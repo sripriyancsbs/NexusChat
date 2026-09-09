@@ -3,6 +3,65 @@ import { api } from '../services/api.js';
 import { socketClient } from '../services/socket.js';
 import { useAuth } from './AuthContext.jsx';
 
+export const CHAT_THEMES = [
+  {
+    id: 'sapphire',
+    label: 'Sapphire Pro',
+    subtitle: 'Electric Blue & Cyber Cyan',
+    gradient: 'linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%)',
+    preview: '#007acc'
+  },
+  {
+    id: 'neon',
+    label: 'Neon Cyberpunk',
+    subtitle: 'Ultraviolet & Hot Magenta',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%)',
+    preview: '#d946ef'
+  },
+  {
+    id: 'sunset',
+    label: 'Sunset Flare',
+    subtitle: 'Golden Coral & Sunset Rose',
+    gradient: 'linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%)',
+    preview: '#f43f5e'
+  },
+  {
+    id: 'emerald',
+    label: 'Emerald Matrix',
+    subtitle: 'Electric Mint & Forest Jade',
+    gradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
+    preview: '#10b981'
+  },
+  {
+    id: 'indigo',
+    label: 'Cosmic Indigo',
+    subtitle: 'Deep Royal Blue & Starlight',
+    gradient: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
+    preview: '#6366f1'
+  },
+  {
+    id: 'berry',
+    label: 'Velvet Berry',
+    subtitle: 'Rich Mulberry & Crimson Flame',
+    gradient: 'linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%)',
+    preview: '#be123c'
+  },
+  {
+    id: 'amber',
+    label: 'Solar Amber',
+    subtitle: 'Honey Gold & Radiant Ember',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)',
+    preview: '#f59e0b'
+  },
+  {
+    id: 'obsidian',
+    label: 'Midnight Stealth',
+    subtitle: 'Titanium Slate & Carbon Dark',
+    gradient: 'linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%)',
+    preview: '#27272a'
+  }
+];
+
 const ChatContext = createContext(null);
 
 export const ChatProvider = ({ children }) => {
@@ -14,6 +73,20 @@ export const ChatProvider = ({ children }) => {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+
+  // Chat Theme State with persistence
+  const [chatTheme, setChatThemeState] = useState(() => {
+    return localStorage.getItem('nexus_chat_theme') || 'sapphire';
+  });
+
+  const setChatTheme = useCallback((newTheme) => {
+    setChatThemeState(newTheme);
+    try {
+      localStorage.setItem('nexus_chat_theme', newTheme);
+    } catch (e) {
+      console.warn('Failed to save chat theme to localStorage', e);
+    }
+  }, []);
 
   // Thread drawer
   const [activeThread, setActiveThread] = useState(null);
@@ -483,7 +556,9 @@ export const ChatProvider = ({ children }) => {
         refreshChannelsAndConversations,
         refreshNotifications,
         setNotifications,
-        setUnreadNotificationsCount
+        setUnreadNotificationsCount,
+        chatTheme,
+        setChatTheme
       }}
     >
       {children}

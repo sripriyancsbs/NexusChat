@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
-import { useChat } from '../../context/ChatContext.jsx';
+import { useChat, CHAT_THEMES } from '../../context/ChatContext.jsx';
 import { IconX, IconPin, IconLock, IconUsers, IconInfo, IconPalette } from '../common/Icons.jsx';
 
-const THEMES = [
-  { id: 'sapphire', label: 'Sapphire Blue', gradient: 'var(--chat-theme-sapphire)' },
-  { id: 'indigo', label: 'Electric Indigo', gradient: 'var(--chat-theme-indigo)' },
-  { id: 'cyan', label: 'Midnight Cyan', gradient: 'var(--chat-theme-cyan)' },
-  { id: 'emerald', label: 'Emerald Pine', gradient: 'var(--chat-theme-emerald)' },
-  { id: 'graphite', label: 'Graphite Minimal', gradient: 'var(--chat-theme-graphite)' },
-  { id: 'berry', label: 'Velvet Berry', gradient: 'var(--chat-theme-berry)' }
-];
-
-export default function ContextPanel({ isOpen, onClose, currentTheme = 'sapphire', onSelectTheme }) {
-  const { activeConversation, messages, togglePin } = useChat();
+export default function ContextPanel({ isOpen, onClose }) {
+  const { activeConversation, messages, togglePin, chatTheme, setChatTheme } = useChat();
   const [activeTab, setActiveTab] = useState('DETAILS');
 
   if (!isOpen || !activeConversation) return null;
@@ -191,27 +182,62 @@ export default function ContextPanel({ isOpen, onClose, currentTheme = 'sapphire
                 borderRadius: 'var(--radius-md)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
-                <IconPalette size={15} />
-                <span>Chat Themes</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  <IconPalette size={15} />
+                  <span>Chat Atmosphere</span>
+                </div>
+                <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
+                  {CHAT_THEMES.find((t) => t.id === chatTheme)?.label || 'Theme'}
+                </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                {THEMES.map((th) => (
-                  <button
-                    key={th.id}
-                    type="button"
-                    onClick={() => onSelectTheme && onSelectTheme(th.id)}
-                    className={`theme-swatch ${currentTheme === th.id ? 'active' : ''}`}
-                    style={{
-                      background: th.gradient,
-                      width: '100%',
-                      height: '34px',
-                      borderRadius: '8px'
-                    }}
-                    title={th.label}
-                  />
-                ))}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                {CHAT_THEMES.map((th) => {
+                  const isActive = chatTheme === th.id;
+                  return (
+                    <button
+                      key={th.id}
+                      type="button"
+                      onClick={() => setChatTheme(th.id)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '6px 8px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: isActive ? '1.5px solid var(--accent-primary)' : '1px solid var(--border-default)',
+                        backgroundColor: isActive ? 'var(--bg-active)' : 'var(--bg-card)',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all var(--transition-fast)'
+                      }}
+                      title={`${th.label} — ${th.subtitle}`}
+                    >
+                      <span
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '5px',
+                          background: th.gradient,
+                          flexShrink: 0
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: isActive ? 600 : 500,
+                          color: 'var(--text-primary)',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {th.label}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

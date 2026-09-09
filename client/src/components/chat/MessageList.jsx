@@ -73,7 +73,11 @@ export default function MessageList({ onOpenThread, onReport }) {
         display: 'flex',
         flexDirection: 'column',
         padding: '14px 0',
-        backgroundColor: 'var(--bg-canvas)'
+        backgroundColor: 'var(--bg-canvas)',
+        backgroundImage: 'var(--theme-ambient)',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100% 100%',
+        transition: 'background-image 0.4s ease'
       }}
     >
       {/* Welcome Card */}

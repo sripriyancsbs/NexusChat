@@ -211,8 +211,11 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
             fontSize: '0.8125rem',
             gap: '6px',
             flexShrink: 0,
+            background: 'var(--theme-bubble, var(--accent-primary))',
+            boxShadow: 'var(--theme-bubble-shadow, 0 2px 8px rgba(0, 122, 204, 0.4))',
             opacity: !content.trim() || sending ? 0.45 : 1,
-            cursor: !content.trim() || sending ? 'not-allowed' : 'pointer'
+            cursor: !content.trim() || sending ? 'not-allowed' : 'pointer',
+            transition: 'all var(--transition-fast)'
           }}
         >
           <IconSend size={13} />

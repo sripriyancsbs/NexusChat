@@ -20,12 +20,9 @@ import UserProfileModal from '../components/common/UserProfileModal.jsx';
 import ReportMessageModal from '../components/common/ReportMessageModal.jsx';
 
 export default function MemberApp({ onNavigateAdmin }) {
-  const { channels, activeConversationId, selectChannel, activeThread, openThread, unreadNotificationsCount } = useChat();
+  const { channels, activeConversationId, selectChannel, activeThread, openThread, unreadNotificationsCount, chatTheme, setChatTheme } = useChat();
   const { user, logout, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
-
-  // Professional Chat Theme state: 'sapphire' | 'indigo' | 'cyan' | 'emerald' | 'graphite' | 'berry'
-  const [chatTheme, setChatTheme] = useState('sapphire');
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const [isNewDMOpen, setIsNewDMOpen] = useState(false);
@@ -113,8 +110,6 @@ export default function MemberApp({ onNavigateAdmin }) {
             isContextOpen={isContextPanelOpen}
             onOpenSearch={() => setIsSearchOpen(true)}
             onToggleMobileSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
-            currentTheme={chatTheme}
-            onSelectTheme={setChatTheme}
           />
 
           <MessageList
@@ -134,8 +129,6 @@ export default function MemberApp({ onNavigateAdmin }) {
           <ContextPanel
             isOpen={isContextPanelOpen}
             onClose={() => setIsContextPanelOpen(false)}
-            currentTheme={chatTheme}
-            onSelectTheme={setChatTheme}
           />
         )}
       </div>

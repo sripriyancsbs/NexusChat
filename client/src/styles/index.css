@@ -446,17 +446,79 @@ html, body {
 
 /* Outgoing Messages */
 .dialogue-bubble.me {
-  background: var(--accent-primary);
+  background: var(--theme-bubble, var(--accent-primary));
   color: #ffffff;
   border-bottom-right-radius: 4px;
+  box-shadow: var(--theme-bubble-shadow, var(--shadow-sm));
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.theme-sapphire .dialogue-bubble.me { background: #007acc; }
-.theme-indigo .dialogue-bubble.me { background: #4f46e5; }
-.theme-cyan .dialogue-bubble.me { background: #0284c7; }
-.theme-emerald .dialogue-bubble.me { background: #059669; }
-.theme-graphite .dialogue-bubble.me { background: #27272a; }
-.theme-berry .dialogue-bubble.me { background: #be123c; }
+/* ============================================================
+   CHAT ATMOSPHERE THEMES (Vibrant, Modern, Dynamic)
+   ============================================================ */
+/* 1. Sapphire Pro (Default IDE Signature) */
+.theme-sapphire {
+  --theme-bubble: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(0, 122, 204, 0.4);
+  --theme-accent: #007acc;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.12), transparent 60%);
+}
+
+/* 2. Neon Cyberpunk (Ultraviolet & Hot Magenta) */
+.theme-neon {
+  --theme-bubble: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(217, 70, 239, 0.42);
+  --theme-accent: #d946ef;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.15), transparent 60%);
+}
+
+/* 3. Sunset Flare (Golden Coral & Sunset Rose) */
+.theme-sunset {
+  --theme-bubble: linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(244, 63, 94, 0.42);
+  --theme-accent: #f43f5e;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.14), transparent 60%);
+}
+
+/* 4. Emerald Matrix (Electric Mint & Forest Jade) */
+.theme-emerald {
+  --theme-bubble: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(16, 185, 129, 0.42);
+  --theme-accent: #10b981;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.14), transparent 60%);
+}
+
+/* 5. Cosmic Indigo (Deep Astral Blue & Iris) */
+.theme-indigo {
+  --theme-bubble: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(99, 102, 241, 0.42);
+  --theme-accent: #6366f1;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.14), transparent 60%);
+}
+
+/* 6. Velvet Berry (Rich Mulberry & Crimson Flame) */
+.theme-berry {
+  --theme-bubble: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(190, 18, 60, 0.42);
+  --theme-accent: #be123c;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(225, 29, 72, 0.14), transparent 60%);
+}
+
+/* 7. Solar Amber (Honey Gold & Warm Amber) */
+.theme-amber {
+  --theme-bubble: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(245, 158, 11, 0.42);
+  --theme-accent: #f59e0b;
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.14), transparent 60%);
+}
+
+/* 8. Midnight Stealth (Titanium Slate & Carbon Dark) */
+.theme-obsidian {
+  --theme-bubble: linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%);
+  --theme-bubble-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  --theme-accent: #71717a;
+  --theme-ambient: none;
+}
 
 /* Incoming Messages */
 .dialogue-bubble.them {
@@ -580,21 +642,30 @@ html, body {
    9. CHAT THEME PALETTE SWATCHES
    ============================================================ */
 .theme-swatch {
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 36px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   border: 2px solid transparent;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-swatch:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .theme-swatch.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.65), var(--theme-bubble-shadow, none);
+}
+
+[data-theme='light'] .theme-swatch.active {
   border-color: var(--text-primary);
-  box-shadow: 0 0 8px rgba(0, 122, 204, 0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
 }
 
 /* Custom Scrollbars */

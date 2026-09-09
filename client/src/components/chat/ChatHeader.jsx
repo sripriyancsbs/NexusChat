@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useChat } from '../../context/ChatContext.jsx';
+import { useChat, CHAT_THEMES } from '../../context/ChatContext.jsx';
 import {
   IconSearch,
   IconInfo,
@@ -8,24 +8,13 @@ import {
   IconX
 } from '../common/Icons.jsx';
 
-const THEMES = [
-  { id: 'sapphire', label: 'Sapphire Blue', gradient: 'var(--chat-theme-sapphire)' },
-  { id: 'indigo', label: 'Electric Indigo', gradient: 'var(--chat-theme-indigo)' },
-  { id: 'cyan', label: 'Midnight Cyan', gradient: 'var(--chat-theme-cyan)' },
-  { id: 'emerald', label: 'Emerald Pine', gradient: 'var(--chat-theme-emerald)' },
-  { id: 'graphite', label: 'Graphite Minimal', gradient: 'var(--chat-theme-graphite)' },
-  { id: 'berry', label: 'Velvet Berry', gradient: 'var(--chat-theme-berry)' }
-];
-
 export default function ChatHeader({
   onToggleContextPanel,
   isContextOpen,
   onOpenSearch,
-  onToggleMobileSidebar,
-  currentTheme = 'sapphire',
-  onSelectTheme
+  onToggleMobileSidebar
 }) {
-  const { activeConversation, presenceMap } = useChat();
+  const { activeConversation, presenceMap, chatTheme, setChatTheme } = useChat();
   const [showThemePicker, setShowThemePicker] = useState(false);
 
   if (!activeConversation) return null;
@@ -60,9 +49,9 @@ export default function ChatHeader({
           alignItems: 'center',
           justifyContent: 'space-between',
           flexShrink: 0,
-          zIndex: 20,
+          zIndex: 35,
           gap: '12px',
-          overflow: 'hidden'
+          position: 'relative'
         }}
       >
         {/* Header Left: Avatar & Info */}
@@ -182,13 +171,33 @@ export default function ChatHeader({
 
         {/* Header Right: Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, position: 'relative' }}>
+          {/* Backdrop for closing theme picker when clicking outside */}
+          {showThemePicker && (
+            <div
+              onClick={() => setShowThemePicker(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 40
+              }}
+            />
+          )}
+
           {/* Chat Theme Customizer */}
           <button
             type="button"
-            onClick={() => setShowThemePicker((prev) => !prev)}
-            title="Change Chat Theme"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowThemePicker((prev) => !prev);
+            }}
+            title="Change Chat Theme Atmosphere"
             className="btn-icon"
-            style={{ color: showThemePicker ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+            style={{
+              color: showThemePicker ? 'var(--accent-primary)' : 'var(--text-secondary)',
+              background: showThemePicker ? 'var(--bg-hover)' : 'transparent',
+              position: 'relative',
+              zIndex: 41
+            }}
           >
             <IconPalette size={18} />
           </button>
@@ -196,36 +205,72 @@ export default function ChatHeader({
           {/* Theme Picker Popover */}
           {showThemePicker && (
             <div
+              onClick={(e) => e.stopPropagation()}
               style={{
                 position: 'absolute',
                 top: '46px',
-                right: '40px',
+                right: '0px',
                 backgroundColor: 'var(--bg-surface)',
                 border: '1px solid var(--border-default)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-lg)',
-                padding: '12px 14px',
+                padding: '14px',
                 zIndex: 50,
-                width: '210px'
+                width: '280px'
               }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                Chat Themes
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  🎨 Chat Atmospheres
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowThemePicker(false)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '2px',
+                    display: 'flex'
+                  }}
+                >
+                  <IconX size={14} />
+                </button>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                {THEMES.map((th) => (
-                  <button
-                    key={th.id}
-                    type="button"
-                    onClick={() => {
-                      if (onSelectTheme) onSelectTheme(th.id);
-                      setShowThemePicker(false);
-                    }}
-                    className={`theme-swatch ${currentTheme === th.id ? 'active' : ''}`}
-                    style={{ background: th.gradient }}
-                    title={th.label}
-                  />
-                ))}
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                {CHAT_THEMES.map((th) => {
+                  const isActive = chatTheme === th.id;
+                  return (
+                    <button
+                      key={th.id}
+                      type="button"
+                      onClick={() => {
+                        setChatTheme(th.id);
+                        setShowThemePicker(false);
+                      }}
+                      className={`theme-swatch ${isActive ? 'active' : ''}`}
+                      style={{
+                        background: th.gradient,
+                        height: '36px',
+                        borderRadius: '8px',
+                        cursor: 'pointer'
+                      }}
+                      title={`${th.label} — ${th.subtitle}`}
+                    >
+                      {isActive && (
+                        <span style={{ color: '#ffffff', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div style={{ marginTop: '10px', fontSize: '0.6875rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                {CHAT_THEMES.find((t) => t.id === chatTheme)?.subtitle || 'Select an atmosphere'}
               </div>
             </div>
           )}
