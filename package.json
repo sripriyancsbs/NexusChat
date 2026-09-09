@@ -1,0 +1,28 @@
+{
+  "name": "nexuschat-workspace",
+  "version": "1.0.0",
+  "description": "NexusChat – Privacy-Focused Community Communication Platform",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=server",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "start": "npm start --workspace=server",
+    "test": "npm test --workspace=server"
+  },
+  "keywords": [
+    "nexuschat",
+    "chat",
+    "privacy",
+    "realtime",
+    "websocket",
+    "community"
+  ],
+  "author": "NexusChat Team",
+  "license": "MIT"
+}
