@@ -166,10 +166,10 @@ export default function ContextPanel({ isOpen, onClose, currentTheme = 'sapphire
                     justifyContent: 'center',
                     fontSize: '1.5rem',
                     fontWeight: 700,
-                    color: '#ffffff'
+                    color: 'var(--text-primary)'
                   }}
                 >
-                  {isChannel ? (activeConversation.is_private ? <IconLock size={22} /> : '#') : (title[0] || 'U').toUpperCase()}
+                  {isChannel ? (activeConversation.is_private ? <IconLock size={22} /> : (title[0] || 'S').toUpperCase()) : (title[0] || 'U').toUpperCase()}
                 </div>
               </div>
 

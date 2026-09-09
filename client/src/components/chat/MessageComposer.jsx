@@ -4,9 +4,7 @@ import { socketClient } from '../../services/socket.js';
 import {
   IconSend,
   IconSmile,
-  IconPaperclip,
-  IconMic,
-  IconHeart
+  IconPaperclip
 } from '../common/Icons.jsx';
 
 const EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡', '✨', '⚡', '😍', '👏', '🙌', '💯'];
@@ -29,7 +27,7 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
 
   const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
   const defaultPlaceholder = isChannel
-    ? `Message #${formatName(activeConversation?.name) || 'space'}...`
+    ? `Message ${formatName(activeConversation?.name) || 'space'}...`
     : `Message ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
 
   const typingUsers = typingMap[activeConversationId] || [];
@@ -73,19 +71,6 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
     } catch (err) {
       console.error('Failed to send message:', err);
       setContent(msgText);
-    } finally {
-      setSending(false);
-    }
-  };
-
-  // Instagram-style Quick Heart send
-  const handleSendHeart = async () => {
-    if (sending) return;
-    setSending(true);
-    try {
-      await sendMessage('❤️', replyToMessageId);
-    } catch (err) {
-      console.error('Failed to send quick heart:', err);
     } finally {
       setSending(false);
     }
@@ -188,17 +173,6 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           <IconPaperclip size={18} />
         </button>
 
-        {/* Voice Note / Mic Button */}
-        <button
-          type="button"
-          onClick={() => alert('Voice messaging: Recording secure waveform note...')}
-          title="Voice Message"
-          className="btn-icon"
-          style={{ width: '32px', height: '32px' }}
-        >
-          <IconMic size={18} />
-        </button>
-
         {/* Input Textarea */}
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           <textarea
@@ -224,36 +198,26 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           />
         </div>
 
-        {/* Right Action: Instagram-style Morphing Quick Heart / Send Button */}
-        {content.trim().length === 0 ? (
-          <button
-            type="button"
-            onClick={handleSendHeart}
-            title="Send Like (Heart)"
-            className="quick-heart-btn"
-            disabled={sending}
-          >
-            ❤️
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={sending}
-            title="Send Message (Enter)"
-            className="btn btn-primary"
-            style={{
-              padding: '6px 14px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.8125rem',
-              gap: '6px',
-              flexShrink: 0
-            }}
-          >
-            <IconSend size={13} />
-            <span>Send</span>
-          </button>
-        )}
+        {/* Send Button */}
+        <button
+          type="button"
+          onClick={handleSend}
+          disabled={!content.trim() || sending}
+          title="Send Message (Enter)"
+          className="btn btn-primary"
+          style={{
+            padding: '6px 14px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: '0.8125rem',
+            gap: '6px',
+            flexShrink: 0,
+            opacity: !content.trim() || sending ? 0.45 : 1,
+            cursor: !content.trim() || sending ? 'not-allowed' : 'pointer'
+          }}
+        >
+          <IconSend size={13} />
+          <span>Send</span>
+        </button>
       </div>
     </div>
   );

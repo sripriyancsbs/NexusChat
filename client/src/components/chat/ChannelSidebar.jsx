@@ -425,7 +425,7 @@ export default function ChannelSidebar({
                       flexShrink: 0
                     }}
                   >
-                    {channel.is_private ? <IconLock size={15} /> : '#'}
+                    {channel.is_private ? <IconLock size={15} /> : (channel.name ? channel.name[0].toUpperCase() : 'S')}
                   </div>
 
                   {/* Details */}

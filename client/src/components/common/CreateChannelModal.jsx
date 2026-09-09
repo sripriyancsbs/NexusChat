@@ -78,11 +78,12 @@ export default function CreateChannelModal({ isOpen, onClose }) {
                 left: '12px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: 'var(--text-muted)',
-                fontWeight: 600
+                color: 'var(--accent-primary)',
+                fontWeight: 700,
+                fontSize: '0.875rem'
               }}
             >
-              #
+              {name ? name[0].toUpperCase() : 'S'}
             </span>
             <input
               type="text"

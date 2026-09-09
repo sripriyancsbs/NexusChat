@@ -112,7 +112,7 @@ export default function ChatHeader({
                 borderRadius: isChannel ? '12px' : '50%',
                 background: isChannel ? 'var(--grad-prism)' : 'var(--bg-elevated)',
                 border: isChannel ? 'none' : '2px solid var(--border-default)',
-                color: '#ffffff',
+                color: isChannel ? '#ffffff' : 'var(--text-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -120,7 +120,7 @@ export default function ChatHeader({
                 fontSize: '0.9375rem'
               }}
             >
-              {isChannel ? (activeConversation.is_private ? <IconLock size={16} /> : '#') : (title[0] || 'U').toUpperCase()}
+              {isChannel ? (activeConversation.is_private ? <IconLock size={16} /> : (title[0] || 'S').toUpperCase()) : (title[0] || 'U').toUpperCase()}
             </div>
 
             {!isChannel && presence === 'online' && (

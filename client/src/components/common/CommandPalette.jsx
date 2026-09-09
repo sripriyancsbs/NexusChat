@@ -43,9 +43,9 @@ export default function CommandPalette({ isOpen, onClose, onNavigateAdmin, onOpe
       items.push({
         id: `chan-${c.id}`,
         category: 'Channels',
-        title: `# ${c.name}`,
+        title: c.name,
         subtitle: c.topic || (c.is_private ? 'Private channel' : 'Public channel'),
-        icon: c.is_private ? <IconLock size={16} /> : <IconHash size={16} />,
+        icon: c.is_private ? <IconLock size={16} /> : <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>{c.name ? c.name[0].toUpperCase() : 'S'}</span>,
         action: () => {
           selectChannel(c);
           onClose();

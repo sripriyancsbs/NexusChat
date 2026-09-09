@@ -183,12 +183,26 @@ export default function SearchModal({ isOpen, onClose }) {
                       gap: '12px'
                     }}
                   >
-                    <div style={{ color: 'var(--accent-cyan)' }}>
-                      {c.is_private ? <IconLock size={18} /> : <IconHash size={18} />}
+                    <div
+                      style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '8px',
+                        backgroundColor: 'var(--bg-elevated)',
+                        color: 'var(--accent-primary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 600,
+                        fontSize: '0.8125rem',
+                        flexShrink: 0
+                      }}
+                    >
+                      {c.is_private ? <IconLock size={15} /> : (c.name ? c.name[0].toUpperCase() : 'S')}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                        #{c.name}
+                        {c.name}
                       </div>
                       {c.topic && (
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>

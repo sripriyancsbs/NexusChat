@@ -102,7 +102,7 @@ export default function MessageList({ onOpenThread, onReport }) {
               fontSize: '1.1rem'
             }}
           >
-            {isChannel ? (activeConversation?.is_private ? <IconLock size={16} /> : '#') : (title[0] || 'U').toUpperCase()}
+            {isChannel ? (activeConversation?.is_private ? <IconLock size={16} /> : (title[0] || 'S').toUpperCase()) : (title[0] || 'U').toUpperCase()}
           </div>
 
           <div>
@@ -115,7 +115,7 @@ export default function MessageList({ onOpenThread, onReport }) {
                 color: 'var(--text-primary)'
               }}
             >
-              {isChannel ? `Welcome to #${title}` : `Conversation with ${title}`}
+              {isChannel ? `Welcome to ${title}` : `Conversation with ${title}`}
             </h2>
             <div style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', marginTop: '2px' }}>
               🔒 End-to-end encrypted • Zero-admin access
