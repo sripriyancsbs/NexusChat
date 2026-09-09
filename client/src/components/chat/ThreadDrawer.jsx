@@ -20,7 +20,9 @@ export default function ThreadDrawer({ onReport }) {
     <aside
       style={{
         width: '360px',
-        backgroundColor: 'var(--bg-canvas)',
+        backgroundColor: 'var(--bg-surface)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
         borderLeft: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',

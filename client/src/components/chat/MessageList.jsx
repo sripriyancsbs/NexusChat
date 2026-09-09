@@ -73,7 +73,7 @@ export default function MessageList({ onOpenThread, onReport }) {
         display: 'flex',
         flexDirection: 'column',
         padding: '14px 0',
-        backgroundColor: 'var(--bg-canvas)',
+        backgroundColor: 'transparent',
         backgroundImage: 'var(--theme-ambient)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: '100% 100%',

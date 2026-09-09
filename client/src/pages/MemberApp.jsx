@@ -63,7 +63,10 @@ export default function MemberApp({ onNavigateAdmin }) {
         width: '100vw',
         overflow: 'hidden',
         backgroundColor: 'var(--bg-canvas)',
-        transition: 'background-color 0.3s ease, color 0.3s ease'
+        backgroundImage: 'var(--canvas-atmosphere)',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        transition: 'background-color 0.4s ease, background-image 0.4s ease, color 0.4s ease'
       }}
     >
       {/* 1. Global Social Navigation Rail (Instagram / Messenger Primary Dock) */}

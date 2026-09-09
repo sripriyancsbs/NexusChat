@@ -8,6 +8,7 @@
 :root {
   /* Core Foundation - Pure Pitch Black */
   --bg-canvas: #000000;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.28) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.22) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.12) 0%, transparent 70%), #000000;
   --bg-surface: #0a0a0a;
   --bg-elevated: #111111;
   --bg-card: #161616;
@@ -91,6 +92,7 @@
 /* Light Theme Variables */
 [data-theme='light'] {
   --bg-canvas: #f4f5f8;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 60%), #f4f5f8;
   --bg-surface: #ffffff;
   --bg-elevated: #f8fafc;
   --bg-card: #ffffff;
@@ -131,6 +133,9 @@ html, body {
   font-family: var(--font-sans);
   font-size: 14.5px;
   background-color: var(--bg-canvas);
+  background-image: var(--canvas-atmosphere, none);
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--text-primary);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
@@ -142,6 +147,19 @@ html, body {
   flex-direction: column;
   overflow: hidden;
   background-color: var(--bg-canvas);
+  background-image: var(--canvas-atmosphere, none);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.app-canvas {
+  background-color: var(--bg-canvas);
+  background-image: var(--canvas-atmosphere, none);
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+  width: 100vw;
+  transition: background-color 0.4s ease, background-image 0.4s ease, color 0.4s ease;
 }
 
 /* ============================================================
@@ -159,6 +177,9 @@ html, body {
   padding: 14px 0;
   flex-shrink: 0;
   z-index: 30;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
 .social-nav-item {
@@ -184,8 +205,8 @@ html, body {
 
 .social-nav-item.active {
   color: #ffffff;
-  background: var(--accent-primary);
-  box-shadow: 0 4px 12px rgba(0, 122, 204, 0.45);
+  background: var(--grad-prism);
+  box-shadow: var(--theme-bubble-shadow, 0 4px 12px rgba(0, 122, 204, 0.45));
 }
 
 .social-nav-badge {
@@ -210,7 +231,9 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color var(--transition-fast);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: border-color var(--transition-fast), background var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .floating-island:hover {
@@ -230,6 +253,9 @@ html, body {
   flex-direction: column;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-default);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: background var(--transition-normal), border-color var(--transition-normal);
 }
 
 /* ============================================================
@@ -305,18 +331,18 @@ html, body {
   text-decoration: none;
 }
 
-/* Primary Button: Electric Blue like the "Tab to Jump" pill */
+/* Primary Button: Vibrant atmosphere gradient */
 .btn-primary {
-  background: #007acc;
+  background: var(--grad-prism);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.4);
+  box-shadow: var(--theme-bubble-shadow, 0 2px 8px rgba(0, 122, 204, 0.4));
 }
 
 .btn-primary:hover {
-  background: #0088e6;
+  background: var(--accent-primary-hover);
   transform: translateY(-0.5px);
-  box-shadow: 0 4px 12px rgba(0, 122, 204, 0.5);
+  box-shadow: var(--theme-bubble-shadow, 0 4px 12px rgba(0, 122, 204, 0.5));
 }
 
 /* Secondary Button: Clean themed border */
@@ -407,7 +433,8 @@ html, body {
 
 .channel-card.active {
   background: var(--bg-active);
-  border-color: var(--border-default);
+  border-color: var(--border-strong);
+  border-left: 3px solid var(--accent-primary);
   box-shadow: var(--shadow-sm);
 }
 
@@ -457,172 +484,372 @@ html, body {
    GLOBAL CHAT ATMOSPHERE THEMES (Transforms Entire Interface)
    ============================================================ */
 
-/* 1. Sapphire Pro (Electric Blue & Cyber Cyan) */
-[data-chat-theme='sapphire'], .theme-sapphire {
+/* 1. Sapphire Pro (Electric Blue & Oceanic Starlight) */
+:root[data-chat-theme='sapphire'], [data-theme='dark'][data-chat-theme='sapphire'], [data-chat-theme='sapphire'], .theme-sapphire {
+  --bg-canvas: #030a16;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.32) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.24) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.14) 0%, transparent 70%), #030a16;
+  --bg-surface: rgba(5, 16, 32, 0.85);
+  --bg-elevated: rgba(10, 28, 54, 0.88);
+  --bg-card: rgba(14, 38, 72, 0.8);
+  --bg-card-hover: rgba(20, 52, 96, 0.9);
+  --bg-active: rgba(0, 122, 204, 0.26);
+  --border-subtle: rgba(0, 122, 204, 0.2);
+  --border-default: rgba(0, 122, 204, 0.38);
+  --border-strong: rgba(56, 189, 248, 0.65);
   --accent-primary: #007acc;
   --accent-primary-hover: #0088e6;
-  --accent-primary-subtle: rgba(0, 122, 204, 0.16);
+  --accent-primary-subtle: rgba(0, 122, 204, 0.22);
+  --text-primary: #ffffff;
+  --text-secondary: #93c5fd;
+  --text-muted: #60a5fa;
+  --text-accent: #38bdf8;
   --grad-prism: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
   --grad-avatar-ring: linear-gradient(135deg, #007acc, #38bdf8, #818cf8);
   --theme-bubble: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(0, 122, 204, 0.42);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.14), transparent 65%);
-  --bg-active: rgba(0, 122, 204, 0.16);
-}
-
-:root[data-chat-theme='sapphire'], [data-theme='dark'][data-chat-theme='sapphire'] {
-  --bg-canvas: #000000;
+  --theme-bubble-shadow: 0 6px 22px rgba(0, 122, 204, 0.52);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.25), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='sapphire'] {
   --bg-canvas: #f0f7ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 60%), #f0f7ff;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #e0f2fe;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f9ff;
+  --bg-active: rgba(0, 122, 204, 0.14);
+  --border-subtle: rgba(0, 122, 204, 0.18);
+  --border-default: rgba(0, 122, 204, 0.3);
+  --border-strong: rgba(0, 122, 204, 0.5);
+  --accent-primary: #0284c7;
+  --accent-primary-hover: #0369a1;
+  --accent-primary-subtle: rgba(2, 132, 199, 0.15);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-accent: #0284c7;
 }
 
 /* 2. Neon Cyberpunk (Ultraviolet & Hot Magenta) */
-[data-chat-theme='neon'], .theme-neon {
+:root[data-chat-theme='neon'], [data-theme='dark'][data-chat-theme='neon'], [data-chat-theme='neon'], .theme-neon {
+  --bg-canvas: #0c0314;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(217, 70, 239, 0.34) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(139, 92, 246, 0.3) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.18) 0%, transparent 70%), #0c0314;
+  --bg-surface: rgba(24, 7, 36, 0.85);
+  --bg-elevated: rgba(38, 12, 58, 0.88);
+  --bg-card: rgba(50, 17, 76, 0.8);
+  --bg-card-hover: rgba(66, 24, 98, 0.9);
+  --bg-active: rgba(217, 70, 239, 0.26);
+  --border-subtle: rgba(217, 70, 239, 0.22);
+  --border-default: rgba(217, 70, 239, 0.4);
+  --border-strong: rgba(232, 121, 249, 0.68);
   --accent-primary: #d946ef;
   --accent-primary-hover: #e879f9;
-  --accent-primary-subtle: rgba(217, 70, 239, 0.18);
+  --accent-primary-subtle: rgba(217, 70, 239, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #f0abfc;
+  --text-muted: #d8b4fe;
+  --text-accent: #e879f9;
   --grad-prism: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%);
   --grad-avatar-ring: linear-gradient(135deg, #8b5cf6, #d946ef, #f43f5e);
   --theme-bubble: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(217, 70, 239, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.16), transparent 65%);
-  --bg-active: rgba(217, 70, 239, 0.18);
-}
-
-:root[data-chat-theme='neon'], [data-theme='dark'][data-chat-theme='neon'] {
-  --bg-canvas: #09020e;
+  --theme-bubble-shadow: 0 6px 22px rgba(217, 70, 239, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='neon'] {
   --bg-canvas: #faf5ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(217, 70, 239, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(139, 92, 246, 0.12) 0%, transparent 60%), #faf5ff;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #f3e8ff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #faf5ff;
+  --bg-active: rgba(217, 70, 239, 0.15);
+  --border-subtle: rgba(217, 70, 239, 0.18);
+  --border-default: rgba(217, 70, 239, 0.32);
+  --border-strong: rgba(217, 70, 239, 0.52);
+  --accent-primary: #c026d3;
+  --accent-primary-hover: #a21caf;
+  --accent-primary-subtle: rgba(192, 38, 211, 0.15);
+  --text-primary: #1e1b4b;
+  --text-secondary: #4c1d95;
+  --text-muted: #6b21a8;
+  --text-accent: #c026d3;
 }
 
 /* 3. Sunset Flare (Golden Coral & Sunset Rose) */
-[data-chat-theme='sunset'], .theme-sunset {
+:root[data-chat-theme='sunset'], [data-theme='dark'][data-chat-theme='sunset'], [data-chat-theme='sunset'], .theme-sunset {
+  --bg-canvas: #140306;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(244, 63, 94, 0.34) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(249, 115, 22, 0.3) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(225, 29, 72, 0.18) 0%, transparent 70%), #140306;
+  --bg-surface: rgba(30, 7, 13, 0.85);
+  --bg-elevated: rgba(46, 12, 22, 0.88);
+  --bg-card: rgba(62, 18, 30, 0.8);
+  --bg-card-hover: rgba(80, 25, 40, 0.9);
+  --bg-active: rgba(244, 63, 94, 0.26);
+  --border-subtle: rgba(244, 63, 94, 0.22);
+  --border-default: rgba(244, 63, 94, 0.4);
+  --border-strong: rgba(251, 113, 133, 0.68);
   --accent-primary: #f43f5e;
   --accent-primary-hover: #fb7185;
-  --accent-primary-subtle: rgba(244, 63, 94, 0.18);
+  --accent-primary-subtle: rgba(244, 63, 94, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #fecdd3;
+  --text-muted: #fda4af;
+  --text-accent: #fb7185;
   --grad-prism: linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%);
   --grad-avatar-ring: linear-gradient(135deg, #f97316, #f43f5e, #fbbf24);
   --theme-bubble: linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(244, 63, 94, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.15), transparent 65%);
-  --bg-active: rgba(244, 63, 94, 0.18);
-}
-
-:root[data-chat-theme='sunset'], [data-theme='dark'][data-chat-theme='sunset'] {
-  --bg-canvas: #0c0204;
+  --theme-bubble-shadow: 0 6px 22px rgba(244, 63, 94, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(244, 63, 94, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='sunset'] {
   --bg-canvas: #fff1f2;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(244, 63, 94, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(249, 115, 22, 0.12) 0%, transparent 60%), #fff1f2;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #ffe4e6;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fff1f2;
+  --bg-active: rgba(244, 63, 94, 0.15);
+  --border-subtle: rgba(244, 63, 94, 0.18);
+  --border-default: rgba(244, 63, 94, 0.32);
+  --border-strong: rgba(244, 63, 94, 0.52);
+  --accent-primary: #e11d48;
+  --accent-primary-hover: #be123c;
+  --accent-primary-subtle: rgba(225, 29, 72, 0.15);
+  --text-primary: #4c0519;
+  --text-secondary: #881337;
+  --text-muted: #9f1239;
+  --text-accent: #e11d48;
 }
 
 /* 4. Emerald Matrix (Electric Mint & Forest Jade) */
-[data-chat-theme='emerald'], .theme-emerald {
+:root[data-chat-theme='emerald'], [data-theme='dark'][data-chat-theme='emerald'], [data-chat-theme='emerald'], .theme-emerald {
+  --bg-canvas: #020e06;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(16, 185, 129, 0.34) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.28) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.16) 0%, transparent 70%), #020e06;
+  --bg-surface: rgba(5, 24, 13, 0.85);
+  --bg-elevated: rgba(8, 36, 20, 0.88);
+  --bg-card: rgba(12, 48, 28, 0.8);
+  --bg-card-hover: rgba(18, 66, 38, 0.9);
+  --bg-active: rgba(16, 185, 129, 0.26);
+  --border-subtle: rgba(16, 185, 129, 0.22);
+  --border-default: rgba(16, 185, 129, 0.4);
+  --border-strong: rgba(52, 211, 153, 0.68);
   --accent-primary: #10b981;
   --accent-primary-hover: #34d399;
-  --accent-primary-subtle: rgba(16, 185, 129, 0.18);
+  --accent-primary-subtle: rgba(16, 185, 129, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #a7f3d0;
+  --text-muted: #6ee7b7;
+  --text-accent: #34d399;
   --grad-prism: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
   --grad-avatar-ring: linear-gradient(135deg, #10b981, #06b6d4, #34d399);
   --theme-bubble: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.15), transparent 65%);
-  --bg-active: rgba(16, 185, 129, 0.18);
-}
-
-:root[data-chat-theme='emerald'], [data-theme='dark'][data-chat-theme='emerald'] {
-  --bg-canvas: #010803;
+  --theme-bubble-shadow: 0 6px 22px rgba(16, 185, 129, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='emerald'] {
   --bg-canvas: #f0fdf4;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.12) 0%, transparent 60%), #f0fdf4;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #dcfce7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0fdf4;
+  --bg-active: rgba(16, 185, 129, 0.15);
+  --border-subtle: rgba(16, 185, 129, 0.18);
+  --border-default: rgba(16, 185, 129, 0.32);
+  --border-strong: rgba(16, 185, 129, 0.52);
+  --accent-primary: #059669;
+  --accent-primary-hover: #047857;
+  --accent-primary-subtle: rgba(5, 150, 105, 0.15);
+  --text-primary: #064e3b;
+  --text-secondary: #065f46;
+  --text-muted: #047857;
+  --text-accent: #059669;
 }
 
 /* 5. Cosmic Indigo (Deep Astral Blue & Iris) */
-[data-chat-theme='indigo'], .theme-indigo {
+:root[data-chat-theme='indigo'], [data-theme='dark'][data-chat-theme='indigo'], [data-chat-theme='indigo'], .theme-indigo {
+  --bg-canvas: #040518;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99, 102, 241, 0.36) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(59, 130, 246, 0.28) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.18) 0%, transparent 70%), #040518;
+  --bg-surface: rgba(9, 12, 38, 0.85);
+  --bg-elevated: rgba(16, 20, 58, 0.88);
+  --bg-card: rgba(24, 30, 80, 0.8);
+  --bg-card-hover: rgba(32, 40, 105, 0.9);
+  --bg-active: rgba(99, 102, 241, 0.26);
+  --border-subtle: rgba(99, 102, 241, 0.22);
+  --border-default: rgba(99, 102, 241, 0.4);
+  --border-strong: rgba(129, 140, 248, 0.68);
   --accent-primary: #6366f1;
   --accent-primary-hover: #818cf8;
-  --accent-primary-subtle: rgba(99, 102, 241, 0.18);
+  --accent-primary-subtle: rgba(99, 102, 241, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #c7d2fe;
+  --text-muted: #a5b4fc;
+  --text-accent: #818cf8;
   --grad-prism: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
   --grad-avatar-ring: linear-gradient(135deg, #3b82f6, #6366f1, #a855f7);
   --theme-bubble: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.15), transparent 65%);
-  --bg-active: rgba(99, 102, 241, 0.18);
-}
-
-:root[data-chat-theme='indigo'], [data-theme='dark'][data-chat-theme='indigo'] {
-  --bg-canvas: #03030f;
+  --theme-bubble-shadow: 0 6px 22px rgba(99, 102, 241, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='indigo'] {
   --bg-canvas: #eef2ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), #eef2ff;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #e0e7ff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #eef2ff;
+  --bg-active: rgba(99, 102, 241, 0.15);
+  --border-subtle: rgba(99, 102, 241, 0.18);
+  --border-default: rgba(99, 102, 241, 0.32);
+  --border-strong: rgba(99, 102, 241, 0.52);
+  --accent-primary: #4f46e5;
+  --accent-primary-hover: #4338ca;
+  --accent-primary-subtle: rgba(79, 70, 229, 0.15);
+  --text-primary: #1e1b4b;
+  --text-secondary: #3730a3;
+  --text-muted: #4338ca;
+  --text-accent: #4f46e5;
 }
 
 /* 6. Velvet Berry (Rich Mulberry & Crimson Flame) */
-[data-chat-theme='berry'], .theme-berry {
+:root[data-chat-theme='berry'], [data-theme='dark'][data-chat-theme='berry'], [data-chat-theme='berry'], .theme-berry {
+  --bg-canvas: #130209;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(225, 29, 72, 0.34) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(157, 23, 77, 0.3) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(190, 18, 60, 0.18) 0%, transparent 70%), #130209;
+  --bg-surface: rgba(28, 6, 16, 0.85);
+  --bg-elevated: rgba(45, 10, 26, 0.88);
+  --bg-card: rgba(62, 15, 37, 0.8);
+  --bg-card-hover: rgba(80, 22, 50, 0.9);
+  --bg-active: rgba(190, 18, 60, 0.26);
+  --border-subtle: rgba(225, 29, 72, 0.22);
+  --border-default: rgba(225, 29, 72, 0.4);
+  --border-strong: rgba(251, 113, 133, 0.68);
   --accent-primary: #be123c;
   --accent-primary-hover: #e11d48;
-  --accent-primary-subtle: rgba(190, 18, 60, 0.18);
+  --accent-primary-subtle: rgba(190, 18, 60, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #fbcfe8;
+  --text-muted: #f472b6;
+  --text-accent: #fb7185;
   --grad-prism: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
   --grad-avatar-ring: linear-gradient(135deg, #e11d48, #be123c, #fb7185);
   --theme-bubble: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(190, 18, 60, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(225, 29, 72, 0.15), transparent 65%);
-  --bg-active: rgba(190, 18, 60, 0.18);
-}
-
-:root[data-chat-theme='berry'], [data-theme='dark'][data-chat-theme='berry'] {
-  --bg-canvas: #090104;
+  --theme-bubble-shadow: 0 6px 22px rgba(190, 18, 60, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(225, 29, 72, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='berry'] {
   --bg-canvas: #fff1f5;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(225, 29, 72, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(157, 23, 77, 0.12) 0%, transparent 60%), #fff1f5;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #ffe4ec;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fff1f5;
+  --bg-active: rgba(225, 29, 72, 0.15);
+  --border-subtle: rgba(225, 29, 72, 0.18);
+  --border-default: rgba(225, 29, 72, 0.32);
+  --border-strong: rgba(225, 29, 72, 0.52);
+  --accent-primary: #9d174d;
+  --accent-primary-hover: #831843;
+  --accent-primary-subtle: rgba(157, 23, 77, 0.15);
+  --text-primary: #500724;
+  --text-secondary: #831843;
+  --text-muted: #9d174d;
+  --text-accent: #9d174d;
 }
 
 /* 7. Solar Amber (Honey Gold & Warm Amber) */
-[data-chat-theme='amber'], .theme-amber {
+:root[data-chat-theme='amber'], [data-theme='dark'][data-chat-theme='amber'], [data-chat-theme='amber'], .theme-amber {
+  --bg-canvas: #130901;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(245, 158, 11, 0.34) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.28) 0%, transparent 60%), radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.16) 0%, transparent 70%), #130901;
+  --bg-surface: rgba(28, 15, 4, 0.85);
+  --bg-elevated: rgba(44, 25, 7, 0.88);
+  --bg-card: rgba(58, 35, 12, 0.8);
+  --bg-card-hover: rgba(76, 48, 18, 0.9);
+  --bg-active: rgba(245, 158, 11, 0.26);
+  --border-subtle: rgba(245, 158, 11, 0.22);
+  --border-default: rgba(245, 158, 11, 0.4);
+  --border-strong: rgba(251, 191, 36, 0.68);
   --accent-primary: #f59e0b;
   --accent-primary-hover: #fbbf24;
-  --accent-primary-subtle: rgba(245, 158, 11, 0.18);
+  --accent-primary-subtle: rgba(245, 158, 11, 0.24);
+  --text-primary: #ffffff;
+  --text-secondary: #fde68a;
+  --text-muted: #fcd34d;
+  --text-accent: #fbbf24;
   --grad-prism: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
   --grad-avatar-ring: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
   --theme-bubble: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(245, 158, 11, 0.45);
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.15), transparent 65%);
-  --bg-active: rgba(245, 158, 11, 0.18);
-}
-
-:root[data-chat-theme='amber'], [data-theme='dark'][data-chat-theme='amber'] {
-  --bg-canvas: #080400;
+  --theme-bubble-shadow: 0 6px 22px rgba(245, 158, 11, 0.54);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.26), transparent 65%);
 }
 
 [data-theme='light'][data-chat-theme='amber'] {
   --bg-canvas: #fffbeb;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.12) 0%, transparent 60%), #fffbeb;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-elevated: #fef3c7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fffbeb;
+  --bg-active: rgba(245, 158, 11, 0.15);
+  --border-subtle: rgba(245, 158, 11, 0.18);
+  --border-default: rgba(245, 158, 11, 0.32);
+  --border-strong: rgba(245, 158, 11, 0.52);
+  --accent-primary: #d97706;
+  --accent-primary-hover: #b45309;
+  --accent-primary-subtle: rgba(217, 119, 6, 0.15);
+  --text-primary: #451a03;
+  --text-secondary: #78350f;
+  --text-muted: #92400e;
+  --text-accent: #d97706;
 }
 
 /* 8. Midnight Stealth (Titanium Slate & Carbon Dark) */
-[data-chat-theme='obsidian'], .theme-obsidian {
-  --accent-primary: #71717a;
-  --accent-primary-hover: #a1a1aa;
-  --accent-primary-subtle: rgba(113, 113, 122, 0.18);
-  --grad-prism: linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%);
-  --grad-avatar-ring: linear-gradient(135deg, #71717a, #52525b, #3f3f46);
-  --theme-bubble: linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
-  --theme-ambient: none;
-  --bg-active: rgba(113, 113, 122, 0.18);
-}
-
-:root[data-chat-theme='obsidian'], [data-theme='dark'][data-chat-theme='obsidian'] {
+:root[data-chat-theme='obsidian'], [data-theme='dark'][data-chat-theme='obsidian'], [data-chat-theme='obsidian'], .theme-obsidian {
   --bg-canvas: #000000;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 70%), #000000;
+  --bg-surface: rgba(14, 14, 16, 0.92);
+  --bg-elevated: rgba(22, 22, 26, 0.92);
+  --bg-card: rgba(30, 30, 36, 0.85);
+  --bg-card-hover: rgba(42, 42, 50, 0.92);
+  --bg-active: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-default: rgba(255, 255, 255, 0.22);
+  --border-strong: rgba(255, 255, 255, 0.42);
+  --accent-primary: #94a3b8;
+  --accent-primary-hover: #cbd5e1;
+  --accent-primary-subtle: rgba(255, 255, 255, 0.16);
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-accent: #cbd5e1;
+  --grad-prism: linear-gradient(135deg, #475569 0%, #334155 50%, #1e293b 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #94a3b8, #64748b, #475569);
+  --theme-bubble: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  --theme-bubble-shadow: 0 6px 22px rgba(0, 0, 0, 0.65);
+  --theme-ambient: none;
 }
 
 [data-theme='light'][data-chat-theme='obsidian'] {
-  --bg-canvas: #f4f4f5;
+  --bg-canvas: #f8fafc;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 0, 0, 0.05) 0%, transparent 70%), #f8fafc;
+  --bg-surface: rgba(255, 255, 255, 0.94);
+  --bg-elevated: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-active: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-default: rgba(0, 0, 0, 0.2);
+  --border-strong: rgba(0, 0, 0, 0.35);
+  --accent-primary: #475569;
+  --accent-primary-hover: #334155;
+  --accent-primary-subtle: rgba(71, 85, 105, 0.15);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-accent: #334155;
 }
 
 /* Incoming Messages */
@@ -735,12 +962,14 @@ html, body {
   align-items: center;
   gap: 10px;
   box-shadow: var(--shadow-md);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-normal);
 }
 
 .floating-composer-deck:focus-within {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+  box-shadow: 0 0 0 2px var(--accent-primary-subtle), var(--shadow-md);
 }
 
 /* ============================================================
