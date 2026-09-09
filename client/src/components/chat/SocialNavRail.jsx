@@ -3,9 +3,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import {
   IconMessageSquare,
-  IconGlobe,
   IconBell,
-  IconBookmark,
   IconSearch,
   IconSun,
   IconMoon,
@@ -14,8 +12,6 @@ import {
 } from '../common/Icons.jsx';
 
 export default function SocialNavRail({
-  activeView,
-  onChangeView,
   onOpenSearch,
   onOpenNotifications,
   onOpenProfile,
@@ -27,12 +23,10 @@ export default function SocialNavRail({
 
   return (
     <nav className="social-nav-rail" aria-label="Primary Navigation">
-      {/* Top Brand Logo */}
+      {/* Top Brand Logo (Does NOT open profile) */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-        <button
-          type="button"
-          onClick={onOpenProfile}
-          title="NexusChat Home"
+        <div
+          title="NexusChat"
           style={{
             width: '40px',
             height: '40px',
@@ -43,38 +37,24 @@ export default function SocialNavRail({
             justifyContent: 'center',
             color: '#ffffff',
             fontWeight: 700,
-            fontSize: '1.1rem',
-            boxShadow: '0 4px 14px rgba(99, 102, 241, 0.45)',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'transform var(--transition-fast)'
+            fontSize: '1.15rem',
+            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.45)',
+            userSelect: 'none',
+            cursor: 'default'
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.08)')}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
           ✦
-        </button>
+        </div>
 
-        {/* Primary Navigation Icons */}
+        {/* Primary Navigation Icons (Clean, unified - no separate direct/spaces clutter) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {/* Direct Messages (Instagram / Messenger Primary) */}
+          {/* Messages & Spaces Unified */}
           <button
             type="button"
-            onClick={() => onChangeView('DIRECT')}
-            className={`social-nav-item ${activeView === 'DIRECT' || activeView === 'ALL' ? 'active' : ''}`}
-            title="Direct Messages"
+            className="social-nav-item active"
+            title="All Conversations"
           >
             <IconMessageSquare size={20} />
-          </button>
-
-          {/* Spaces & Communities */}
-          <button
-            type="button"
-            onClick={() => onChangeView('SPACES')}
-            className={`social-nav-item ${activeView === 'SPACES' ? 'active' : ''}`}
-            title="Spaces & Communities"
-          >
-            <IconGlobe size={20} />
           </button>
 
           {/* Global Search */}
@@ -125,12 +105,12 @@ export default function SocialNavRail({
           {theme === 'dark' ? <IconSun size={19} /> : <IconMoon size={19} />}
         </button>
 
-        {/* User Profile Avatar with Rainbow Status Ring */}
+        {/* User Profile Avatar with Rainbow Status Ring (Opens Profile) */}
         <div
           onClick={onOpenProfile}
           className="story-node"
-          title={`Profile: ${user?.full_name || user?.username}`}
-          style={{ marginTop: '4px' }}
+          title={`Profile: ${user?.full_name || user?.username} (Click to open)`}
+          style={{ marginTop: '4px', cursor: 'pointer' }}
         >
           <div
             className="story-ring"
@@ -141,8 +121,8 @@ export default function SocialNavRail({
           >
             <div
               style={{
-                width: '32px',
-                height: '32px',
+                width: '34px',
+                height: '34px',
                 borderRadius: '50%',
                 backgroundColor: 'var(--bg-elevated)',
                 color: 'var(--text-primary)',

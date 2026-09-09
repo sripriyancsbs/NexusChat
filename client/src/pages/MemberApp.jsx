@@ -24,9 +24,6 @@ export default function MemberApp({ onNavigateAdmin }) {
   const { user, logout, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  // Social Navigation state: 'ALL' | 'DIRECT' | 'SPACES'
-  const [activeView, setActiveView] = useState('ALL');
-
   // Professional Chat Theme state: 'sapphire' | 'indigo' | 'cyan' | 'emerald' | 'graphite' | 'berry'
   const [chatTheme, setChatTheme] = useState('sapphire');
 
@@ -72,8 +69,6 @@ export default function MemberApp({ onNavigateAdmin }) {
     >
       {/* 1. Global Social Navigation Rail (Instagram / Messenger Primary Dock) */}
       <SocialNavRail
-        activeView={activeView}
-        onChangeView={setActiveView}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenNotifications={() => setIsNotificationsOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}

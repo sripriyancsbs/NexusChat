@@ -210,63 +210,16 @@ html, body {
 }
 
 /* ============================================================
-   3. AUTO-COLLAPSING HOVER SIDEBAR (Expands on hover)
+   3. STABLE WORKSPACE SIDEBAR (Direct Messages & Spaces)
    ============================================================ */
-.collapsible-sidebar-deck {
-  width: 60px;
+.sidebar-deck {
+  width: 290px;
   height: 100%;
-  transition: width 240ms cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  z-index: 25;
-}
-
-.collapsible-sidebar-deck:hover,
-.collapsible-sidebar-deck.pinned,
-.collapsible-sidebar-deck.is-hovered {
-  width: 320px;
-}
-
-/* Full content shown when hovered/pinned */
-.sidebar-full-content {
-  width: 320px;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 180ms ease 50ms;
-}
-
-.collapsible-sidebar-deck:hover .sidebar-full-content,
-.collapsible-sidebar-deck.pinned .sidebar-full-content,
-.collapsible-sidebar-deck.is-hovered .sidebar-full-content {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Mini preview strip shown when not hovered */
-.sidebar-mini-strip {
-  position: absolute;
-  inset: 0;
-  width: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 0;
-  gap: 12px;
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 140ms ease;
-  overflow: hidden;
-}
-
-.collapsible-sidebar-deck:hover .sidebar-mini-strip,
-.collapsible-sidebar-deck.pinned .sidebar-mini-strip,
-.collapsible-sidebar-deck.is-hovered .sidebar-mini-strip {
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* ============================================================
