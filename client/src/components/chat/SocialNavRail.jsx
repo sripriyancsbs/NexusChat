@@ -38,9 +38,10 @@ export default function SocialNavRail({
             color: '#ffffff',
             fontWeight: 700,
             fontSize: '1.15rem',
-            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.45)',
+            boxShadow: 'var(--theme-bubble-shadow, 0 4px 14px rgba(0, 122, 204, 0.45))',
             userSelect: 'none',
-            cursor: 'default'
+            cursor: 'default',
+            transition: 'background var(--transition-normal), box-shadow var(--transition-normal)'
           }}
         >
           ✦

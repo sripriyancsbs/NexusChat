@@ -79,6 +79,11 @@ export const ChatProvider = ({ children }) => {
     return localStorage.getItem('nexus_chat_theme') || 'sapphire';
   });
 
+  // Set global data-chat-theme on document root to theme entire screen
+  useEffect(() => {
+    document.documentElement.setAttribute('data-chat-theme', chatTheme);
+  }, [chatTheme]);
+
   const setChatTheme = useCallback((newTheme) => {
     setChatThemeState(newTheme);
     try {

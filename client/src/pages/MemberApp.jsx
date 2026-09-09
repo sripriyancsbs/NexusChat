@@ -56,12 +56,14 @@ export default function MemberApp({ onNavigateAdmin }) {
 
   return (
     <div
+      className={`app-canvas theme-${chatTheme}`}
       style={{
         display: 'flex',
         height: '100vh',
         width: '100vw',
         overflow: 'hidden',
-        backgroundColor: 'var(--bg-canvas)'
+        backgroundColor: 'var(--bg-canvas)',
+        transition: 'background-color 0.3s ease, color 0.3s ease'
       }}
     >
       {/* 1. Global Social Navigation Rail (Instagram / Messenger Primary Dock) */}

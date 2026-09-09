@@ -454,70 +454,175 @@ html, body {
 }
 
 /* ============================================================
-   CHAT ATMOSPHERE THEMES (Vibrant, Modern, Dynamic)
+   GLOBAL CHAT ATMOSPHERE THEMES (Transforms Entire Interface)
    ============================================================ */
-/* 1. Sapphire Pro (Default IDE Signature) */
-.theme-sapphire {
+
+/* 1. Sapphire Pro (Electric Blue & Cyber Cyan) */
+[data-chat-theme='sapphire'], .theme-sapphire {
+  --accent-primary: #007acc;
+  --accent-primary-hover: #0088e6;
+  --accent-primary-subtle: rgba(0, 122, 204, 0.16);
+  --grad-prism: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #007acc, #38bdf8, #818cf8);
   --theme-bubble: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
-  --theme-bubble-shadow: 0 4px 16px rgba(0, 122, 204, 0.4);
-  --theme-accent: #007acc;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.12), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(0, 122, 204, 0.42);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.14), transparent 65%);
+  --bg-active: rgba(0, 122, 204, 0.16);
+}
+
+:root[data-chat-theme='sapphire'], [data-theme='dark'][data-chat-theme='sapphire'] {
+  --bg-canvas: #000000;
+}
+
+[data-theme='light'][data-chat-theme='sapphire'] {
+  --bg-canvas: #f0f7ff;
 }
 
 /* 2. Neon Cyberpunk (Ultraviolet & Hot Magenta) */
-.theme-neon {
+[data-chat-theme='neon'], .theme-neon {
+  --accent-primary: #d946ef;
+  --accent-primary-hover: #e879f9;
+  --accent-primary-subtle: rgba(217, 70, 239, 0.18);
+  --grad-prism: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #8b5cf6, #d946ef, #f43f5e);
   --theme-bubble: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(217, 70, 239, 0.42);
-  --theme-accent: #d946ef;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.15), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(217, 70, 239, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.16), transparent 65%);
+  --bg-active: rgba(217, 70, 239, 0.18);
+}
+
+:root[data-chat-theme='neon'], [data-theme='dark'][data-chat-theme='neon'] {
+  --bg-canvas: #09020e;
+}
+
+[data-theme='light'][data-chat-theme='neon'] {
+  --bg-canvas: #faf5ff;
 }
 
 /* 3. Sunset Flare (Golden Coral & Sunset Rose) */
-.theme-sunset {
+[data-chat-theme='sunset'], .theme-sunset {
+  --accent-primary: #f43f5e;
+  --accent-primary-hover: #fb7185;
+  --accent-primary-subtle: rgba(244, 63, 94, 0.18);
+  --grad-prism: linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #f97316, #f43f5e, #fbbf24);
   --theme-bubble: linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(244, 63, 94, 0.42);
-  --theme-accent: #f43f5e;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.14), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(244, 63, 94, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.15), transparent 65%);
+  --bg-active: rgba(244, 63, 94, 0.18);
+}
+
+:root[data-chat-theme='sunset'], [data-theme='dark'][data-chat-theme='sunset'] {
+  --bg-canvas: #0c0204;
+}
+
+[data-theme='light'][data-chat-theme='sunset'] {
+  --bg-canvas: #fff1f2;
 }
 
 /* 4. Emerald Matrix (Electric Mint & Forest Jade) */
-.theme-emerald {
+[data-chat-theme='emerald'], .theme-emerald {
+  --accent-primary: #10b981;
+  --accent-primary-hover: #34d399;
+  --accent-primary-subtle: rgba(16, 185, 129, 0.18);
+  --grad-prism: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #10b981, #06b6d4, #34d399);
   --theme-bubble: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(16, 185, 129, 0.42);
-  --theme-accent: #10b981;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.14), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.15), transparent 65%);
+  --bg-active: rgba(16, 185, 129, 0.18);
+}
+
+:root[data-chat-theme='emerald'], [data-theme='dark'][data-chat-theme='emerald'] {
+  --bg-canvas: #010803;
+}
+
+[data-theme='light'][data-chat-theme='emerald'] {
+  --bg-canvas: #f0fdf4;
 }
 
 /* 5. Cosmic Indigo (Deep Astral Blue & Iris) */
-.theme-indigo {
+[data-chat-theme='indigo'], .theme-indigo {
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #818cf8;
+  --accent-primary-subtle: rgba(99, 102, 241, 0.18);
+  --grad-prism: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #3b82f6, #6366f1, #a855f7);
   --theme-bubble: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(99, 102, 241, 0.42);
-  --theme-accent: #6366f1;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.14), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.15), transparent 65%);
+  --bg-active: rgba(99, 102, 241, 0.18);
+}
+
+:root[data-chat-theme='indigo'], [data-theme='dark'][data-chat-theme='indigo'] {
+  --bg-canvas: #03030f;
+}
+
+[data-theme='light'][data-chat-theme='indigo'] {
+  --bg-canvas: #eef2ff;
 }
 
 /* 6. Velvet Berry (Rich Mulberry & Crimson Flame) */
-.theme-berry {
+[data-chat-theme='berry'], .theme-berry {
+  --accent-primary: #be123c;
+  --accent-primary-hover: #e11d48;
+  --accent-primary-subtle: rgba(190, 18, 60, 0.18);
+  --grad-prism: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #e11d48, #be123c, #fb7185);
   --theme-bubble: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(190, 18, 60, 0.42);
-  --theme-accent: #be123c;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(225, 29, 72, 0.14), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(190, 18, 60, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(225, 29, 72, 0.15), transparent 65%);
+  --bg-active: rgba(190, 18, 60, 0.18);
+}
+
+:root[data-chat-theme='berry'], [data-theme='dark'][data-chat-theme='berry'] {
+  --bg-canvas: #090104;
+}
+
+[data-theme='light'][data-chat-theme='berry'] {
+  --bg-canvas: #fff1f5;
 }
 
 /* 7. Solar Amber (Honey Gold & Warm Amber) */
-.theme-amber {
+[data-chat-theme='amber'], .theme-amber {
+  --accent-primary: #f59e0b;
+  --accent-primary-hover: #fbbf24;
+  --accent-primary-subtle: rgba(245, 158, 11, 0.18);
+  --grad-prism: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
   --theme-bubble: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-  --theme-bubble-shadow: 0 4px 18px rgba(245, 158, 11, 0.42);
-  --theme-accent: #f59e0b;
-  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.14), transparent 60%);
+  --theme-bubble-shadow: 0 4px 18px rgba(245, 158, 11, 0.45);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.15), transparent 65%);
+  --bg-active: rgba(245, 158, 11, 0.18);
+}
+
+:root[data-chat-theme='amber'], [data-theme='dark'][data-chat-theme='amber'] {
+  --bg-canvas: #080400;
+}
+
+[data-theme='light'][data-chat-theme='amber'] {
+  --bg-canvas: #fffbeb;
 }
 
 /* 8. Midnight Stealth (Titanium Slate & Carbon Dark) */
-.theme-obsidian {
+[data-chat-theme='obsidian'], .theme-obsidian {
+  --accent-primary: #71717a;
+  --accent-primary-hover: #a1a1aa;
+  --accent-primary-subtle: rgba(113, 113, 122, 0.18);
+  --grad-prism: linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #71717a, #52525b, #3f3f46);
   --theme-bubble: linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%);
   --theme-bubble-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
-  --theme-accent: #71717a;
   --theme-ambient: none;
+  --bg-active: rgba(113, 113, 122, 0.18);
+}
+
+:root[data-chat-theme='obsidian'], [data-theme='dark'][data-chat-theme='obsidian'] {
+  --bg-canvas: #000000;
+}
+
+[data-theme='light'][data-chat-theme='obsidian'] {
+  --bg-canvas: #f4f4f5;
 }
 
 /* Incoming Messages */

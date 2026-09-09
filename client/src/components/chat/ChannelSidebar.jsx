@@ -416,13 +416,14 @@ export default function ChannelSidebar({
                       height: '36px',
                       borderRadius: '10px',
                       background: isActive ? 'var(--grad-prism)' : 'var(--bg-elevated)',
-                      color: isActive ? '#ffffff' : 'var(--text-accent)',
+                      color: isActive ? '#ffffff' : 'var(--accent-primary)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '0.9375rem',
                       fontWeight: 600,
-                      flexShrink: 0
+                      flexShrink: 0,
+                      transition: 'background var(--transition-fast), color var(--transition-fast)'
                     }}
                   >
                     {channel.is_private ? <IconLock size={15} /> : (channel.name ? channel.name[0].toUpperCase() : 'S')}
