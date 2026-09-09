@@ -493,8 +493,10 @@ html, body {
    GLOBAL CHAT ATMOSPHERE THEMES (Transforms Entire Interface)
    ============================================================ */
 
-/* 1. Midnight Horizon (Electric Azure & Cyber Cyan) */
-:root[data-chat-theme='sapphire'], [data-theme='dark'][data-chat-theme='sapphire'], [data-chat-theme='sapphire'], .theme-sapphire {
+/* 1. Midnight Horizon (Electric Azure & Cyber Cyan) — Dark Mode */
+:root[data-chat-theme='sapphire']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='sapphire'],
+[data-theme='dark'] .theme-sapphire {
   --bg-canvas: #060b16;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.24) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.18) 0%, transparent 60%), #060b16;
   --bg-surface: rgba(10, 18, 32, 0.88);
@@ -502,6 +504,7 @@ html, body {
   --bg-card: rgba(20, 34, 60, 0.85);
   --bg-card-hover: rgba(26, 44, 76, 0.9);
   --bg-active: rgba(0, 122, 204, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(56, 189, 248, 0.15);
   --border-default: rgba(56, 189, 248, 0.28);
   --border-strong: rgba(56, 189, 248, 0.55);
@@ -519,28 +522,38 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='sapphire'] {
+/* 1. Midnight Horizon (Electric Azure & Cyber Cyan) — Light Mode */
+:root[data-theme='light'][data-chat-theme='sapphire'],
+[data-theme='light'] .theme-sapphire {
   --bg-canvas: #f0f7ff;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 60%), #f0f7ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(0, 122, 204, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 60%), #f0f7ff;
   --bg-surface: #ffffff;
   --bg-elevated: #e0f2fe;
   --bg-card: #ffffff;
   --bg-card-hover: #f0f9ff;
   --bg-active: rgba(0, 122, 204, 0.12);
-  --border-subtle: rgba(0, 122, 204, 0.16);
-  --border-default: rgba(0, 122, 204, 0.28);
-  --border-strong: rgba(0, 122, 204, 0.48);
-  --accent-primary: #0284c7;
-  --accent-primary-hover: #0369a1;
-  --accent-primary-subtle: rgba(2, 132, 199, 0.15);
+  --bg-hover: rgba(0, 122, 204, 0.08);
+  --border-subtle: #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-strong: #94a3b8;
+  --accent-primary: #007acc;
+  --accent-primary-hover: #0066aa;
+  --accent-primary-subtle: rgba(0, 122, 204, 0.14);
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
   --text-accent: #0284c7;
+  --grad-prism: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #007acc, #38bdf8, #818cf8);
+  --theme-bubble: linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(0, 122, 204, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(0, 122, 204, 0.12), transparent 65%);
 }
 
-/* 2. Cyber Neon (Astral Violet & Hot Magenta) */
-:root[data-chat-theme='neon'], [data-theme='dark'][data-chat-theme='neon'], [data-chat-theme='neon'], .theme-neon {
+/* 2. Cyber Neon (Astral Violet & Hot Magenta) — Dark Mode */
+:root[data-chat-theme='neon']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='neon'],
+[data-theme='dark'] .theme-neon {
   --bg-canvas: #0a0714;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(139, 92, 246, 0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 70, 239, 0.18) 0%, transparent 60%), #0a0714;
   --bg-surface: rgba(16, 12, 28, 0.88);
@@ -548,6 +561,7 @@ html, body {
   --bg-card: rgba(32, 24, 54, 0.85);
   --bg-card-hover: rgba(42, 32, 70, 0.9);
   --bg-active: rgba(217, 70, 239, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(192, 38, 211, 0.16);
   --border-default: rgba(192, 38, 211, 0.28);
   --border-strong: rgba(217, 70, 239, 0.55);
@@ -565,17 +579,20 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='neon'] {
+/* 2. Cyber Neon (Astral Violet & Hot Magenta) — Light Mode */
+:root[data-theme='light'][data-chat-theme='neon'],
+[data-theme='light'] .theme-neon {
   --bg-canvas: #faf5ff;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(217, 70, 239, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(139, 92, 246, 0.1) 0%, transparent 60%), #faf5ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(217, 70, 239, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(139, 92, 246, 0.12) 0%, transparent 60%), #faf5ff;
   --bg-surface: #ffffff;
   --bg-elevated: #f3e8ff;
   --bg-card: #ffffff;
   --bg-card-hover: #faf5ff;
   --bg-active: rgba(217, 70, 239, 0.12);
-  --border-subtle: rgba(217, 70, 239, 0.16);
-  --border-default: rgba(217, 70, 239, 0.28);
-  --border-strong: rgba(217, 70, 239, 0.48);
+  --bg-hover: rgba(217, 70, 239, 0.08);
+  --border-subtle: #f3e8ff;
+  --border-default: #e9d5ff;
+  --border-strong: #c084fc;
   --accent-primary: #c026d3;
   --accent-primary-hover: #a21caf;
   --accent-primary-subtle: rgba(192, 38, 211, 0.15);
@@ -583,10 +600,17 @@ html, body {
   --text-secondary: #4c1d95;
   --text-muted: #6b21a8;
   --text-accent: #c026d3;
+  --grad-prism: linear-gradient(135deg, #8b5cf6 0%, #c026d3 50%, #ec4899 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #8b5cf6, #d946ef, #f43f5e);
+  --theme-bubble: linear-gradient(135deg, #7c3aed 0%, #c026d3 55%, #db2777 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(192, 38, 211, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(217, 70, 239, 0.12), transparent 65%);
 }
 
-/* 3. Solar Ember (Warm Titanium & Amber Gold) */
-:root[data-chat-theme='amber'], [data-theme='dark'][data-chat-theme='amber'], [data-chat-theme='amber'], .theme-amber {
+/* 3. Solar Ember (Warm Titanium & Amber Gold) — Dark Mode */
+:root[data-chat-theme='amber']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='amber'],
+[data-theme='dark'] .theme-amber {
   --bg-canvas: #0c0a06;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(245, 158, 11, 0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.16) 0%, transparent 60%), #0c0a06;
   --bg-surface: rgba(20, 16, 10, 0.88);
@@ -594,6 +618,7 @@ html, body {
   --bg-card: rgba(40, 32, 20, 0.85);
   --bg-card-hover: rgba(52, 42, 26, 0.9);
   --bg-active: rgba(245, 158, 11, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(245, 158, 11, 0.16);
   --border-default: rgba(245, 158, 11, 0.28);
   --border-strong: rgba(251, 191, 36, 0.55);
@@ -611,17 +636,20 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='amber'] {
+/* 3. Solar Ember (Warm Titanium & Amber Gold) — Light Mode */
+:root[data-theme='light'][data-chat-theme='amber'],
+[data-theme='light'] .theme-amber {
   --bg-canvas: #fffbeb;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(245, 158, 11, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.1) 0%, transparent 60%), #fffbeb;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(245, 158, 11, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.12) 0%, transparent 60%), #fffbeb;
   --bg-surface: #ffffff;
   --bg-elevated: #fef3c7;
   --bg-card: #ffffff;
   --bg-card-hover: #fffbeb;
   --bg-active: rgba(245, 158, 11, 0.12);
-  --border-subtle: rgba(245, 158, 11, 0.16);
-  --border-default: rgba(245, 158, 11, 0.28);
-  --border-strong: rgba(245, 158, 11, 0.48);
+  --bg-hover: rgba(245, 158, 11, 0.08);
+  --border-subtle: #fef3c7;
+  --border-default: #fde68a;
+  --border-strong: #f59e0b;
   --accent-primary: #d97706;
   --accent-primary-hover: #b45309;
   --accent-primary-subtle: rgba(217, 119, 6, 0.15);
@@ -629,10 +657,17 @@ html, body {
   --text-secondary: #78350f;
   --text-muted: #92400e;
   --text-accent: #d97706;
+  --grad-prism: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
+  --theme-bubble: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.12), transparent 65%);
 }
 
-/* 4. Matrix Jade (Deep Forest & Electric Mint) */
-:root[data-chat-theme='emerald'], [data-theme='dark'][data-chat-theme='emerald'], [data-chat-theme='emerald'], .theme-emerald {
+/* 4. Matrix Jade (Deep Forest & Electric Mint) — Dark Mode */
+:root[data-chat-theme='emerald']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='emerald'],
+[data-theme='dark'] .theme-emerald {
   --bg-canvas: #040b07;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(16, 185, 129, 0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.16) 0%, transparent 60%), #040b07;
   --bg-surface: rgba(8, 18, 12, 0.88);
@@ -640,6 +675,7 @@ html, body {
   --bg-card: rgba(16, 38, 24, 0.85);
   --bg-card-hover: rgba(22, 50, 32, 0.9);
   --bg-active: rgba(16, 185, 129, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(16, 185, 129, 0.16);
   --border-default: rgba(16, 185, 129, 0.28);
   --border-strong: rgba(52, 211, 153, 0.55);
@@ -657,17 +693,20 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='emerald'] {
+/* 4. Matrix Jade (Deep Forest & Electric Mint) — Light Mode */
+:root[data-theme='light'][data-chat-theme='emerald'],
+[data-theme='light'] .theme-emerald {
   --bg-canvas: #f0fdf4;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(16, 185, 129, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.1) 0%, transparent 60%), #f0fdf4;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(16, 185, 129, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.12) 0%, transparent 60%), #f0fdf4;
   --bg-surface: #ffffff;
   --bg-elevated: #dcfce7;
   --bg-card: #ffffff;
   --bg-card-hover: #f0fdf4;
   --bg-active: rgba(16, 185, 129, 0.12);
-  --border-subtle: rgba(16, 185, 129, 0.16);
-  --border-default: rgba(16, 185, 129, 0.28);
-  --border-strong: rgba(16, 185, 129, 0.48);
+  --bg-hover: rgba(16, 185, 129, 0.08);
+  --border-subtle: #dcfce7;
+  --border-default: #bbf7d0;
+  --border-strong: #34d399;
   --accent-primary: #059669;
   --accent-primary-hover: #047857;
   --accent-primary-subtle: rgba(5, 150, 105, 0.15);
@@ -675,10 +714,17 @@ html, body {
   --text-secondary: #065f46;
   --text-muted: #047857;
   --text-accent: #059669;
+  --grad-prism: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #10b981, #06b6d4, #34d399);
+  --theme-bubble: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.12), transparent 65%);
 }
 
-/* 5. Deep Cosmos (Royal Blue & Starlight Iris) */
-:root[data-chat-theme='indigo'], [data-theme='dark'][data-chat-theme='indigo'], [data-chat-theme='indigo'], .theme-indigo {
+/* 5. Deep Cosmos (Royal Blue & Starlight Iris) — Dark Mode */
+:root[data-chat-theme='indigo']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='indigo'],
+[data-theme='dark'] .theme-indigo {
   --bg-canvas: #050614;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99, 102, 241, 0.24) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(59, 130, 246, 0.18) 0%, transparent 60%), #050614;
   --bg-surface: rgba(10, 14, 28, 0.88);
@@ -686,6 +732,7 @@ html, body {
   --bg-card: rgba(22, 30, 60, 0.85);
   --bg-card-hover: rgba(30, 40, 80, 0.9);
   --bg-active: rgba(99, 102, 241, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(99, 102, 241, 0.16);
   --border-default: rgba(99, 102, 241, 0.28);
   --border-strong: rgba(129, 140, 248, 0.55);
@@ -703,17 +750,20 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='indigo'] {
+/* 5. Deep Cosmos (Royal Blue & Starlight Iris) — Light Mode */
+:root[data-theme='light'][data-chat-theme='indigo'],
+[data-theme='light'] .theme-indigo {
   --bg-canvas: #eef2ff;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(59, 130, 246, 0.1) 0%, transparent 60%), #eef2ff;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99, 102, 241, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), #eef2ff;
   --bg-surface: #ffffff;
   --bg-elevated: #e0e7ff;
   --bg-card: #ffffff;
   --bg-card-hover: #eef2ff;
   --bg-active: rgba(99, 102, 241, 0.12);
-  --border-subtle: rgba(99, 102, 241, 0.16);
-  --border-default: rgba(99, 102, 241, 0.28);
-  --border-strong: rgba(99, 102, 241, 0.48);
+  --bg-hover: rgba(99, 102, 241, 0.08);
+  --border-subtle: #e0e7ff;
+  --border-default: #c7d2fe;
+  --border-strong: #818cf8;
   --accent-primary: #4f46e5;
   --accent-primary-hover: #4338ca;
   --accent-primary-subtle: rgba(79, 70, 229, 0.15);
@@ -721,10 +771,17 @@ html, body {
   --text-secondary: #3730a3;
   --text-muted: #4338ca;
   --text-accent: #4f46e5;
+  --grad-prism: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #3b82f6, #6366f1, #a855f7);
+  --theme-bubble: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.12), transparent 65%);
 }
 
-/* 6. Crimson Eclipse (Matte Carbon & Coral Rose) */
-:root[data-chat-theme='sunset'], [data-theme='dark'][data-chat-theme='sunset'], [data-chat-theme='sunset'], .theme-sunset {
+/* 6. Crimson Eclipse (Matte Carbon & Coral Rose) — Dark Mode */
+:root[data-chat-theme='sunset']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='sunset'],
+[data-theme='dark'] .theme-sunset {
   --bg-canvas: #0e0709;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(244, 63, 94, 0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(225, 29, 72, 0.16) 0%, transparent 60%), #0e0709;
   --bg-surface: rgba(20, 12, 15, 0.88);
@@ -732,6 +789,7 @@ html, body {
   --bg-card: rgba(42, 24, 30, 0.85);
   --bg-card-hover: rgba(56, 32, 40, 0.9);
   --bg-active: rgba(244, 63, 94, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(244, 63, 94, 0.16);
   --border-default: rgba(244, 63, 94, 0.28);
   --border-strong: rgba(251, 113, 133, 0.55);
@@ -749,17 +807,20 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(244, 63, 94, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='sunset'] {
+/* 6. Crimson Eclipse (Matte Carbon & Coral Rose) — Light Mode */
+:root[data-theme='light'][data-chat-theme='sunset'],
+[data-theme='light'] .theme-sunset {
   --bg-canvas: #fff1f2;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(249, 115, 22, 0.1) 0%, transparent 60%), #fff1f2;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(244, 63, 94, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(249, 115, 22, 0.12) 0%, transparent 60%), #fff1f2;
   --bg-surface: #ffffff;
   --bg-elevated: #ffe4e6;
   --bg-card: #ffffff;
   --bg-card-hover: #fff1f2;
   --bg-active: rgba(244, 63, 94, 0.12);
-  --border-subtle: rgba(244, 63, 94, 0.16);
-  --border-default: rgba(244, 63, 94, 0.28);
-  --border-strong: rgba(244, 63, 94, 0.48);
+  --bg-hover: rgba(244, 63, 94, 0.08);
+  --border-subtle: #ffe4e6;
+  --border-default: #fecdd3;
+  --border-strong: #fb7185;
   --accent-primary: #e11d48;
   --accent-primary-hover: #be123c;
   --accent-primary-subtle: rgba(225, 29, 72, 0.15);
@@ -767,11 +828,20 @@ html, body {
   --text-secondary: #881337;
   --text-muted: #9f1239;
   --text-accent: #e11d48;
+  --grad-prism: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #f97316, #f43f5e, #fbbf24);
+  --theme-bubble: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(244, 63, 94, 0.12), transparent 65%);
 }
 
-/* 7. Nordic Frost (Arctic Navy & Pure Aquamarine) */
-:root[data-chat-theme='frost'], [data-theme='dark'][data-chat-theme='frost'], [data-chat-theme='frost'], .theme-frost,
-:root[data-chat-theme='berry'], [data-theme='dark'][data-chat-theme='berry'], [data-chat-theme='berry'], .theme-berry {
+/* 7. Nordic Frost (Arctic Navy & Pure Aquamarine) — Dark Mode */
+:root[data-chat-theme='frost']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='frost'],
+[data-theme='dark'] .theme-frost,
+:root[data-chat-theme='berry']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='berry'],
+[data-theme='dark'] .theme-berry {
   --bg-canvas: #050d12;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(6, 182, 212, 0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(20, 184, 166, 0.16) 0%, transparent 60%), #050d12;
   --bg-surface: rgba(8, 18, 24, 0.88);
@@ -779,6 +849,7 @@ html, body {
   --bg-card: rgba(16, 36, 48, 0.85);
   --bg-card-hover: rgba(22, 48, 64, 0.9);
   --bg-active: rgba(6, 182, 212, 0.22);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(6, 182, 212, 0.16);
   --border-default: rgba(6, 182, 212, 0.28);
   --border-strong: rgba(34, 211, 238, 0.55);
@@ -796,18 +867,22 @@ html, body {
   --theme-ambient: radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.2), transparent 65%);
 }
 
-[data-theme='light'][data-chat-theme='frost'],
-[data-theme='light'][data-chat-theme='berry'] {
+/* 7. Nordic Frost (Arctic Navy & Pure Aquamarine) — Light Mode */
+:root[data-theme='light'][data-chat-theme='frost'],
+[data-theme='light'] .theme-frost,
+:root[data-theme='light'][data-chat-theme='berry'],
+[data-theme='light'] .theme-berry {
   --bg-canvas: #f0fdfa;
-  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(20, 184, 166, 0.1) 0%, transparent 60%), #f0fdfa;
+  --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 15% 10%, rgba(6, 182, 212, 0.14) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 85% 90%, rgba(20, 184, 166, 0.12) 0%, transparent 60%), #f0fdfa;
   --bg-surface: #ffffff;
   --bg-elevated: #ccfbf1;
   --bg-card: #ffffff;
   --bg-card-hover: #f0fdfa;
   --bg-active: rgba(6, 182, 212, 0.12);
-  --border-subtle: rgba(6, 182, 212, 0.16);
-  --border-default: rgba(6, 182, 212, 0.28);
-  --border-strong: rgba(6, 182, 212, 0.48);
+  --bg-hover: rgba(6, 182, 212, 0.08);
+  --border-subtle: #ccfbf1;
+  --border-default: #99f6e4;
+  --border-strong: #2dd4bf;
   --accent-primary: #0891b2;
   --accent-primary-hover: #0e7490;
   --accent-primary-subtle: rgba(8, 145, 178, 0.15);
@@ -815,10 +890,17 @@ html, body {
   --text-secondary: #115e59;
   --text-muted: #0f766e;
   --text-accent: #0891b2;
+  --grad-prism: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #14b8a6 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #06b6d4, #38bdf8, #2dd4bf);
+  --theme-bubble: linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #0d9488 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(8, 145, 178, 0.35);
+  --theme-ambient: radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.12), transparent 65%);
 }
 
-/* 8. Monochrome Stealth (Pitch Black & Titanium Silver) */
-:root[data-chat-theme='obsidian'], [data-theme='dark'][data-chat-theme='obsidian'], [data-chat-theme='obsidian'], .theme-obsidian {
+/* 8. Monochrome Stealth (Pitch Black & Titanium Silver) — Dark Mode */
+:root[data-chat-theme='obsidian']:not([data-theme='light']),
+:root[data-theme='dark'][data-chat-theme='obsidian'],
+[data-theme='dark'] .theme-obsidian {
   --bg-canvas: #000000;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.06) 0%, transparent 70%), #000000;
   --bg-surface: rgba(14, 14, 16, 0.92);
@@ -826,6 +908,7 @@ html, body {
   --bg-card: rgba(30, 30, 36, 0.85);
   --bg-card-hover: rgba(42, 42, 50, 0.92);
   --bg-active: rgba(255, 255, 255, 0.12);
+  --bg-hover: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(255, 255, 255, 0.12);
   --border-default: rgba(255, 255, 255, 0.22);
   --border-strong: rgba(255, 255, 255, 0.45);
@@ -843,7 +926,9 @@ html, body {
   --theme-ambient: none;
 }
 
-[data-theme='light'][data-chat-theme='obsidian'] {
+/* 8. Monochrome Stealth (Pitch Black & Titanium Silver) — Light Mode */
+:root[data-theme='light'][data-chat-theme='obsidian'],
+[data-theme='light'] .theme-obsidian {
   --bg-canvas: #f8fafc;
   --canvas-atmosphere: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 0, 0, 0.05) 0%, transparent 70%), #f8fafc;
   --bg-surface: #ffffff;
@@ -851,9 +936,10 @@ html, body {
   --bg-card: #ffffff;
   --bg-card-hover: #f8fafc;
   --bg-active: rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0, 0, 0, 0.1);
-  --border-default: rgba(0, 0, 0, 0.18);
-  --border-strong: rgba(0, 0, 0, 0.35);
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --border-subtle: #f1f5f9;
+  --border-default: #e2e8f0;
+  --border-strong: #94a3b8;
   --accent-primary: #475569;
   --accent-primary-hover: #334155;
   --accent-primary-subtle: rgba(71, 85, 105, 0.15);
@@ -861,6 +947,11 @@ html, body {
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-accent: #334155;
+  --grad-prism: linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #94a3b8, #64748b, #475569);
+  --theme-bubble: linear-gradient(135deg, #475569 0%, #334155 100%);
+  --theme-bubble-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --theme-ambient: none;
 }
 
 /* Incoming Messages */

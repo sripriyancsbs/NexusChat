@@ -56,7 +56,7 @@ export default function MemberApp({ onNavigateAdmin }) {
 
   return (
     <div
-      className={`app-canvas theme-${chatTheme}`}
+      className="app-canvas"
       style={{
         display: 'flex',
         height: '100vh',
@@ -100,7 +100,7 @@ export default function MemberApp({ onNavigateAdmin }) {
 
         {/* Center Floating Island: Main Dialogue Feed & Instagram Floating Composer */}
         <main
-          className={`floating-island theme-${chatTheme}`}
+          className="floating-island"
           style={{
             flex: 1,
             display: 'flex',

@@ -150,7 +150,7 @@ export default function ChannelSidebar({
                 className="story-ring"
                 style={{
                   padding: '2px',
-                  background: isOnline ? 'var(--grad-avatar-ring)' : 'rgba(255, 255, 255, 0.12)'
+                  background: isOnline ? 'var(--grad-avatar-ring)' : 'var(--border-default)'
                 }}
               >
                 <div
