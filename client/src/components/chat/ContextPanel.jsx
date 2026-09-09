@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
-import { IconX, IconPin, IconLock } from '../common/Icons.jsx';
+import { IconX, IconPin, IconLock, IconUsers, IconInfo } from '../common/Icons.jsx';
 
 export default function ContextPanel({ isOpen, onClose }) {
   const { activeConversation, messages, togglePin } = useChat();
@@ -21,12 +21,12 @@ export default function ContextPanel({ isOpen, onClose }) {
 
   const title = isChannel
     ? formatName(activeConversation.name)
-    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Contact Info';
+    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Conversation';
 
   return (
     <aside
       style={{
-        width: '380px',
+        width: '340px',
         backgroundColor: 'var(--bg-surface)',
         borderLeft: '1px solid var(--border-subtle)',
         display: 'flex',
@@ -37,145 +37,202 @@ export default function ContextPanel({ isOpen, onClose }) {
         zIndex: 30
       }}
     >
-      {/* WhatsApp Info Header */}
+      {/* Panel Header */}
       <div
         style={{
-          height: '60px',
-          padding: '10px 16px',
-          backgroundColor: 'var(--bg-elevated)',
+          height: '56px',
+          padding: '0 18px',
+          borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
-          gap: '20px',
-          flexShrink: 0
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          backgroundColor: 'var(--bg-surface)'
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+            Conversation Info
+          </span>
+        </div>
+
         <button
           type="button"
           onClick={onClose}
-          title="Close"
+          title="Close panel"
           style={{
             background: 'transparent',
             border: 'none',
             color: 'var(--text-secondary)',
             cursor: 'pointer',
             padding: '4px',
+            borderRadius: 'var(--radius-xs)',
             display: 'flex'
           }}
         >
-          <IconX size={20} />
+          <IconX size={16} />
         </button>
-
-        <h3 style={{ fontSize: '1rem', fontWeight: 500, margin: 0, color: 'var(--text-primary)' }}>
-          {isChannel ? 'Group info' : 'Contact info'}
-        </h3>
       </div>
 
-      {/* WhatsApp Profile Showcase */}
-      <div style={{ flex: 1, overflowY: 'auto' }}>
-        <div
+      {/* Tabs */}
+      <div
+        style={{
+          display: 'flex',
+          borderBottom: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--bg-elevated)',
+          padding: '4px 10px',
+          gap: '4px'
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setActiveTab('DETAILS')}
           style={{
-            padding: '24px 16px',
-            backgroundColor: 'var(--bg-surface)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            borderBottom: '10px solid var(--bg-canvas)'
-          }}
-        >
-          <div
-            style={{
-              width: '120px',
-              height: '120px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--bg-elevated)',
-              color: isChannel ? 'var(--accent-primary)' : 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '2.5rem',
-              fontWeight: 600,
-              marginBottom: '16px'
-            }}
-          >
-            {isChannel ? (activeConversation.is_private ? <IconLock size={44} /> : '#') : (title[0] || 'U').toUpperCase()}
-          </div>
-
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 500, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
-            {title}
-          </h2>
-
-          <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-            {isChannel ? 'Community Channel' : `@${activeConversation.other_user?.username || ''}`}
-          </span>
-        </div>
-
-        {/* Description / About */}
-        <div
-          style={{
-            padding: '16px',
-            backgroundColor: 'var(--bg-surface)',
-            borderBottom: '10px solid var(--bg-canvas)'
-          }}
-        >
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
-            {isChannel ? 'Channel description' : 'About'}
-          </div>
-          <div style={{ fontSize: '0.9375rem', color: 'var(--text-primary)', lineHeight: 1.4 }}>
-            {activeConversation.topic || 'No description provided.'}
-          </div>
-        </div>
-
-        {/* Privacy & Encryption Guarantee */}
-        <div
-          style={{
-            padding: '16px',
-            backgroundColor: 'var(--bg-surface)',
-            borderBottom: '10px solid var(--bg-canvas)',
+            flex: 1,
+            padding: '6px 8px',
+            borderRadius: 'var(--radius-sm)',
+            border: activeTab === 'DETAILS' ? '1px solid var(--border-default)' : '1px solid transparent',
+            backgroundColor: activeTab === 'DETAILS' ? 'var(--bg-card)' : 'transparent',
+            color: activeTab === 'DETAILS' ? 'var(--text-primary)' : 'var(--text-muted)',
+            fontWeight: 500,
+            fontSize: '0.75rem',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '14px'
+            justifyContent: 'center',
+            gap: '5px'
           }}
         >
-          <span style={{ fontSize: '1.25rem', color: 'var(--whatsapp-green)' }}>🔒</span>
-          <div>
-            <div style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-              End-to-end encryption
+          <IconInfo size={13} /> Overview
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('PINS')}
+          style={{
+            flex: 1,
+            padding: '6px 8px',
+            borderRadius: 'var(--radius-sm)',
+            border: activeTab === 'PINS' ? '1px solid var(--border-default)' : '1px solid transparent',
+            backgroundColor: activeTab === 'PINS' ? 'var(--bg-card)' : 'transparent',
+            color: activeTab === 'PINS' ? 'var(--text-primary)' : 'var(--text-muted)',
+            fontWeight: 500,
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '5px'
+          }}
+        >
+          <IconPin size={13} /> Pinned ({pinnedMessages.length})
+        </button>
+      </div>
+
+      {/* Body */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+        {activeTab === 'DETAILS' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {/* Showcase Card */}
+            <div
+              style={{
+                padding: '16px',
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-md)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center'
+              }}
+            >
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--grad-prism)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  marginBottom: '10px'
+                }}
+              >
+                {isChannel ? (activeConversation.is_private ? <IconLock size={24} /> : '#') : (title[0] || 'U').toUpperCase()}
+              </div>
+
+              <div style={{ fontSize: '1.0625rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {title}
+              </div>
+
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                {isChannel ? 'Community Channel' : `@${activeConversation.other_user?.username || ''}`}
+              </div>
             </div>
-            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-              Messages are secured. Platform administrators have zero access.
+
+            {/* Description Card */}
+            {activeConversation.topic && (
+              <div
+                style={{
+                  padding: '12px 14px',
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-default)',
+                  borderRadius: 'var(--radius-sm)'
+                }}
+              >
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                  Description
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', lineHeight: 1.45 }}>
+                  {activeConversation.topic}
+                </div>
+              </div>
+            )}
+
+            {/* Privacy Architecture Guarantee */}
+            <div
+              style={{
+                padding: '12px 14px',
+                backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                borderRadius: 'var(--radius-sm)'
+              }}
+            >
+              <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--accent-primary)', marginBottom: '4px' }}>
+                🔒 Zero-Admin Access Boundary
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                Messages are private to authorized conversation participants. System administrators cannot inspect message text.
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Pinned Messages */}
-        <div style={{ padding: '16px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-              Starred & Pinned ({pinnedMessages.length})
-            </span>
-          </div>
-
-          {pinnedMessages.length === 0 ? (
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center', padding: '12px 0' }}>
-              No pinned messages
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {pinnedMessages.map((pin) => (
+        {activeTab === 'PINS' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {pinnedMessages.length === 0 ? (
+              <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
+                No pinned messages
+              </div>
+            ) : (
+              pinnedMessages.map((pin) => (
                 <div
                   key={pin.id}
                   style={{
                     padding: '10px 12px',
                     backgroundColor: 'var(--bg-elevated)',
-                    borderRadius: '8px',
+                    border: '1px solid var(--border-default)',
+                    borderRadius: 'var(--radius-sm)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '4px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                       {pin.sender_full_name || pin.sender_username}
                     </span>
                     <button
@@ -190,17 +247,17 @@ export default function ContextPanel({ isOpen, onClose }) {
                         padding: '2px'
                       }}
                     >
-                      <IconPin size={13} />
+                      <IconPin size={12} />
                     </button>
                   </div>
-                  <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                     {pin.content}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </aside>
   );

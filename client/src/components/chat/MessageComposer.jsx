@@ -3,7 +3,7 @@ import { useChat } from '../../context/ChatContext.jsx';
 import { socketClient } from '../../services/socket.js';
 import { IconSend, IconSmile } from '../common/Icons.jsx';
 
-const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🙏', '🔥', '🎉', '💡', '✨'];
+const EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡', '✨', '⚡'];
 
 export default function MessageComposer({ placeholder, replyToMessageId = null }) {
   const { activeConversationId, sendMessage, typingMap, activeConversation } = useChat();
@@ -12,6 +12,19 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef(null);
   const typingTimerRef = useRef(null);
+
+  const formatName = (name) => {
+    if (!name) return '';
+    return name
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
+  const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
+  const defaultPlaceholder = isChannel
+    ? `Message #${formatName(activeConversation?.name) || 'channel'}...`
+    : `Message @${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
 
   const typingUsers = typingMap[activeConversationId] || [];
 
@@ -69,33 +82,34 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
 
   return (
     <div style={{ position: 'relative', flexShrink: 0 }}>
-      {/* Typing Indicator Bar */}
+      {/* Typing Indicator */}
       {typingUsers.length > 0 && (
         <div
           style={{
             position: 'absolute',
-            top: '-24px',
-            left: '20px',
+            top: '-20px',
+            left: '28px',
             fontSize: '0.75rem',
-            color: 'var(--whatsapp-green)',
-            backgroundColor: 'var(--bg-elevated)',
-            padding: '2px 10px',
-            borderRadius: '10px',
-            boxShadow: 'var(--shadow-sm)'
+            color: 'var(--accent-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
           }}
         >
-          {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
+          <span>
+            {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
+          </span>
         </div>
       )}
 
-      {/* WhatsApp Bottom Composer Bar */}
-      <div className="whatsapp-composer-bar">
+      {/* Modern Composer Card */}
+      <div className="modern-composer-card">
         {/* Emoji Button */}
         <div style={{ position: 'relative' }}>
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
-            title="Emoji"
+            title="Add Emoji"
             style={{
               background: 'transparent',
               border: 'none',
@@ -104,26 +118,27 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
               padding: '6px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              borderRadius: 'var(--radius-sm)'
             }}
           >
-            <IconSmile size={24} />
+            <IconSmile size={20} />
           </button>
 
-          {/* Emoji popover */}
+          {/* Emoji Popover */}
           {showEmojiPicker && (
             <div
               style={{
                 position: 'absolute',
-                bottom: '50px',
+                bottom: '46px',
                 left: '0',
                 backgroundColor: 'var(--bg-elevated)',
                 border: '1px solid var(--border-default)',
-                borderRadius: '8px',
+                borderRadius: 'var(--radius-md)',
                 boxShadow: 'var(--shadow-lg)',
                 padding: '8px',
                 display: 'grid',
-                gridTemplateColumns: 'repeat(5, 1fr)',
+                gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '6px',
                 zIndex: 40
               }}
@@ -149,21 +164,12 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           )}
         </div>
 
-        {/* Input Pill */}
-        <div
-          style={{
-            flex: 1,
-            backgroundColor: 'var(--bg-active)',
-            borderRadius: '8px',
-            padding: '8px 14px',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
+        {/* Input Textarea */}
+        <div style={{ flex: 1 }}>
           <textarea
             ref={textareaRef}
             rows={1}
-            placeholder={placeholder || 'Type a message'}
+            placeholder={placeholder || defaultPlaceholder}
             value={content}
             onChange={(e) => handleTyping(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -173,37 +179,34 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
               border: 'none',
               outline: 'none',
               color: 'var(--text-primary)',
-              fontSize: '0.9375rem',
+              fontSize: '0.90625rem',
               fontFamily: 'var(--font-sans)',
               resize: 'none',
               maxHeight: '120px',
-              lineHeight: 1.4
+              lineHeight: 1.45,
+              padding: '2px 0'
             }}
           />
         </div>
 
-        {/* Circular Send Button */}
+        {/* Send Button */}
         <button
           type="button"
           onClick={handleSend}
           disabled={!content.trim() || sending}
-          title="Send"
+          title="Send message"
+          className="btn btn-primary"
           style={{
-            width: '42px',
-            height: '42px',
-            borderRadius: '50%',
-            backgroundColor: content.trim() ? 'var(--accent-primary)' : 'transparent',
-            color: content.trim() ? '#ffffff' : 'var(--text-secondary)',
-            border: 'none',
-            cursor: content.trim() ? 'pointer' : 'default',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background-color var(--transition-fast)',
+            padding: '7px 14px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: '0.8125rem',
+            gap: '6px',
+            opacity: !content.trim() || sending ? 0.45 : 1,
             flexShrink: 0
           }}
         >
-          <IconSend size={18} />
+          <IconSend size={14} />
+          <span>Send</span>
         </button>
       </div>
     </div>

@@ -12,7 +12,7 @@ import {
   IconX
 } from '../common/Icons.jsx';
 
-const QUICK_EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+const QUICK_EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡'];
 
 export default function MessageItem({ message, onOpenThread, onReport }) {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Delete message?')) {
+    if (window.confirm('Delete message permanently?')) {
       try {
         await deleteMessage(message.id);
       } catch (err) {
@@ -67,23 +67,48 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
     <div
       className={`dialogue-pod ${isAuthor ? 'me' : 'them'}`}
       style={{
-        padding: '2px 24px',
+        padding: '2px 20px',
         display: 'flex',
+        gap: '8px',
+        alignItems: 'flex-end',
         position: 'relative'
       }}
     >
-      {/* WhatsApp Message Bubble */}
+      {/* Sender Avatar for incoming */}
+      {!isAuthor && (
+        <div
+          style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            backgroundColor: 'var(--bg-elevated)',
+            border: '1px solid var(--border-default)',
+            color: 'var(--text-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 600,
+            fontSize: '0.75rem',
+            flexShrink: 0,
+            marginBottom: '2px'
+          }}
+        >
+          {(message.sender_full_name || message.sender_username || 'U')[0].toUpperCase()}
+        </div>
+      )}
+
+      {/* Message Bubble */}
       <div
         className={`dialogue-bubble ${isAuthor ? 'me' : 'them'} ${isPinned ? 'pinned' : ''}`}
         style={{ position: 'relative' }}
       >
-        {/* Sender Name for group incoming messages */}
+        {/* Incoming Author Name */}
         {!isAuthor && (
           <div
             style={{
               fontSize: '0.8125rem',
               fontWeight: 600,
-              color: 'var(--accent-primary)',
+              color: 'var(--text-accent)',
               marginBottom: '2px',
               display: 'flex',
               alignItems: 'center',
@@ -94,11 +119,11 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
             {message.sender_role === 'admin' && (
               <span
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.625rem',
                   padding: '1px 5px',
                   borderRadius: 'var(--radius-xs)',
                   backgroundColor: 'rgba(244, 63, 94, 0.15)',
-                  color: '#f43f5e',
+                  color: 'var(--accent-rose)',
                   fontWeight: 500
                 }}
               >
@@ -117,7 +142,8 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
               display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              marginBottom: '2px'
+              marginBottom: '2px',
+              fontWeight: 500
             }}
           >
             <IconPin size={10} /> Pinned
@@ -135,9 +161,8 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
               style={{
                 width: '100%',
                 marginBottom: '6px',
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                fontSize: '0.9375rem',
-                color: '#ffffff'
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                fontSize: '0.90625rem'
               }}
               autoFocus
             />
@@ -165,62 +190,56 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           <div style={{ wordBreak: 'break-word', display: 'inline' }}>
             <span
               style={{
-                fontSize: '0.9375rem',
+                fontSize: '0.90625rem',
                 fontStyle: isDeleted ? 'italic' : 'normal',
-                color: isDeleted ? 'var(--text-secondary)' : 'inherit'
+                color: isDeleted ? 'var(--text-muted)' : 'inherit'
               }}
             >
-              {isDeleted ? '🚫 This message was deleted' : message.content}
+              {isDeleted ? 'This message was deleted' : message.content}
             </span>
 
-            {/* Inline WhatsApp Timestamp and Blue Checks */}
+            {/* Timestamp */}
             <span className="bubble-meta">
               <span>{formattedTime}</span>
               {message.is_edited && !isDeleted && <span>(edited)</span>}
-              {isAuthor && (
-                <span style={{ color: 'var(--whatsapp-blue-check)', fontSize: '0.85rem', fontWeight: 700, marginLeft: '2px' }}>
-                  ✓✓
-                </span>
-              )}
             </span>
           </div>
         )}
 
-        {/* WhatsApp Quoted Reply / Thread Branch */}
+        {/* Replies Branch Link */}
         {!isDeleted && message.reply_count > 0 && (
           <div
             onClick={() => onOpenThread(message)}
             style={{
               marginTop: '6px',
               padding: '4px 8px',
-              backgroundColor: 'rgba(0, 0, 0, 0.15)',
-              borderLeft: '3px solid var(--accent-primary)',
-              borderRadius: '4px',
+              backgroundColor: 'rgba(0, 0, 0, 0.12)',
+              borderRadius: '6px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              fontSize: '0.78125rem'
+              fontSize: '0.75rem'
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <IconReply size={12} />
               <span>{message.reply_count} {message.reply_count === 1 ? 'reply' : 'replies'}</span>
             </span>
-            <span style={{ fontSize: '0.6875rem', opacity: 0.8 }}>View thread →</span>
+            <span style={{ opacity: 0.8 }}>View thread →</span>
           </div>
         )}
 
-        {/* Reactions floating capsule */}
+        {/* Reactions floating pill */}
         {!isDeleted && message.reactions && message.reactions.length > 0 && (
           <div
             style={{
               position: 'absolute',
               bottom: '-12px',
-              left: isAuthor ? 'auto' : '8px',
-              right: isAuthor ? '8px' : 'auto',
+              left: isAuthor ? 'auto' : '10px',
+              right: isAuthor ? '10px' : 'auto',
               display: 'flex',
-              gap: '2px',
+              gap: '3px',
               backgroundColor: 'var(--bg-elevated)',
               border: '1px solid var(--border-default)',
               borderRadius: '12px',
@@ -254,7 +273,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           </div>
         )}
 
-        {/* Hover Action Menu Capsule */}
+        {/* Floating Actions on hover */}
         {!isDeleted && !isEditing && (
           <div className="message-action-capsule">
             <button
@@ -331,7 +350,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                     background: 'transparent',
                     border: 'none',
                     padding: '3px 5px',
-                    color: '#f43f5e',
+                    color: 'var(--accent-rose)',
                     cursor: 'pointer',
                     display: 'flex'
                   }}
@@ -350,7 +369,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                   background: 'transparent',
                   border: 'none',
                   padding: '3px 5px',
-                  color: '#f43f5e',
+                  color: 'var(--accent-rose)',
                   cursor: 'pointer',
                   display: 'flex'
                 }}
@@ -366,7 +385,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           <div
             style={{
               position: 'absolute',
-              top: '-40px',
+              top: '-38px',
               right: isAuthor ? '0' : 'auto',
               left: isAuthor ? 'auto' : '0',
               backgroundColor: 'var(--bg-elevated)',
@@ -387,7 +406,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  fontSize: '1.2rem',
+                  fontSize: '1.15rem',
                   cursor: 'pointer',
                   padding: '2px',
                   transition: 'transform var(--transition-fast)'

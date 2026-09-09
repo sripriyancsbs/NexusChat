@@ -1,59 +1,70 @@
 /* ============================================================
-   NexusChat — WhatsApp & Meta Modern Application Design System
-   Authentic WhatsApp Web / Instagram Direct Aesthetics
-   Color Palette: WhatsApp Dark Canvas (#0b141a), Emerald Green (#00a884 / #005c4b),
-   Surface Slate (#202c33), Active (#2a3942), Primary Text (#e9edef).
+   NexusChat — Aura Obsidian & Modern Prism Design System
+   A unique, original, consumer-grade conversational architecture
+   Inspired by modern messaging principles (Instagram, WhatsApp, Linear)
+   Palette: Midnight Obsidian, Iris & Ocean Cyan Prism Gradient,
+   Elevated Card Surfaces, and Crisp Typography.
    ============================================================ */
 
 :root {
-  /* WhatsApp Dark Theme Foundation */
-  --bg-canvas: #0b141a;         /* Chat wallpaper background */
-  --bg-surface: #111b21;        /* Sidebar & main panels */
-  --bg-elevated: #202c33;       /* Header, incoming bubbles, cards */
-  --bg-card: #222e35;
-  --bg-card-hover: #233138;
-  --bg-hover: #202c33;
-  --bg-active: #2a3942;
+  /* Core Foundation - Midnight Obsidian */
+  --bg-canvas: #0c0e14;
+  --bg-surface: #12151e;
+  --bg-elevated: #181c28;
+  --bg-card: #1e2332;
+  --bg-card-hover: #24293a;
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(99, 102, 241, 0.12);
 
-  /* WhatsApp Iconic Emerald Accents */
-  --accent-primary: #00a884;
-  --accent-primary-hover: #029072;
-  --accent-subtle: rgba(0, 168, 132, 0.15);
-  --whatsapp-green: #25d366;
-  --whatsapp-teal: #00a884;
-  --whatsapp-blue-check: #53bdeb;
+  /* Nexus Prism Signature Accents */
+  --grad-prism: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  --grad-bubble-me: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+  --grad-avatar: linear-gradient(135deg, rgba(79, 70, 229, 0.25) 0%, rgba(6, 182, 212, 0.25) 100%);
+
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #4f46e5;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+
+  /* Backward Compatibility Aliases */
+  --cyber-cyan: #06b6d4;
+  --cyber-cyan-glow: rgba(6, 182, 212, 0.2);
+  --cyber-amber: #f59e0b;
+  --cyber-amber-glow: rgba(245, 158, 11, 0.2);
+  --cyber-mint: #10b981;
+  --cyber-violet: #8b5cf6;
+  --cyber-coral: #f43f5e;
+  --whatsapp-green: #10b981;
 
   /* Message Bubbles */
-  --bubble-me: #005c4b;         /* WhatsApp outgoing bubble green */
-  --bubble-me-text: #e9edef;
-  --bubble-them: #202c33;       /* WhatsApp incoming bubble dark slate */
-  --bubble-them-text: #e9edef;
-
-  /* System & Encryption Pill */
-  --bg-privacy-pill: rgba(254, 239, 179, 0.12);
-  --text-privacy-pill: #ffd279;
-  --border-privacy-pill: rgba(255, 210, 121, 0.25);
+  --bubble-me: #3730a3;
+  --bubble-me-text: #ffffff;
+  --bubble-them: #181c28;
+  --bubble-them-text: #f1f3f5;
 
   /* Text Hierarchy */
-  --text-primary: #e9edef;
-  --text-secondary: #8696a0;
-  --text-muted: #667781;
-  --text-link: #53bdeb;
+  --text-primary: #f1f3f5;
+  --text-secondary: #9aa2b1;
+  --text-muted: #6b7280;
+  --text-accent: #818cf8;
 
-  /* Typography - Meta / WhatsApp Standard Font Stack */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Borders & Dividers */
-  --border-subtle: rgba(134, 150, 160, 0.15);
-  --border-default: rgba(134, 150, 160, 0.2);
-  --border-strong: rgba(134, 150, 160, 0.3);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: rgba(99, 102, 241, 0.4);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 2px 5px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+  /* Clean Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.45);
 
   /* Radii */
   --radius-xs: 4px;
@@ -63,44 +74,36 @@
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 120ms ease;
-  --transition-normal: 200ms ease;
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
 }
 
-/* Light Theme Variables (Iconic WhatsApp Light) */
+/* Light Theme Variables */
 [data-theme='light'] {
-  --bg-canvas: #efeae2;         /* WhatsApp warm sand chat wallpaper */
-  --bg-surface: #ffffff;        /* Clean white sidebar */
-  --bg-elevated: #f0f2f5;       /* Header and toolbars */
+  --bg-canvas: #f4f6fb;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ebedf5;
   --bg-card: #ffffff;
-  --bg-card-hover: #f5f6f6;
-  --bg-hover: #f5f6f6;
-  --bg-active: #e9edef;
+  --bg-card-hover: #f7f8fc;
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-active: rgba(99, 102, 241, 0.1);
 
-  --accent-primary: #008069;
-  --accent-primary-hover: #016b57;
-  --accent-subtle: rgba(0, 128, 105, 0.1);
+  --bubble-me: #4f46e5;
+  --bubble-me-text: #ffffff;
+  --bubble-them: #ffffff;
+  --bubble-them-text: #0f172a;
 
-  --bubble-me: #d9fdd3;         /* WhatsApp light outgoing bubble mint */
-  --bubble-me-text: #111b21;
-  --bubble-them: #ffffff;       /* WhatsApp light incoming bubble white */
-  --bubble-them-text: #111b21;
-
-  --bg-privacy-pill: #ffeecd;
-  --text-privacy-pill: #54656f;
-  --border-privacy-pill: #ffd279;
-
-  --text-primary: #111b21;
-  --text-secondary: #667781;
-  --text-muted: #8696a0;
+  --text-primary: #0f172a;
+  --text-secondary: #526071;
+  --text-muted: #8896a6;
 
   --border-subtle: rgba(0, 0, 0, 0.06);
   --border-default: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.16);
+  --border-strong: rgba(0, 0, 0, 0.18);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* Resets */
@@ -114,7 +117,7 @@ html, body {
   height: 100%;
   font-family: var(--font-sans);
   font-size: 14.5px;
-  background-color: var(--bg-surface);
+  background-color: var(--bg-canvas);
   color: var(--text-primary);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
@@ -129,12 +132,13 @@ html, body {
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: -0.015em;
 }
 
-/* WhatsApp Buttons */
+/* Modern Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -143,21 +147,23 @@ h1, h2, h3, h4, h5, h6 {
   padding: 8px 16px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
   text-decoration: none;
 }
 
 .btn-primary {
-  background: var(--accent-primary);
+  background: var(--grad-prism);
   color: #ffffff;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
 }
 
 .btn-primary:hover {
-  background: var(--accent-primary-hover);
+  opacity: 0.94;
+  transform: translateY(-0.5px);
 }
 
 .btn-secondary {
@@ -167,7 +173,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background: var(--bg-hover);
+  background: var(--bg-card);
+  border-color: var(--border-strong);
 }
 
 .btn-outline {
@@ -179,77 +186,56 @@ h1, h2, h3, h4, h5, h6 {
 .btn-outline:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
+  border-color: var(--border-strong);
 }
 
 /* Inputs */
 .input {
   width: 100%;
   padding: 9px 14px;
-  background-color: var(--bg-surface);
+  background-color: var(--bg-elevated);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-family: var(--font-sans);
-  transition: border-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .input:focus {
   outline: none;
   border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
 }
 
 .input::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
-/* Badges */
-.badge {
+/* Privacy Badge */
+.privacy-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
+  gap: 5px;
+  padding: 3px 9px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  color: var(--text-accent);
+  font-size: 0.7rem;
   font-weight: 500;
 }
 
-.badge-whatsapp {
-  background-color: var(--whatsapp-green);
-  color: #111b21;
-}
-
-/* WhatsApp E2EE Yellow / Gold Privacy Banner */
-.whatsapp-privacy-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background: var(--bg-privacy-pill);
-  border: 1px solid var(--border-privacy-pill);
-  border-radius: var(--radius-sm);
-  color: var(--text-privacy-pill);
-  font-size: 0.78125rem;
-  line-height: 1.4;
-  text-align: center;
-}
-
-/* Bento Modern Panel */
-.bento-panel {
-  background: var(--bg-surface);
-  display: flex;
-  flex-direction: column;
-}
-
-/* WhatsApp Chat Items */
+/* Conversation Item */
 .chat-list-item {
-  padding: 12px 16px;
+  padding: 10px 14px;
+  margin: 2px 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background-color var(--transition-fast);
+  gap: 12px;
+  transition: all var(--transition-fast);
 }
 
 .chat-list-item:hover {
@@ -257,15 +243,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-list-item.active {
-  background-color: var(--bg-active);
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-sm);
 }
 
-/* WhatsApp Dialogue Pods */
+/* Message Dialogue Pods */
 .dialogue-pod {
   display: flex;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   position: relative;
-  padding: 0 24px;
+  padding: 0 20px;
 }
 
 .dialogue-pod.me {
@@ -276,88 +263,57 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: flex-start;
 }
 
-/* WhatsApp Message Bubble */
+/* Message Bubble */
 .dialogue-bubble {
-  max-width: 65%;
+  max-width: 68%;
   min-width: 80px;
-  padding: 6px 9px 8px 9px;
-  border-radius: 8px;
+  padding: 8px 14px;
+  border-radius: 16px;
   position: relative;
-  font-size: 0.9375rem;
+  font-size: 0.90625rem;
   line-height: 1.45;
-  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  box-shadow: var(--shadow-sm);
   word-wrap: break-word;
+  transition: all var(--transition-fast);
 }
 
 .dialogue-bubble.me {
-  background-color: var(--bubble-me);
-  color: var(--bubble-me-text);
-  border-top-right-radius: 0px;
+  background: var(--grad-bubble-me);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
 }
 
 .dialogue-bubble.them {
-  background-color: var(--bubble-them);
-  color: var(--bubble-them-text);
-  border-top-left-radius: 0px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-bottom-left-radius: 4px;
 }
 
 .dialogue-bubble.pinned {
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border: 1px solid rgba(245, 158, 11, 0.45);
 }
 
-/* WhatsApp Timestamp & Read Receipts */
+/* Message Meta (Timestamp) */
 .bubble-meta {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   float: right;
   margin-left: 10px;
   margin-top: 4px;
   font-size: 0.6875rem;
-  color: var(--text-secondary);
+  opacity: 0.75;
 }
 
-/* Quoted Reply Box (WhatsApp Reply style) */
-.quoted-reply {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-left: 3px solid var(--accent-primary);
-  border-radius: 4px;
-  padding: 4px 8px;
-  margin-bottom: 6px;
-  font-size: 0.8125rem;
-}
-
-/* Date Divider Chip */
-.whatsapp-date-chip {
-  align-self: center;
-  background-color: var(--bg-elevated);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
-  margin: 12px 0;
-}
-
-/* Composer Bar */
-.whatsapp-composer-bar {
-  background-color: var(--bg-elevated);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-/* Action Capsule on Hover */
+/* Floating Action Capsule */
 .message-action-capsule {
   position: absolute;
   top: -14px;
-  right: 28px;
+  right: 24px;
   background: var(--bg-card);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   padding: 2px 4px;
   display: flex;
   align-items: center;
@@ -374,10 +330,29 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: auto;
 }
 
+/* Modern Composer */
+.modern-composer-card {
+  margin: 12px 18px 16px 18px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.modern-composer-card:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
 /* Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -385,10 +360,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(134, 150, 160, 0.25);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(134, 150, 160, 0.4);
+  background: rgba(255, 255, 255, 0.22);
 }

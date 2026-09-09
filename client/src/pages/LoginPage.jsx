@@ -76,8 +76,8 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
             style={{
               width: '32px',
               height: '32px',
-              borderRadius: 'var(--radius-sm)',
-              background: 'var(--grad-brand)',
+              borderRadius: '8px',
+              background: 'var(--grad-prism)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

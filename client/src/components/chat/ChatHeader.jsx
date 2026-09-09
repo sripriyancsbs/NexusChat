@@ -33,9 +33,9 @@ export default function ChatHeader({
   return (
     <header
       style={{
-        height: '60px',
-        padding: '10px 16px',
-        backgroundColor: 'var(--bg-elevated)',
+        height: '56px',
+        padding: '0 18px',
+        backgroundColor: 'var(--bg-surface)',
         borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
@@ -44,7 +44,7 @@ export default function ChatHeader({
         zIndex: 10
       }}
     >
-      {/* Contact / Channel Info */}
+      {/* Header Left: Avatar & Info */}
       <div
         onClick={onToggleContextPanel}
         style={{
@@ -55,7 +55,7 @@ export default function ChatHeader({
           minWidth: 0
         }}
       >
-        {/* Mobile sidebar toggle button */}
+        {/* Mobile menu button */}
         <button
           type="button"
           onClick={(e) => {
@@ -71,105 +71,109 @@ export default function ChatHeader({
             padding: '4px',
             cursor: 'pointer'
           }}
-          aria-label="Toggle chat list"
+          aria-label="Toggle sidebar"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
 
-        {/* Round Avatar */}
+        {/* Squircle Avatar */}
         <div
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--bg-surface)',
+            width: '36px',
+            height: '36px',
+            borderRadius: 'var(--radius-sm)',
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border-default)',
             color: isChannel ? 'var(--accent-primary)' : 'var(--text-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 600,
-            fontSize: '1.1rem',
+            fontSize: '1rem',
             flexShrink: 0
           }}
         >
-          {isChannel ? (activeConversation.is_private ? <IconLock size={18} /> : '#') : (title[0] || 'U').toUpperCase()}
+          {isChannel ? (activeConversation.is_private ? <IconLock size={16} /> : '#') : (title[0] || 'U').toUpperCase()}
         </div>
 
-        {/* Name and Status */}
+        {/* Title & Metadata */}
         <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: '1rem',
-              fontWeight: 500,
-              color: 'var(--text-primary)',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}
-          >
-            {title}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 600,
+                fontSize: '0.9375rem',
+                letterSpacing: '-0.01em',
+                color: 'var(--text-primary)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {title}
+            </span>
+
+            <span className="privacy-badge">
+              🔒 Zero-Admin Access
+            </span>
           </div>
 
           <div
             style={{
-              fontSize: '0.8125rem',
-              color: presence === 'online' ? 'var(--whatsapp-green)' : 'var(--text-secondary)',
+              fontSize: '0.75rem',
+              color: presence === 'online' ? 'var(--accent-emerald)' : 'var(--text-muted)',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis'
             }}
           >
             {isChannel
-              ? activeConversation.topic || 'tap here for group info'
+              ? activeConversation.topic || 'Channel conversation'
               : presence === 'online'
-              ? 'online'
-              : 'click here for contact info'}
+              ? 'Active now'
+              : 'Direct communication'}
           </div>
         </div>
       </div>
 
-      {/* Right Header Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Header Right Actions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
         <button
           type="button"
           onClick={onOpenSearch}
-          title="Search in chat"
+          title="Search in conversation"
+          className="btn btn-secondary"
           style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            padding: '8px',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            padding: '5px 10px',
+            fontSize: '0.75rem',
+            borderRadius: 'var(--radius-sm)'
           }}
         >
-          <IconSearch size={18} />
+          <IconSearch size={13} />
+          <span className="hide-sm">Search</span>
         </button>
 
         <button
           type="button"
           onClick={onToggleContextPanel}
-          title="Contact / Group info"
+          title="Conversation Details"
+          className="btn btn-secondary"
           style={{
-            background: isContextOpen ? 'var(--bg-active)' : 'transparent',
-            border: 'none',
-            color: isContextOpen ? 'var(--accent-primary)' : 'var(--text-secondary)',
-            cursor: 'pointer',
-            padding: '8px',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            padding: '5px 10px',
+            fontSize: '0.75rem',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: isContextOpen ? 'var(--bg-active)' : 'var(--bg-elevated)',
+            color: isContextOpen ? 'var(--accent-primary)' : 'var(--text-primary)',
+            borderColor: isContextOpen ? 'var(--accent-primary)' : 'var(--border-default)'
           }}
         >
-          <IconInfo size={19} />
+          <IconInfo size={13} />
+          <span className="hide-sm">Details</span>
         </button>
       </div>
     </header>
