@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
-import { IconX, IconPin, IconUsers, IconInfo, IconLock } from '../common/Icons.jsx';
+import { IconX, IconPin, IconLock } from '../common/Icons.jsx';
 
 export default function ContextPanel({ isOpen, onClose }) {
   const { activeConversation, messages, togglePin } = useChat();
@@ -19,264 +19,188 @@ export default function ContextPanel({ isOpen, onClose }) {
       .join(' ');
   };
 
+  const title = isChannel
+    ? formatName(activeConversation.name)
+    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Contact Info';
+
   return (
     <aside
-      className="bento-panel context-panel"
       style={{
-        width: '340px',
+        width: '380px',
+        backgroundColor: 'var(--bg-surface)',
+        borderLeft: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
         overflow: 'hidden',
-        zIndex: 40
+        zIndex: 30
       }}
     >
-      {/* Header */}
+      {/* WhatsApp Info Header */}
       <div
         style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid var(--border-default)',
+          height: '60px',
+          padding: '10px 16px',
+          backgroundColor: 'var(--bg-elevated)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-          backgroundColor: 'var(--bg-surface)'
+          gap: '20px',
+          flexShrink: 0
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <h3
-            style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              margin: 0,
-              color: 'var(--text-primary)'
-            }}
-          >
-            Details
-          </h3>
-        </div>
-
         <button
           type="button"
           onClick={onClose}
-          title="Close Details"
+          title="Close"
           style={{
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'var(--text-secondary)',
             cursor: 'pointer',
             padding: '4px',
-            borderRadius: 'var(--radius-xs)',
             display: 'flex'
           }}
         >
-          <IconX size={16} />
+          <IconX size={20} />
         </button>
+
+        <h3 style={{ fontSize: '1rem', fontWeight: 500, margin: 0, color: 'var(--text-primary)' }}>
+          {isChannel ? 'Group info' : 'Contact info'}
+        </h3>
       </div>
 
-      {/* Tabs */}
-      <div
-        style={{
-          display: 'flex',
-          borderBottom: '1px solid var(--border-subtle)',
-          backgroundColor: 'var(--bg-elevated)',
-          padding: '4px 10px',
-          gap: '4px'
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => setActiveTab('DETAILS')}
+      {/* WhatsApp Profile Showcase */}
+      <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div
           style={{
-            flex: 1,
-            padding: '5px 8px',
-            borderRadius: 'var(--radius-xs)',
-            border: activeTab === 'DETAILS' ? '1px solid rgba(99, 102, 241, 0.35)' : '1px solid transparent',
-            backgroundColor: activeTab === 'DETAILS' ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
-            color: activeTab === 'DETAILS' ? 'var(--accent-primary)' : 'var(--text-muted)',
-            fontWeight: 500,
-            fontSize: '0.75rem',
-            cursor: 'pointer',
+            padding: '24px 16px',
+            backgroundColor: 'var(--bg-surface)',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: '5px',
-            transition: 'all var(--transition-fast)'
+            textAlign: 'center',
+            borderBottom: '10px solid var(--bg-canvas)'
           }}
         >
-          <IconInfo size={13} /> Overview
-        </button>
+          <div
+            style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--bg-elevated)',
+              color: isChannel ? 'var(--accent-primary)' : 'var(--text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2.5rem',
+              fontWeight: 600,
+              marginBottom: '16px'
+            }}
+          >
+            {isChannel ? (activeConversation.is_private ? <IconLock size={44} /> : '#') : (title[0] || 'U').toUpperCase()}
+          </div>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('PINS')}
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 500, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
+            {title}
+          </h2>
+
+          <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            {isChannel ? 'Community Channel' : `@${activeConversation.other_user?.username || ''}`}
+          </span>
+        </div>
+
+        {/* Description / About */}
+        <div
           style={{
-            flex: 1,
-            padding: '5px 8px',
-            borderRadius: 'var(--radius-xs)',
-            border: activeTab === 'PINS' ? '1px solid rgba(245, 158, 11, 0.35)' : '1px solid transparent',
-            backgroundColor: activeTab === 'PINS' ? 'rgba(245, 158, 11, 0.12)' : 'transparent',
-            color: activeTab === 'PINS' ? 'var(--accent-amber)' : 'var(--text-muted)',
-            fontWeight: 500,
-            fontSize: '0.75rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '5px',
-            transition: 'all var(--transition-fast)'
+            padding: '16px',
+            backgroundColor: 'var(--bg-surface)',
+            borderBottom: '10px solid var(--bg-canvas)'
           }}
         >
-          <IconPin size={13} /> Pinned ({pinnedMessages.length})
-        </button>
-      </div>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+            {isChannel ? 'Channel description' : 'About'}
+          </div>
+          <div style={{ fontSize: '0.9375rem', color: 'var(--text-primary)', lineHeight: 1.4 }}>
+            {activeConversation.topic || 'No description provided.'}
+          </div>
+        </div>
 
-      {/* Body */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '14px' }}>
-        {activeTab === 'DETAILS' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {/* Overview Card */}
-            <div
-              style={{
-                padding: '12px',
-                backgroundColor: 'var(--bg-elevated)',
-                border: '1px solid var(--border-default)',
-                borderRadius: 'var(--radius-sm)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                <span style={{ color: 'var(--accent-primary)', display: 'flex' }}>
-                  {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '#') : <IconUsers size={15} />}
-                </span>
-                <span
-                  style={{
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    color: 'var(--text-primary)'
-                  }}
-                >
-                  {isChannel ? formatName(activeConversation.name) : activeConversation.other_user?.full_name || activeConversation.other_user?.username}
-                </span>
-              </div>
-
-              {activeConversation.topic && (
-                <div
-                  style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--text-secondary)',
-                    marginBottom: '8px',
-                    lineHeight: 1.45
-                  }}
-                >
-                  {activeConversation.topic}
-                </div>
-              )}
-
-              <div
-                style={{
-                  fontSize: '0.75rem',
-                  color: 'var(--text-muted)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '3px'
-                }}
-              >
-                <div>Type: {isChannel ? (activeConversation.is_private ? 'Private Channel' : 'Public Channel') : 'Direct Message'}</div>
-                <div>Protocol: End-to-End Isolated (E2EE)</div>
-              </div>
+        {/* Privacy & Encryption Guarantee */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: 'var(--bg-surface)',
+            borderBottom: '10px solid var(--bg-canvas)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px'
+          }}
+        >
+          <span style={{ fontSize: '1.25rem', color: 'var(--whatsapp-green)' }}>🔒</span>
+          <div>
+            <div style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+              End-to-end encryption
             </div>
-
-            {/* Privacy Guarantee */}
-            <div
-              style={{
-                padding: '12px',
-                backgroundColor: 'rgba(99, 102, 241, 0.06)',
-                border: '1px solid rgba(99, 102, 241, 0.2)',
-                borderRadius: 'var(--radius-sm)'
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: 600,
-                  fontSize: '0.8125rem',
-                  color: 'var(--accent-primary)',
-                  marginBottom: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                🔒 Zero-Admin Access Boundary
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-                Platform administrators cannot browse or read private conversation messages. Messages remain mathematically restricted to authorized conversation members.
-              </div>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              Messages are secured. Platform administrators have zero access.
             </div>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'PINS' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {pinnedMessages.length === 0 ? (
-              <div
-                style={{
-                  padding: '24px 10px',
-                  textAlign: 'center',
-                  color: 'var(--text-muted)',
-                  fontSize: '0.8125rem'
-                }}
-              >
-                No pinned messages
-              </div>
-            ) : (
-              pinnedMessages.map((pin) => (
+        {/* Pinned Messages */}
+        <div style={{ padding: '16px', backgroundColor: 'var(--bg-surface)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+              Starred & Pinned ({pinnedMessages.length})
+            </span>
+          </div>
+
+          {pinnedMessages.length === 0 ? (
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center', padding: '12px 0' }}>
+              No pinned messages
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {pinnedMessages.map((pin) => (
                 <div
                   key={pin.id}
                   style={{
-                    padding: '8px 10px',
+                    padding: '10px 12px',
                     backgroundColor: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-default)',
-                    borderRadius: 'var(--radius-sm)',
+                    borderRadius: '8px',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '4px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)'
-                      }}
-                    >
+                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                       {pin.sender_full_name || pin.sender_username}
                     </span>
                     <button
                       type="button"
                       onClick={() => togglePin(pin.id)}
-                      title="Unpin message"
+                      title="Unpin"
                       style={{
                         background: 'transparent',
                         border: 'none',
                         color: 'var(--accent-amber)',
                         cursor: 'pointer',
-                        padding: '2px',
-                        display: 'flex'
+                        padding: '2px'
                       }}
                     >
-                      <IconPin size={12} />
+                      <IconPin size={13} />
                     </button>
                   </div>
-                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                     {pin.content}
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );

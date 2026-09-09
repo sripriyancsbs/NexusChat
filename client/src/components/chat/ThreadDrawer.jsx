@@ -18,73 +18,63 @@ export default function ThreadDrawer({ onReport }) {
 
   return (
     <aside
-      className="bento-panel thread-drawer"
       style={{
-        width: '360px',
+        width: '380px',
+        backgroundColor: 'var(--bg-canvas)',
+        borderLeft: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
         overflow: 'hidden',
-        zIndex: 50
+        zIndex: 30
       }}
     >
-      {/* Thread Header */}
+      {/* WhatsApp Thread Header */}
       <div
         style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid var(--border-default)',
+          height: '60px',
+          padding: '10px 16px',
+          backgroundColor: 'var(--bg-elevated)',
+          borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexShrink: 0,
-          backgroundColor: 'var(--bg-surface)'
+          flexShrink: 0
         }}
       >
-        <div>
-          <h3
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <button
+            type="button"
+            onClick={closeThread}
+            title="Close"
             style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              margin: 0,
-              color: 'var(--text-primary)'
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex'
             }}
           >
-            Thread
-          </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            Started by {activeThread.sender_full_name || activeThread.sender_username}
-          </span>
-        </div>
+            <IconX size={20} />
+          </button>
 
-        <button
-          type="button"
-          onClick={closeThread}
-          title="Close Thread"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-muted)',
-            cursor: 'pointer',
-            padding: '4px',
-            borderRadius: 'var(--radius-xs)',
-            display: 'flex'
-          }}
-        >
-          <IconX size={16} />
-        </button>
+          <div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 500, margin: 0, color: 'var(--text-primary)' }}>
+              Thread replies
+            </h3>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {activeThread.sender_full_name || activeThread.sender_username}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Thread Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
-        {/* Parent Message Card */}
-        <div
-          style={{
-            borderBottom: '1px solid var(--border-subtle)',
-            paddingBottom: '10px',
-            marginBottom: '10px'
-          }}
-        >
+        {/* Parent Message */}
+        <div style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: '8px', marginBottom: '8px' }}>
           <MessageItem
             message={activeThread}
             onOpenThread={() => {}}
@@ -92,26 +82,20 @@ export default function ThreadDrawer({ onReport }) {
           />
         </div>
 
-        {/* Replies Header */}
+        {/* Replies List */}
         <div
           style={{
-            padding: '0 18px 6px 18px',
-            fontSize: '0.6875rem',
-            fontWeight: 600,
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
+            padding: '4px 24px 8px 24px',
+            fontSize: '0.75rem',
+            color: 'var(--text-secondary)',
+            fontWeight: 500
           }}
         >
-          <span>Replies ({threadMessages.length})</span>
-          {loadingThread && <span style={{ color: 'var(--accent-primary)' }}>Loading...</span>}
+          {threadMessages.length} {threadMessages.length === 1 ? 'reply' : 'replies'}
         </div>
 
         {loadingThread ? (
-          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
             Loading replies...
           </div>
         ) : (
@@ -127,8 +111,8 @@ export default function ThreadDrawer({ onReport }) {
         <div ref={bottomRef} style={{ height: '4px' }} />
       </div>
 
-      {/* Reply Input */}
-      <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: '8px' }}>
+      {/* Reply Composer */}
+      <div style={{ backgroundColor: 'var(--bg-elevated)', borderTop: '1px solid var(--border-subtle)' }}>
         <MessageComposer
           placeholder="Reply in thread..."
           replyToMessageId={activeThread.id}

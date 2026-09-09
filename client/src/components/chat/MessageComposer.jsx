@@ -3,7 +3,7 @@ import { useChat } from '../../context/ChatContext.jsx';
 import { socketClient } from '../../services/socket.js';
 import { IconSend, IconSmile } from '../common/Icons.jsx';
 
-const EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡', '✨', '⚡'];
+const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🙏', '🔥', '🎉', '💡', '✨'];
 
 export default function MessageComposer({ placeholder, replyToMessageId = null }) {
   const { activeConversationId, sendMessage, typingMap, activeConversation } = useChat();
@@ -12,19 +12,6 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef(null);
   const typingTimerRef = useRef(null);
-
-  const formatName = (name) => {
-    if (!name) return '';
-    return name
-      .split(/[-_]/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  };
-
-  const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
-  const defaultPlaceholder = isChannel
-    ? `Message #${formatName(activeConversation?.name) || 'channel'}...`
-    : `Message @${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
 
   const typingUsers = typingMap[activeConversationId] || [];
 
@@ -81,152 +68,143 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
   };
 
   return (
-    <div style={{ padding: '0 18px 14px 18px', flexShrink: 0, position: 'relative' }}>
-      {/* Typing Indicator */}
-      <div
-        style={{
-          minHeight: '18px',
-          fontSize: '0.75rem',
-          color: 'var(--text-muted)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          marginBottom: '4px'
-        }}
-      >
-        {typingUsers.length > 0 && (
-          <span>
-            {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
-          </span>
-        )}
-      </div>
-
-      {/* Modern Composer Card */}
-      <div className="broadcast-console">
-        <textarea
-          ref={textareaRef}
-          rows={1}
-          placeholder={placeholder || defaultPlaceholder}
-          value={content}
-          onChange={(e) => handleTyping(e.target.value)}
-          onKeyDown={handleKeyDown}
-          style={{
-            width: '100%',
-            padding: '10px 14px',
-            backgroundColor: 'transparent',
-            border: 'none',
-            outline: 'none',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            fontFamily: 'var(--font-sans)',
-            resize: 'none',
-            maxHeight: '140px',
-            lineHeight: 1.5
-          }}
-        />
-
-        {/* Action Dock */}
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      {/* Typing Indicator Bar */}
+      {typingUsers.length > 0 && (
         <div
           style={{
-            padding: '6px 12px',
+            position: 'absolute',
+            top: '-24px',
+            left: '20px',
+            fontSize: '0.75rem',
+            color: 'var(--whatsapp-green)',
             backgroundColor: 'var(--bg-elevated)',
-            borderTop: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderBottomLeftRadius: 'var(--radius-md)',
-            borderBottomRightRadius: 'var(--radius-md)'
+            padding: '2px 10px',
+            borderRadius: '10px',
+            boxShadow: 'var(--shadow-sm)'
           }}
         >
-          {/* Left Actions: Emoji */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative' }}>
-            <button
-              type="button"
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
-              title="Add Emoji"
-              className="btn btn-secondary"
-              style={{
-                padding: '4px 8px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '0.75rem',
-                gap: '4px'
-              }}
-            >
-              <IconSmile size={14} />
-              <span className="hide-sm">Emoji</span>
-            </button>
-
-            {/* Emoji popover */}
-            {showEmojiPicker && (
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  left: 0,
-                  marginBottom: '8px',
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-strong)',
-                  borderRadius: 'var(--radius-sm)',
-                  boxShadow: 'var(--shadow-lg)',
-                  padding: '6px',
-                  display: 'flex',
-                  gap: '4px',
-                  zIndex: 30
-                }}
-              >
-                {EMOJIS.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    onClick={() => handleAddEmoji(emoji)}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      fontSize: '1.1rem',
-                      cursor: 'pointer',
-                      padding: '3px',
-                      borderRadius: 'var(--radius-xs)',
-                      transition: 'transform var(--transition-fast)'
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Right Action: Send */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span
-              style={{
-                fontSize: '0.6875rem',
-                color: 'var(--text-muted)'
-              }}
-              className="hide-sm"
-            >
-              Press Enter to send
-            </span>
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={!content.trim() || sending}
-              className="btn btn-primary"
-              style={{
-                padding: '5px 12px',
-                fontSize: '0.8125rem',
-                borderRadius: 'var(--radius-sm)',
-                gap: '6px',
-                opacity: !content.trim() || sending ? 0.45 : 1
-              }}
-            >
-              <IconSend size={13} />
-              <span>Send</span>
-            </button>
-          </div>
+          {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
         </div>
+      )}
+
+      {/* WhatsApp Bottom Composer Bar */}
+      <div className="whatsapp-composer-bar">
+        {/* Emoji Button */}
+        <div style={{ position: 'relative' }}>
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+            title="Emoji"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <IconSmile size={24} />
+          </button>
+
+          {/* Emoji popover */}
+          {showEmojiPicker && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '50px',
+                left: '0',
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-default)',
+                borderRadius: '8px',
+                boxShadow: 'var(--shadow-lg)',
+                padding: '8px',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                gap: '6px',
+                zIndex: 40
+              }}
+            >
+              {EMOJIS.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => handleAddEmoji(emoji)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontSize: '1.25rem',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    borderRadius: '4px'
+                  }}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Input Pill */}
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: 'var(--bg-active)',
+            borderRadius: '8px',
+            padding: '8px 14px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            placeholder={placeholder || 'Type a message'}
+            value={content}
+            onChange={(e) => handleTyping(e.target.value)}
+            onKeyDown={handleKeyDown}
+            style={{
+              width: '100%',
+              backgroundColor: 'transparent',
+              border: 'none',
+              outline: 'none',
+              color: 'var(--text-primary)',
+              fontSize: '0.9375rem',
+              fontFamily: 'var(--font-sans)',
+              resize: 'none',
+              maxHeight: '120px',
+              lineHeight: 1.4
+            }}
+          />
+        </div>
+
+        {/* Circular Send Button */}
+        <button
+          type="button"
+          onClick={handleSend}
+          disabled={!content.trim() || sending}
+          title="Send"
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            backgroundColor: content.trim() ? 'var(--accent-primary)' : 'transparent',
+            color: content.trim() ? '#ffffff' : 'var(--text-secondary)',
+            border: 'none',
+            cursor: content.trim() ? 'pointer' : 'default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'background-color var(--transition-fast)',
+            flexShrink: 0
+          }}
+        >
+          <IconSend size={18} />
+        </button>
       </div>
     </div>
   );

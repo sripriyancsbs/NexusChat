@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { IconPlus, IconLock, IconHash, IconUsers } from '../common/Icons.jsx';
+import { useTheme } from '../../context/ThemeContext.jsx';
+import {
+  IconPlus,
+  IconSearch,
+  IconLock,
+  IconBell,
+  IconSun,
+  IconMoon,
+  IconLogOut,
+  IconShield
+} from '../common/Icons.jsx';
 
 export default function ChannelSidebar({
   onOpenCreateChannel,
@@ -19,12 +29,14 @@ export default function ChannelSidebar({
     activeConversationId,
     selectChannel,
     selectConversation,
-    presenceMap
+    presenceMap,
+    unreadNotificationsCount
   } = useChat();
-  const { user } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
-  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'CHANNELS' | 'DIRECT'
-  const [filterQuery, setFilterQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'UNREAD' | 'CHANNELS' | 'DMS'
+  const [searchQuery, setSearchQuery] = useState('');
 
   const formatName = (name) => {
     if (!name) return '';
@@ -35,121 +47,269 @@ export default function ChannelSidebar({
   };
 
   const filteredChannels = channels.filter((c) =>
-    c.name.toLowerCase().includes(filterQuery.toLowerCase())
+    c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredConversations = conversations.filter((conv) => {
     const other = conv.other_user;
     const name = other?.full_name || other?.username || '';
-    return name.toLowerCase().includes(filterQuery.toLowerCase());
+    return name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   return (
     <aside
-      className={`bento-panel ${isMobileOpen ? 'mobile-open' : ''}`}
+      className={`sidebar ${isMobileOpen ? 'open' : ''}`}
       style={{
-        width: '280px',
+        width: '380px',
+        backgroundColor: 'var(--bg-surface)',
+        borderRight: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
         userSelect: 'none',
-        overflow: 'hidden',
-        position: 'relative'
+        position: 'relative',
+        zIndex: 20
       }}
     >
-      {/* Sidebar Header */}
+      {/* WhatsApp Web Top Toolbar */}
       <div
         style={{
-          padding: '12px 14px',
-          borderBottom: '1px solid var(--border-subtle)',
+          height: '60px',
+          padding: '10px 16px',
+          backgroundColor: 'var(--bg-elevated)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          flexShrink: 0
         }}
       >
-        <span
+        {/* User Profile Avatar */}
+        <div
+          onClick={onOpenProfile}
+          title="View profile & status"
           style={{
-            fontSize: '0.875rem',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.01em'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            cursor: 'pointer'
           }}
         >
-          Navigation
-        </span>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--bg-card)',
+              border: '2px solid var(--accent-primary)',
+              color: 'var(--text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 600,
+              fontSize: '1rem'
+            }}
+          >
+            {(user?.full_name || user?.username || 'U')[0].toUpperCase()}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+              {user?.full_name || user?.username}
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--accent-primary)' }}>
+              Online
+            </span>
+          </div>
+        </div>
 
-        {/* Action Triggers */}
+        {/* Right Toolbar Action Icons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={onNavigateAdmin}
+              title="Admin Portal"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <IconShield size={19} />
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onOpenCreateChannel}
-            title="Create Channel"
-            className="btn btn-secondary"
+            title="New Channel"
             style={{
-              padding: '4px 8px',
-              fontSize: '0.75rem',
-              borderRadius: 'var(--radius-sm)',
-              gap: '4px'
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <IconPlus size={13} />
-            <span>Channel</span>
+            <IconPlus size={20} />
           </button>
 
           <button
             type="button"
             onClick={onOpenNewDM}
-            title="New Direct Message"
-            className="btn btn-secondary"
+            title="New Direct Chat"
             style={{
-              padding: '4px 8px',
-              fontSize: '0.75rem',
-              borderRadius: 'var(--radius-sm)'
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.05rem',
+              fontWeight: 600
             }}
           >
-            <span>+ DM</span>
+            💬
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenNotifications}
+            title="Notifications"
+            style={{
+              position: 'relative',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <IconBell size={18} />
+            {unreadNotificationsCount > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--whatsapp-green)'
+                }}
+              />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title="Toggle theme"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {theme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={logout}
+            title="Log Out"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <IconLogOut size={18} />
           </button>
         </div>
       </div>
 
-      {/* Filter and Search */}
-      <div style={{ padding: '10px 12px 6px 12px' }}>
-        <input
-          type="text"
-          placeholder="Filter channels or members..."
-          value={filterQuery}
-          onChange={(e) => setFilterQuery(e.target.value)}
-          className="input"
+      {/* WhatsApp Search Bar & Filter Chips */}
+      <div style={{ padding: '8px 12px 8px 12px', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div
           style={{
-            padding: '6px 10px',
-            fontSize: '0.8125rem',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'var(--bg-elevated)'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            backgroundColor: 'var(--bg-elevated)',
+            borderRadius: '8px',
+            padding: '7px 12px'
           }}
-        />
+        >
+          <span style={{ color: 'var(--text-secondary)', display: 'flex' }}>
+            <IconSearch size={16} />
+          </span>
+          <input
+            type="text"
+            placeholder="Search or start new chat"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              backgroundColor: 'transparent',
+              border: 'none',
+              outline: 'none',
+              color: 'var(--text-primary)',
+              fontSize: '0.875rem'
+            }}
+          />
+        </div>
 
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+        {/* WhatsApp Chat Filter Chips */}
+        <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
           {[
             { id: 'ALL', label: 'All' },
+            { id: 'UNREAD', label: 'Unread' },
             { id: 'CHANNELS', label: 'Channels' },
-            { id: 'DIRECT', label: 'DMs' }
+            { id: 'DMS', label: 'DMs' }
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setActiveFilter(tab.id)}
               style={{
-                flex: 1,
-                padding: '3px 6px',
-                borderRadius: 'var(--radius-xs)',
-                fontSize: '0.75rem',
+                padding: '4px 12px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.8125rem',
                 fontWeight: 500,
                 cursor: 'pointer',
-                border: activeFilter === tab.id ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid transparent',
-                backgroundColor: activeFilter === tab.id ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
-                color: activeFilter === tab.id ? 'var(--accent-primary)' : 'var(--text-muted)',
+                border: 'none',
+                backgroundColor: activeFilter === tab.id ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
+                color: activeFilter === tab.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
                 transition: 'all var(--transition-fast)'
               }}
             >
@@ -159,274 +319,248 @@ export default function ChannelSidebar({
         </div>
       </div>
 
-      {/* Scrollable Channels & DMs List */}
+      {/* WhatsApp Chat List */}
       <div
         style={{
           flex: 1,
-          overflowY: 'auto',
-          padding: '8px 8px 12px 8px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '14px'
+          overflowY: 'auto'
         }}
       >
-        {/* Channels Section */}
-        {(activeFilter === 'ALL' || activeFilter === 'CHANNELS') && (
+        {/* Channels List */}
+        {(activeFilter === 'ALL' || activeFilter === 'CHANNELS' || activeFilter === 'UNREAD') && (
           <div>
-            <div
-              style={{
-                padding: '4px 8px 6px 8px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Channels ({filteredChannels.length})
-            </div>
+            {filteredChannels
+              .filter((c) => (activeFilter === 'UNREAD' ? Boolean(c.unread_count && c.unread_count > 0) : true))
+              .map((channel) => {
+                const isActive = channel.id === activeConversationId;
+                const hasUnread = Boolean(channel.unread_count && channel.unread_count > 0);
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {filteredChannels.length === 0 ? (
-                <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                  No channels found
-                </div>
-              ) : (
-                filteredChannels.map((channel) => {
-                  const isActive = channel.id === activeConversationId;
-                  const hasUnread = Boolean(channel.unread_count && channel.unread_count > 0);
-
-                  return (
+                return (
+                  <div
+                    key={channel.id}
+                    onClick={() => {
+                      selectChannel(channel);
+                      if (onCloseMobile) onCloseMobile();
+                    }}
+                    className={`chat-list-item ${isActive ? 'active' : ''}`}
+                  >
+                    {/* Channel Round Avatar */}
                     <div
-                      key={channel.id}
-                      onClick={() => {
-                        selectChannel(channel);
-                        if (onCloseMobile) onCloseMobile();
-                      }}
-                      className={`frequency-card ${isActive ? 'active' : ''}`}
                       style={{
-                        position: 'relative',
-                        padding: '6px 10px'
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--bg-elevated)',
+                        color: 'var(--accent-primary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        fontWeight: 600,
+                        flexShrink: 0
                       }}
                     >
-                      {/* Active Indicator Strip */}
-                      {isActive && (
-                        <div
+                      {channel.is_private ? <IconLock size={18} /> : '#'}
+                    </div>
+
+                    {/* Chat Item Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+                        <span
                           style={{
-                            position: 'absolute',
-                            left: '2px',
-                            top: '6px',
-                            bottom: '6px',
-                            width: '3px',
-                            borderRadius: '2px',
-                            backgroundColor: 'var(--accent-primary)'
+                            fontSize: '1rem',
+                            fontWeight: hasUnread ? 700 : 500,
+                            color: 'var(--text-primary)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
                           }}
-                        />
-                      )}
+                        >
+                          {formatName(channel.name)}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: hasUnread ? 'var(--whatsapp-green)' : 'var(--text-secondary)' }}>
+                          Channel
+                        </span>
+                      </div>
 
-                      {/* Icon */}
-                      <span
-                        style={{
-                          color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          fontSize: '0.9rem',
-                          flexShrink: 0
-                        }}
-                      >
-                        {channel.is_private ? <IconLock size={14} /> : '#'}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span
+                          style={{
+                            fontSize: '0.875rem',
+                            color: 'var(--text-secondary)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
+                          {channel.topic || 'Tap to join conversation'}
+                        </span>
 
-                      {/* Name & Topic */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        {hasUnread && (
                           <span
                             style={{
-                              fontSize: '0.8125rem',
-                              fontWeight: isActive ? 600 : 400,
-                              color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis'
+                              minWidth: '20px',
+                              height: '20px',
+                              padding: '0 5px',
+                              borderRadius: '10px',
+                              backgroundColor: 'var(--whatsapp-green)',
+                              color: '#111b21',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginLeft: '8px'
                             }}
                           >
-                            {formatName(channel.name)}
+                            {channel.unread_count}
                           </span>
-
-                          {hasUnread && !isActive && (
-                            <span
-                              style={{
-                                padding: '1px 6px',
-                                borderRadius: 'var(--radius-full)',
-                                backgroundColor: 'var(--accent-primary)',
-                                color: '#ffffff',
-                                fontSize: '0.6875rem',
-                                fontWeight: 600
-                              }}
-                            >
-                              {channel.unread_count}
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })
-              )}
-            </div>
+                  </div>
+                );
+              })}
           </div>
         )}
 
-        {/* Direct Messages Section */}
-        {(activeFilter === 'ALL' || activeFilter === 'DIRECT') && (
+        {/* Direct Messages List */}
+        {(activeFilter === 'ALL' || activeFilter === 'DMS' || activeFilter === 'UNREAD') && (
           <div>
-            <div
-              style={{
-                padding: '4px 8px 6px 8px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Direct Messages ({filteredConversations.length})
-            </div>
+            {filteredConversations
+              .filter((conv) => (activeFilter === 'UNREAD' ? Boolean(conv.unread_count && conv.unread_count > 0) : true))
+              .map((conv) => {
+                const other = conv.other_user;
+                if (!other) return null;
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {filteredConversations.length === 0 ? (
-                <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                  No direct messages
-                </div>
-              ) : (
-                filteredConversations.map((conv) => {
-                  const other = conv.other_user;
-                  if (!other) return null;
+                const isActive = conv.id === activeConversationId;
+                const hasUnread = Boolean(conv.unread_count && conv.unread_count > 0);
+                const presence = presenceMap[other.id] || other.status?.toLowerCase() || 'offline';
+                const isOnline = presence === 'online';
 
-                  const isActive = conv.id === activeConversationId;
-                  const presence = presenceMap[other.id] || other.status?.toLowerCase() || 'offline';
-                  const isOnline = presence === 'online';
-                  const isIdle = presence === 'idle';
+                return (
+                  <div
+                    key={conv.id}
+                    onClick={() => {
+                      selectConversation(conv);
+                      if (onCloseMobile) onCloseMobile();
+                    }}
+                    className={`chat-list-item ${isActive ? 'active' : ''}`}
+                  >
+                    {/* Contact Round Avatar */}
+                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                      <div
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--bg-elevated)',
+                          color: 'var(--text-primary)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.1rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        {(other.full_name || other.username || 'U')[0].toUpperCase()}
+                      </div>
 
-                  return (
-                    <div
-                      key={conv.id}
-                      onClick={() => {
-                        selectConversation(conv);
-                        if (onCloseMobile) onCloseMobile();
-                      }}
-                      className={`frequency-card ${isActive ? 'active' : ''}`}
-                      style={{
-                        position: 'relative',
-                        padding: '6px 10px'
-                      }}
-                    >
-                      {/* Active Indicator Strip */}
-                      {isActive && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: '2px',
-                            top: '6px',
-                            bottom: '6px',
-                            width: '3px',
-                            borderRadius: '2px',
-                            backgroundColor: 'var(--accent-primary)'
-                          }}
-                        />
-                      )}
-
-                      {/* Avatar with clean status dot */}
-                      <div style={{ position: 'relative', flexShrink: 0 }}>
-                        <div
-                          style={{
-                            width: '24px',
-                            height: '24px',
-                            borderRadius: '50%',
-                            backgroundColor: 'var(--bg-elevated)',
-                            border: '1px solid var(--border-default)',
-                            color: 'var(--text-secondary)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            fontWeight: 600
-                          }}
-                        >
-                          {(other.full_name || other.username || 'U')[0].toUpperCase()}
-                        </div>
-
-                        {/* Status Dot */}
+                      {/* Online Status Dot */}
+                      {isOnline && (
                         <span
                           style={{
                             position: 'absolute',
-                            bottom: '-1px',
-                            right: '-1px',
-                            width: '7px',
-                            height: '7px',
+                            bottom: '0px',
+                            right: '0px',
+                            width: '12px',
+                            height: '12px',
                             borderRadius: '50%',
-                            backgroundColor: isOnline
-                              ? 'var(--accent-emerald)'
-                              : isIdle
-                              ? 'var(--accent-amber)'
-                              : '#64748b',
-                            border: '1.5px solid var(--bg-surface)'
+                            backgroundColor: 'var(--whatsapp-green)',
+                            border: '2px solid var(--bg-surface)'
                           }}
                         />
+                      )}
+                    </div>
+
+                    {/* Contact Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+                        <span
+                          style={{
+                            fontSize: '1rem',
+                            fontWeight: hasUnread ? 700 : 500,
+                            color: 'var(--text-primary)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
+                          {other.full_name || other.username}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: hasUnread ? 'var(--whatsapp-green)' : 'var(--text-secondary)' }}>
+                          {isOnline ? 'Online' : ''}
+                        </span>
                       </div>
 
-                      {/* Name & Role */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span
+                          style={{
+                            fontSize: '0.875rem',
+                            color: 'var(--text-secondary)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
+                          {other.role === 'admin' ? 'Workspace Admin' : 'Active Community Member'}
+                        </span>
+
+                        {hasUnread && (
                           <span
                             style={{
-                              fontSize: '0.8125rem',
-                              fontWeight: isActive ? 600 : 400,
-                              color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis'
+                              minWidth: '20px',
+                              height: '20px',
+                              padding: '0 5px',
+                              borderRadius: '10px',
+                              backgroundColor: 'var(--whatsapp-green)',
+                              color: '#111b21',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginLeft: '8px'
                             }}
                           >
-                            {other.full_name || other.username}
+                            {conv.unread_count}
                           </span>
-
-                          {other.role === 'admin' && (
-                            <span
-                              style={{
-                                fontSize: '0.625rem',
-                                color: 'var(--accent-rose)',
-                                fontWeight: 500
-                              }}
-                            >
-                              Admin
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })
-              )}
-            </div>
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
 
-      {/* Footer */}
+      {/* WhatsApp E2EE Bottom Note */}
       <div
         style={{
-          padding: '8px 12px',
+          padding: '8px 16px',
           borderTop: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--bg-elevated)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '0.6875rem',
-          color: 'var(--text-muted)'
+          justifyContent: 'center',
+          gap: '6px',
+          fontSize: '0.75rem',
+          color: 'var(--text-secondary)'
         }}
       >
-        <span>🔒 Zero-Admin Access</span>
-        <span>E2EE Active</span>
+        <span>🔒</span>
+        <span>Your personal messages are end-to-end encrypted</span>
       </div>
     </aside>
   );

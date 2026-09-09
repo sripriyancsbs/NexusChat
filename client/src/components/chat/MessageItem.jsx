@@ -12,7 +12,7 @@ import {
   IconX
 } from '../common/Icons.jsx';
 
-const QUICK_EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡'];
+const QUICK_EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
 
 export default function MessageItem({ message, onOpenThread, onReport }) {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Delete this message permanently?')) {
+    if (window.confirm('Delete message?')) {
       try {
         await deleteMessage(message.id);
       } catch (err) {
@@ -67,119 +67,64 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
     <div
       className={`dialogue-pod ${isAuthor ? 'me' : 'them'}`}
       style={{
-        padding: '2px 18px',
+        padding: '2px 24px',
         display: 'flex',
-        gap: '10px',
-        alignItems: 'flex-start'
+        position: 'relative'
       }}
     >
-      {/* Sender Avatar (Only on left for others) */}
-      {!isAuthor && (
-        <div
-          style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border-default)',
-            color: 'var(--text-secondary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 600,
-            fontSize: '0.8125rem',
-            flexShrink: 0,
-            marginTop: '2px'
-          }}
-        >
-          {(message.sender_full_name || message.sender_username || 'U')[0].toUpperCase()}
-        </div>
-      )}
-
-      {/* Message Card Bubble */}
+      {/* WhatsApp Message Bubble */}
       <div
         className={`dialogue-bubble ${isAuthor ? 'me' : 'them'} ${isPinned ? 'pinned' : ''}`}
         style={{ position: 'relative' }}
       >
-        {/* Card Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: isAuthor ? 'flex-end' : 'flex-start',
-            gap: '8px',
-            marginBottom: '4px'
-          }}
-        >
-          {isAuthor ? (
-            <span
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: 'var(--text-accent)'
-              }}
-            >
-              You
-            </span>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {/* Sender Name for group incoming messages */}
+        {!isAuthor && (
+          <div
+            style={{
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              color: 'var(--accent-primary)',
+              marginBottom: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>{message.sender_full_name || message.sender_username}</span>
+            {message.sender_role === 'admin' && (
               <span
                 style={{
-                  fontWeight: 600,
-                  fontSize: '0.8125rem',
-                  color: 'var(--text-primary)'
+                  fontSize: '0.65rem',
+                  padding: '1px 5px',
+                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                  color: '#f43f5e',
+                  fontWeight: 500
                 }}
               >
-                {message.sender_full_name || message.sender_username}
+                Admin
               </span>
+            )}
+          </div>
+        )}
 
-              {message.sender_role === 'admin' && (
-                <span
-                  style={{
-                    fontSize: '0.625rem',
-                    padding: '1px 5px',
-                    borderRadius: 'var(--radius-xs)',
-                    backgroundColor: 'rgba(244, 63, 94, 0.12)',
-                    color: 'var(--accent-rose)',
-                    fontWeight: 500
-                  }}
-                >
-                  Admin
-                </span>
-              )}
-            </div>
-          )}
+        {/* Pinned Tag */}
+        {isPinned && (
+          <div
+            style={{
+              fontSize: '0.6875rem',
+              color: 'var(--accent-amber)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              marginBottom: '2px'
+            }}
+          >
+            <IconPin size={10} /> Pinned
+          </div>
+        )}
 
-          <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
-            {formattedTime}
-          </span>
-
-          {message.is_edited && !isDeleted && (
-            <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
-              (edited)
-            </span>
-          )}
-
-          {isPinned && (
-            <span
-              style={{
-                fontSize: '0.6875rem',
-                padding: '1px 6px',
-                borderRadius: 'var(--radius-xs)',
-                backgroundColor: 'rgba(245, 158, 11, 0.15)',
-                color: 'var(--accent-amber)',
-                fontWeight: 500,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '3px'
-              }}
-            >
-              <IconPin size={10} /> Pinned
-            </span>
-          )}
-        </div>
-
-        {/* Message Content */}
+        {/* Message Text / Edit Input */}
         {isEditing ? (
           <div style={{ marginTop: '4px' }}>
             <textarea
@@ -190,12 +135,13 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
               style={{
                 width: '100%',
                 marginBottom: '6px',
-                backgroundColor: 'var(--bg-canvas)',
-                fontSize: '0.875rem'
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                fontSize: '0.9375rem',
+                color: '#ffffff'
               }}
               autoFocus
             />
-            <div style={{ display: 'flex', gap: '6px', justifyContent: isAuthor ? 'flex-end' : 'flex-start' }}>
+            <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
               <button
                 type="button"
                 onClick={handleSaveEdit}
@@ -216,112 +162,112 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              fontSize: '0.875rem',
-              color: isDeleted ? 'var(--text-muted)' : 'var(--text-primary)',
-              fontStyle: isDeleted ? 'italic' : 'normal',
-              lineHeight: 1.5,
-              wordBreak: 'break-word',
-              whiteSpace: 'pre-wrap'
-            }}
-          >
-            {isDeleted ? 'This message was deleted.' : message.content}
+          <div style={{ wordBreak: 'break-word', display: 'inline' }}>
+            <span
+              style={{
+                fontSize: '0.9375rem',
+                fontStyle: isDeleted ? 'italic' : 'normal',
+                color: isDeleted ? 'var(--text-secondary)' : 'inherit'
+              }}
+            >
+              {isDeleted ? '🚫 This message was deleted' : message.content}
+            </span>
+
+            {/* Inline WhatsApp Timestamp and Blue Checks */}
+            <span className="bubble-meta">
+              <span>{formattedTime}</span>
+              {message.is_edited && !isDeleted && <span>(edited)</span>}
+              {isAuthor && (
+                <span style={{ color: 'var(--whatsapp-blue-check)', fontSize: '0.85rem', fontWeight: 700, marginLeft: '2px' }}>
+                  ✓✓
+                </span>
+              )}
+            </span>
           </div>
         )}
 
-        {/* Reactions List */}
+        {/* WhatsApp Quoted Reply / Thread Branch */}
+        {!isDeleted && message.reply_count > 0 && (
+          <div
+            onClick={() => onOpenThread(message)}
+            style={{
+              marginTop: '6px',
+              padding: '4px 8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.15)',
+              borderLeft: '3px solid var(--accent-primary)',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '0.78125rem'
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <IconReply size={12} />
+              <span>{message.reply_count} {message.reply_count === 1 ? 'reply' : 'replies'}</span>
+            </span>
+            <span style={{ fontSize: '0.6875rem', opacity: 0.8 }}>View thread →</span>
+          </div>
+        )}
+
+        {/* Reactions floating capsule */}
         {!isDeleted && message.reactions && message.reactions.length > 0 && (
           <div
             style={{
+              position: 'absolute',
+              bottom: '-12px',
+              left: isAuthor ? 'auto' : '8px',
+              right: isAuthor ? '8px' : 'auto',
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '4px',
-              marginTop: '6px',
-              justifyContent: isAuthor ? 'flex-end' : 'flex-start'
+              gap: '2px',
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-default)',
+              borderRadius: '12px',
+              padding: '1px 6px',
+              boxShadow: 'var(--shadow-sm)',
+              zIndex: 5
             }}
           >
-            {message.reactions.map((r, idx) => {
-              const hasReacted = r.users?.includes(user?.id);
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleToggleReaction(r.reaction)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: '2px 7px',
-                    borderRadius: 'var(--radius-sm)',
-                    backgroundColor: hasReacted ? 'rgba(99, 102, 241, 0.15)' : 'var(--bg-elevated)',
-                    border: hasReacted ? '1px solid rgba(99, 102, 241, 0.35)' : '1px solid var(--border-default)',
-                    color: hasReacted ? 'var(--text-accent)' : 'var(--text-secondary)',
-                    cursor: 'pointer',
-                    fontSize: '0.75rem',
-                    transition: 'all var(--transition-fast)'
-                  }}
-                >
-                  <span>{r.reaction}</span>
-                  <span style={{ fontWeight: 600, fontSize: '0.6875rem' }}>
-                    {r.count}
-                  </span>
-                </button>
-              );
-            })}
+            {message.reactions.map((r, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleToggleReaction(r.reaction)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  padding: '1px 3px'
+                }}
+              >
+                <span>{r.reaction}</span>
+                <span style={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>
+                  {r.count > 1 ? r.count : ''}
+                </span>
+              </button>
+            ))}
           </div>
         )}
 
-        {/* Replies Link */}
-        {!isDeleted && message.reply_count > 0 && (
-          <div
-            style={{
-              marginTop: '6px',
-              display: 'flex',
-              justifyContent: isAuthor ? 'flex-end' : 'flex-start'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => onOpenThread(message)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '2px 8px',
-                borderRadius: 'var(--radius-xs)',
-                backgroundColor: 'rgba(99, 102, 241, 0.08)',
-                border: '1px solid rgba(99, 102, 241, 0.25)',
-                color: 'var(--text-accent)',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              <IconReply size={12} />
-              <span>
-                {message.reply_count} {message.reply_count === 1 ? 'reply' : 'replies'}
-              </span>
-            </button>
-          </div>
-        )}
-
-        {/* Hover Action Capsule */}
+        {/* Hover Action Menu Capsule */}
         {!isDeleted && !isEditing && (
           <div className="message-action-capsule">
             <button
               type="button"
               onClick={() => setShowEmojiPicker((prev) => !prev)}
-              title="React with emoji"
+              title="React"
               style={{
                 background: 'transparent',
                 border: 'none',
                 padding: '3px 5px',
                 color: 'var(--text-secondary)',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center'
+                display: 'flex'
               }}
             >
               <IconSmile size={14} />
@@ -337,8 +283,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 padding: '3px 5px',
                 color: 'var(--text-secondary)',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center'
+                display: 'flex'
               }}
             >
               <IconReply size={14} />
@@ -354,8 +299,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 padding: '3px 5px',
                 color: isPinned ? 'var(--accent-amber)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center'
+                display: 'flex'
               }}
             >
               <IconPin size={14} />
@@ -373,8 +317,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                     padding: '3px 5px',
                     color: 'var(--text-secondary)',
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center'
+                    display: 'flex'
                   }}
                 >
                   <IconEdit size={14} />
@@ -388,10 +331,9 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                     background: 'transparent',
                     border: 'none',
                     padding: '3px 5px',
-                    color: 'var(--accent-rose)',
+                    color: '#f43f5e',
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center'
+                    display: 'flex'
                   }}
                 >
                   <IconTrash size={14} />
@@ -408,10 +350,9 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                   background: 'transparent',
                   border: 'none',
                   padding: '3px 5px',
-                  color: 'var(--accent-rose)',
+                  color: '#f43f5e',
                   cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center'
+                  display: 'flex'
                 }}
               >
                 <IconAlertCircle size={14} />
@@ -425,15 +366,16 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           <div
             style={{
               position: 'absolute',
-              top: '-38px',
-              right: '8px',
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border-strong)',
-              borderRadius: 'var(--radius-sm)',
+              top: '-40px',
+              right: isAuthor ? '0' : 'auto',
+              left: isAuthor ? 'auto' : '0',
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-default)',
+              borderRadius: '20px',
               boxShadow: 'var(--shadow-md)',
               display: 'flex',
-              gap: '3px',
-              padding: '4px 6px',
+              gap: '4px',
+              padding: '4px 8px',
               zIndex: 30
             }}
           >
@@ -445,13 +387,12 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  fontSize: '1rem',
+                  fontSize: '1.2rem',
                   cursor: 'pointer',
-                  padding: '2px 4px',
-                  borderRadius: 'var(--radius-xs)',
+                  padding: '2px',
                   transition: 'transform var(--transition-fast)'
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.25)')}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
               >
                 {emoji}
@@ -460,28 +401,6 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           </div>
         )}
       </div>
-
-      {/* Sender Avatar for Current User on right */}
-      {isAuthor && (
-        <div
-          style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'var(--accent-primary)',
-            color: '#ffffff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 600,
-            fontSize: '0.8125rem',
-            flexShrink: 0,
-            marginTop: '2px'
-          }}
-        >
-          {(user?.full_name || user?.username || 'Y')[0].toUpperCase()}
-        </div>
-      )}
     </div>
   );
 }
