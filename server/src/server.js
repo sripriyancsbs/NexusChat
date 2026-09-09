@@ -3,6 +3,9 @@ import { WebSocketServer } from 'ws';
 import app from './app.js';
 import { config } from './config/env.js';
 import { logger } from './utils/logger.js';
+import { initDb } from './config/db.js';
+import { runMigrations } from './db/migrate.js';
+import { seedDatabase } from './db/seed.js';
 
 const server = http.createServer(app);
 
@@ -54,7 +57,15 @@ wss.on('close', () => {
 });
 
 // Start Server
-server.listen(config.port, () => {
+server.listen(config.port, async () => {
+  try {
+    await initDb();
+    await runMigrations();
+    await seedDatabase();
+  } catch (err) {
+    logger.error('Failed to initialize database on startup', { error: err.message });
+  }
+
   logger.info(`NexusChat Server listening on port ${config.port} [${config.env}]`);
   logger.info(`REST API: http://localhost:${config.port}/api`);
   logger.info(`Health check: http://localhost:${config.port}/api/health`);
