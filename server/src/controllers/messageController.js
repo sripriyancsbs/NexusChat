@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { query } from '../config/db.js';
+import { socketService } from '../services/socketService.js';
 import { logger } from '../utils/logger.js';
 
 /**
@@ -202,6 +203,11 @@ export const sendMessage = async (req, res) => {
 
     const createdMsg = messageResult.rows[0];
 
+    // Real-time broadcast strictly to conversation participants
+    socketService.broadcastToConversation(conversationId, 'message:new', {
+      message: createdMsg
+    });
+
     return res.status(201).json({
       message: createdMsg
     });
@@ -250,17 +256,26 @@ export const editMessage = async (req, res) => {
       });
     }
 
+    const updatedAt = new Date().toISOString();
     await query(`
       UPDATE messages 
       SET content = $1, updated_at = CURRENT_TIMESTAMP 
       WHERE id = $2
     `, [content.trim(), id]);
 
+    // Real-time broadcast
+    socketService.broadcastToConversation(msg.conversation_id, 'message:edit', {
+      conversationId: msg.conversation_id,
+      messageId: id,
+      content: content.trim(),
+      updatedAt
+    });
+
     return res.status(200).json({
       message: {
         id,
         content: content.trim(),
-        updatedAt: new Date().toISOString()
+        updatedAt
       }
     });
   } catch (err) {
@@ -290,12 +305,20 @@ export const deleteMessage = async (req, res) => {
       });
     }
 
+    const deletedAt = new Date().toISOString();
     await query('UPDATE messages SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1', [id]);
+
+    // Real-time broadcast
+    socketService.broadcastToConversation(msg.conversation_id, 'message:delete', {
+      conversationId: msg.conversation_id,
+      messageId: id,
+      deletedAt
+    });
 
     return res.status(200).json({
       success: true,
       messageId: id,
-      deletedAt: new Date().toISOString()
+      deletedAt
     });
   } catch (err) {
     logger.error('Delete message error', { error: err.message });
@@ -339,6 +362,16 @@ export const toggleReaction = async (req, res) => {
     if (existing.rows.length > 0) {
       // Remove reaction
       await query('DELETE FROM message_reactions WHERE id = $1', [existing.rows[0].id]);
+
+      socketService.broadcastToConversation(conversationId, 'reaction:toggle', {
+        conversationId,
+        messageId: id,
+        reaction: sanitizedReaction,
+        userId,
+        username: req.user.username,
+        action: 'REMOVED'
+      });
+
       return res.status(200).json({ action: 'REMOVED', reaction: sanitizedReaction, messageId: id });
     } else {
       // Add reaction
@@ -347,6 +380,16 @@ export const toggleReaction = async (req, res) => {
         INSERT INTO message_reactions (id, message_id, user_id, reaction)
         VALUES ($1, $2, $3, $4)
       `, [reactionId, id, userId, sanitizedReaction]);
+
+      socketService.broadcastToConversation(conversationId, 'reaction:toggle', {
+        conversationId,
+        messageId: id,
+        reaction: sanitizedReaction,
+        userId,
+        username: req.user.username,
+        action: 'ADDED'
+      });
+
       return res.status(201).json({ action: 'ADDED', reaction: sanitizedReaction, messageId: id });
     }
   } catch (err) {
@@ -380,6 +423,12 @@ export const togglePin = async (req, res) => {
       SET is_pinned = $1, pinned_by = $2, pinned_at = $3
       WHERE id = $4
     `, [newPinStatus, newPinStatus ? userId : null, newPinStatus ? new Date() : null, id]);
+
+    socketService.broadcastToConversation(msg.conversation_id, 'pin:toggle', {
+      conversationId: msg.conversation_id,
+      messageId: id,
+      isPinned: newPinStatus
+    });
 
     return res.status(200).json({ isPinned: newPinStatus, messageId: id });
   } catch (err) {

@@ -1,44 +1,19 @@
 import http from 'http';
 import { WebSocketServer } from 'ws';
+import { fileURLToPath } from 'url';
 import app from './app.js';
 import { config } from './config/env.js';
 import { logger } from './utils/logger.js';
 import { initDb } from './config/db.js';
 import { runMigrations } from './db/migrate.js';
 import { seedDatabase } from './db/seed.js';
+import { socketService } from './services/socketService.js';
 
 const server = http.createServer(app);
 
 // WebSocket Server initialization on same HTTP server
 const wss = new WebSocketServer({ server });
-
-wss.on('connection', (ws, req) => {
-  logger.info('Incoming WebSocket connection initiated', {
-    url: req.url,
-    ip: req.socket.remoteAddress
-  });
-
-  // Base Phase 1 ping/pong heartbeat
-  ws.isAlive = true;
-  ws.on('pong', () => {
-    ws.isAlive = true;
-  });
-
-  ws.on('message', (data) => {
-    try {
-      const message = JSON.parse(data.toString());
-      if (message.type === 'ping') {
-        ws.send(JSON.stringify({ type: 'pong', timestamp: Date.now() }));
-      }
-    } catch {
-      // Ignore unparseable raw pings in Phase 1
-    }
-  });
-
-  ws.on('close', () => {
-    logger.debug('WebSocket client disconnected');
-  });
-});
+socketService.initialize(wss);
 
 // Heartbeat interval to prune dead connections
 const heartbeatInterval = setInterval(() => {
@@ -56,21 +31,30 @@ wss.on('close', () => {
   clearInterval(heartbeatInterval);
 });
 
-// Start Server
-server.listen(config.port, async () => {
-  try {
-    await initDb();
-    await runMigrations();
-    await seedDatabase();
-  } catch (err) {
-    logger.error('Failed to initialize database on startup', { error: err.message });
-  }
+// Start Server helper
+export const startServer = (port = config.port) => {
+  return new Promise((resolve) => {
+    server.listen(port, async () => {
+      try {
+        await initDb();
+        await runMigrations();
+        await seedDatabase();
+      } catch (err) {
+        logger.error('Failed to initialize database on startup', { error: err.message });
+      }
 
-  logger.info(`NexusChat Server listening on port ${config.port} [${config.env}]`);
-  logger.info(`REST API: http://localhost:${config.port}/api`);
-  logger.info(`Health check: http://localhost:${config.port}/api/health`);
-  logger.info(`WebSocket endpoint: ws://localhost:${config.port}`);
-});
+      logger.info(`NexusChat Server listening on port ${port} [${config.env}]`);
+      logger.info(`REST API: http://localhost:${port}/api`);
+      logger.info(`Health check: http://localhost:${port}/api/health`);
+      logger.info(`WebSocket endpoint: ws://localhost:${port}`);
+      resolve(server);
+    });
+  });
+};
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  startServer();
+}
 
 // Graceful shutdown
 const gracefulShutdown = (signal) => {
