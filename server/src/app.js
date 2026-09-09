@@ -9,6 +9,10 @@ import accessRequestRoutes from './routes/accessRequestRoutes.js';
 import channelRoutes from './routes/channelRoutes.js';
 import conversationRoutes from './routes/conversationRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
 
 const app = express();
 
@@ -51,6 +55,10 @@ app.use('/api/access-requests', accessRequestRoutes);
 app.use('/api/channels', channelRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportRoutes);
 
 // 404 & Error Handlers
 app.use(notFound);
