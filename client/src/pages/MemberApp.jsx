@@ -16,7 +16,7 @@ import UserProfileModal from '../components/common/UserProfileModal.jsx';
 import ReportMessageModal from '../components/common/ReportMessageModal.jsx';
 
 export default function MemberApp({ onNavigateAdmin }) {
-  const { channels, activeConversationId, selectChannel, activeThread } = useChat();
+  const { channels, activeConversationId, selectChannel, activeThread, openThread } = useChat();
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const [isNewDMOpen, setIsNewDMOpen] = useState(false);

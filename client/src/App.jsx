@@ -82,7 +82,7 @@ function AppRouter() {
         <LoginPage
           onNavigateHome={() => navigate('HOME', '/')}
           onLoginSuccess={(logged) => {
-            if (logged.role === 'ADMIN' && window.location.pathname.startsWith('/admin')) {
+            if (logged.role === 'ADMIN') {
               navigate('ADMIN', '/admin');
             } else {
               navigate('CHAT', '/app');
