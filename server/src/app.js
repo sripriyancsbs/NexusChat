@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/env.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
@@ -37,6 +39,10 @@ app.get('/api', (req, res) => {
     version: '1.0.0'
   });
 });
+
+// Modular Feature Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 & Error Handlers
 app.use(notFound);
