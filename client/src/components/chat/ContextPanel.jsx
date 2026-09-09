@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
-import { IconX, IconPin, IconLock, IconUsers, IconInfo } from '../common/Icons.jsx';
+import { IconX, IconPin, IconLock, IconUsers, IconInfo, IconPalette } from '../common/Icons.jsx';
 
-export default function ContextPanel({ isOpen, onClose }) {
+const THEMES = [
+  { id: 'sunset', label: 'Sunset Glow', gradient: 'var(--chat-theme-sunset)' },
+  { id: 'prism', label: 'Prism Violet', gradient: 'var(--chat-theme-prism)' },
+  { id: 'ocean', label: 'Ocean Breeze', gradient: 'var(--chat-theme-ocean)' },
+  { id: 'neon', label: 'Electric Neon', gradient: 'var(--chat-theme-neon)' },
+  { id: 'emerald', label: 'Emerald Zen', gradient: 'var(--chat-theme-emerald)' },
+  { id: 'berry', label: 'Sweet Berry', gradient: 'var(--chat-theme-berry)' }
+];
+
+export default function ContextPanel({ isOpen, onClose, currentTheme = 'sunset', onSelectTheme }) {
   const { activeConversation, messages, togglePin } = useChat();
   const [activeTab, setActiveTab] = useState('DETAILS');
 
@@ -26,7 +35,7 @@ export default function ContextPanel({ isOpen, onClose }) {
   return (
     <aside
       style={{
-        width: '340px',
+        width: '320px',
         backgroundColor: 'var(--bg-surface)',
         borderLeft: '1px solid var(--border-subtle)',
         display: 'flex',
@@ -40,7 +49,7 @@ export default function ContextPanel({ isOpen, onClose }) {
       {/* Panel Header */}
       <div
         style={{
-          height: '56px',
+          height: '62px',
           padding: '0 18px',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
@@ -50,25 +59,16 @@ export default function ContextPanel({ isOpen, onClose }) {
           backgroundColor: 'var(--bg-surface)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-            Conversation Info
-          </span>
-        </div>
+        <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+          Details & Customization
+        </span>
 
         <button
           type="button"
           onClick={onClose}
-          title="Close panel"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            padding: '4px',
-            borderRadius: 'var(--radius-xs)',
-            display: 'flex'
-          }}
+          title="Close details"
+          className="btn-icon"
+          style={{ width: '32px', height: '32px' }}
         >
           <IconX size={16} />
         </button>
@@ -132,14 +132,14 @@ export default function ContextPanel({ isOpen, onClose }) {
       {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
         {activeTab === 'DETAILS' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Showcase Card */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Contact / Space Profile Hero */}
             <div
               style={{
-                padding: '16px',
+                padding: '20px 16px',
                 backgroundColor: 'var(--bg-elevated)',
                 border: '1px solid var(--border-default)',
-                borderRadius: 'var(--radius-md)',
+                borderRadius: 'var(--radius-lg)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -147,21 +147,30 @@ export default function ContextPanel({ isOpen, onClose }) {
               }}
             >
               <div
+                className="story-ring"
                 style={{
                   width: '64px',
                   height: '64px',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--grad-prism)',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
+                  padding: '2.5px',
                   marginBottom: '10px'
                 }}
               >
-                {isChannel ? (activeConversation.is_private ? <IconLock size={24} /> : '#') : (title[0] || 'U').toUpperCase()}
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--bg-card)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    fontWeight: 700,
+                    color: '#ffffff'
+                  }}
+                >
+                  {isChannel ? (activeConversation.is_private ? <IconLock size={22} /> : '#') : (title[0] || 'U').toUpperCase()}
+                </div>
               </div>
 
               <div style={{ fontSize: '1.0625rem', fontWeight: 600, color: 'var(--text-primary)' }}>
@@ -169,7 +178,40 @@ export default function ContextPanel({ isOpen, onClose }) {
               </div>
 
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                {isChannel ? 'Community Channel' : `@${activeConversation.other_user?.username || ''}`}
+                {isChannel ? 'Community Space' : `@${activeConversation.other_user?.username || ''}`}
+              </div>
+            </div>
+
+            {/* Messenger-style "Customize Chat" Theme Section */}
+            <div
+              style={{
+                padding: '14px',
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-md)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
+                <IconPalette size={15} />
+                <span>Chat Gradient Theme</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                {THEMES.map((th) => (
+                  <button
+                    key={th.id}
+                    type="button"
+                    onClick={() => onSelectTheme && onSelectTheme(th.id)}
+                    className={`theme-swatch ${currentTheme === th.id ? 'active' : ''}`}
+                    style={{
+                      background: th.gradient,
+                      width: '100%',
+                      height: '34px',
+                      borderRadius: '8px'
+                    }}
+                    title={th.label}
+                  />
+                ))}
               </div>
             </div>
 
@@ -205,7 +247,7 @@ export default function ContextPanel({ isOpen, onClose }) {
                 🔒 Zero-Admin Access Boundary
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-                Messages are private to authorized conversation participants. System administrators cannot inspect message text.
+                Messages are private to authorized conversation participants. Server administrators cannot inspect message text.
               </div>
             </div>
           </div>

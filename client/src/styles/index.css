@@ -1,54 +1,55 @@
 /* ============================================================
-   NexusChat — Aura Obsidian & Modern Prism Design System
-   A unique, original, consumer-grade conversational architecture
-   Inspired by modern messaging principles (Instagram, WhatsApp, Linear)
-   Palette: Midnight Obsidian, Iris & Ocean Cyan Prism Gradient,
-   Elevated Card Surfaces, and Crisp Typography.
+   NexusChat — Aura Social & Modern Prism Design System
+   Inspired by Instagram Direct, Facebook Messenger, and Discord
+   Fluid, expressive, consumer-grade social architecture
+   Zero resemblance to Slack or WhatsApp Web
    ============================================================ */
 
 :root {
-  /* Core Foundation - Midnight Obsidian */
-  --bg-canvas: #0c0e14;
-  --bg-surface: #12151e;
-  --bg-elevated: #181c28;
-  --bg-card: #1e2332;
-  --bg-card-hover: #24293a;
+  /* Core Foundation - Deep Obsidian Canvas */
+  --bg-canvas: #090b10;
+  --bg-surface: #11141d;
+  --bg-elevated: #181d2a;
+  --bg-card: #1f2537;
+  --bg-card-hover: #262c41;
   --bg-hover: rgba(255, 255, 255, 0.05);
-  --bg-active: rgba(99, 102, 241, 0.12);
+  --bg-active: rgba(99, 102, 241, 0.15);
 
-  /* Nexus Prism Signature Accents */
-  --grad-prism: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-  --grad-bubble-me: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
-  --grad-avatar: linear-gradient(135deg, rgba(79, 70, 229, 0.25) 0%, rgba(6, 182, 212, 0.25) 100%);
+  /* Signature Instagram / Messenger Dynamic Chat Theme Gradients */
+  --chat-theme-prism: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #c026d3 100%);
+  --chat-theme-sunset: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  --chat-theme-ocean: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #10b981 100%);
+  --chat-theme-neon: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #ec4899 100%);
+  --chat-theme-emerald: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+  --chat-theme-berry: linear-gradient(135deg, #db2777 0%, #f43f5e 50%, #fb7185 100%);
 
+  /* Active Theme Alias (Defaults to Sunset/Prism) */
+  --grad-active-chat: var(--chat-theme-sunset);
+  --grad-prism: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #f09433, #dc2743, #bc1888);
+
+  /* Accents */
   --accent-primary: #6366f1;
   --accent-primary-hover: #4f46e5;
   --accent-cyan: #06b6d4;
   --accent-emerald: #10b981;
   --accent-amber: #f59e0b;
   --accent-rose: #f43f5e;
+  --accent-fuchsia: #d946ef;
 
-  /* Backward Compatibility Aliases */
+  /* Aliases */
   --cyber-cyan: #06b6d4;
-  --cyber-cyan-glow: rgba(6, 182, 212, 0.2);
   --cyber-amber: #f59e0b;
-  --cyber-amber-glow: rgba(245, 158, 11, 0.2);
   --cyber-mint: #10b981;
   --cyber-violet: #8b5cf6;
   --cyber-coral: #f43f5e;
   --whatsapp-green: #10b981;
 
-  /* Message Bubbles */
-  --bubble-me: #3730a3;
-  --bubble-me-text: #ffffff;
-  --bubble-them: #181c28;
-  --bubble-them-text: #f1f3f5;
-
   /* Text Hierarchy */
-  --text-primary: #f1f3f5;
-  --text-secondary: #9aa2b1;
-  --text-muted: #6b7280;
-  --text-accent: #818cf8;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #a5b4fc;
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -56,57 +57,53 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Borders & Dividers */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-focus: rgba(99, 102, 241, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.2);
 
-  /* Clean Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.45);
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.35);
 
   /* Radii */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-xl: 22px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 140ms ease;
-  --transition-normal: 220ms ease;
+  --transition-fast: 140ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 220ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Light Theme Variables */
 [data-theme='light'] {
-  --bg-canvas: #f4f6fb;
+  --bg-canvas: #f0f2f5;
   --bg-surface: #ffffff;
-  --bg-elevated: #ebedf5;
+  --bg-elevated: #f8fafc;
   --bg-card: #ffffff;
-  --bg-card-hover: #f7f8fc;
+  --bg-card-hover: #f1f5f9;
   --bg-hover: rgba(0, 0, 0, 0.04);
   --bg-active: rgba(99, 102, 241, 0.1);
 
-  --bubble-me: #4f46e5;
-  --bubble-me-text: #ffffff;
-  --bubble-them: #ffffff;
-  --bubble-them-text: #0f172a;
-
   --text-primary: #0f172a;
-  --text-secondary: #526071;
-  --text-muted: #8896a6;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 
   --border-subtle: rgba(0, 0, 0, 0.06);
   --border-default: rgba(0, 0, 0, 0.1);
   --border-strong: rgba(0, 0, 0, 0.18);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
-/* Resets */
+/* Base Resets */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -130,15 +127,159 @@ html, body {
   overflow: hidden;
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.015em;
+/* ============================================================
+   1. GLOBAL PRIMARY SOCIAL RAIL (Instagram / Messenger Dock)
+   ============================================================ */
+.social-nav-rail {
+  width: 64px;
+  height: 100%;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  flex-shrink: 0;
+  z-index: 30;
 }
 
-/* Modern Buttons */
+.social-nav-item {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.social-nav-item:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-hover);
+  transform: scale(1.06);
+}
+
+.social-nav-item.active {
+  color: #ffffff;
+  background: var(--grad-prism);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.social-nav-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-rose);
+  border: 2px solid var(--bg-surface);
+}
+
+/* ============================================================
+   2. FLOATING ISLAND PANELS & CONTAINER
+   ============================================================ */
+.floating-island {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition-fast);
+}
+
+.floating-island:hover {
+  border-color: var(--border-strong);
+}
+
+/* ============================================================
+   3. INSTAGRAM NOTES & ACTIVE STORY RAIL
+   ============================================================ */
+.story-rail {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px 10px 14px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border-subtle);
+  scrollbar-width: none;
+}
+
+.story-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.story-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform var(--transition-fast);
+}
+
+.story-node:hover {
+  transform: translateY(-2px);
+}
+
+.story-note-bubble {
+  position: absolute;
+  top: -10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+  pointer-events: none;
+  animation: noteFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes noteFloat {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-2px); }
+}
+
+.story-ring {
+  padding: 2.5px;
+  border-radius: 50%;
+  background: var(--grad-avatar-ring);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border: 2px solid var(--bg-surface);
+}
+
+/* ============================================================
+   4. BUTTONS & UI CONTROLS
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -158,11 +299,11 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
   background: var(--grad-prism);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
 }
 
 .btn-primary:hover {
-  opacity: 0.94;
+  opacity: 0.92;
   transform: translateY(-0.5px);
 }
 
@@ -177,25 +318,32 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--border-strong);
 }
 
-.btn-outline {
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   background: transparent;
+  border: none;
   color: var(--text-secondary);
-  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.btn-outline:hover {
-  background: var(--bg-hover);
+.btn-icon:hover {
+  background-color: var(--bg-hover);
   color: var(--text-primary);
-  border-color: var(--border-strong);
+  transform: scale(1.05);
 }
 
-/* Inputs */
 .input {
   width: 100%;
-  padding: 9px 14px;
+  padding: 8px 14px;
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   color: var(--text-primary);
   font-size: 0.875rem;
   font-family: var(--font-sans);
@@ -208,11 +356,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
 }
 
-.input::placeholder {
-  color: var(--text-muted);
-}
-
-/* Privacy Badge */
+/* Privacy Security Badge */
 .privacy-badge {
   display: inline-flex;
   align-items: center;
@@ -222,37 +366,43 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(99, 102, 241, 0.25);
   border-radius: var(--radius-full);
   color: var(--text-accent);
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 500;
 }
 
-/* Conversation Item */
-.chat-list-item {
-  padding: 10px 14px;
-  margin: 2px 8px;
-  border-radius: var(--radius-sm);
+/* ============================================================
+   5. CONVERSATION CARDS (Instagram / Messenger Inbox Rows)
+   ============================================================ */
+.channel-card {
+  padding: 10px 12px;
+  margin: 2px 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 12px;
   transition: all var(--transition-fast);
+  border: 1px solid transparent;
 }
 
-.chat-list-item:hover {
-  background-color: var(--bg-hover);
+.channel-card:hover {
+  background: var(--bg-hover);
 }
 
-.chat-list-item.active {
-  background-color: var(--bg-card);
+.channel-card.active {
+  background: var(--bg-card);
+  border-color: var(--border-default);
   box-shadow: var(--shadow-sm);
 }
 
-/* Message Dialogue Pods */
+/* ============================================================
+   6. DIALOGUE FEED & BUBBLE STYLING
+   ============================================================ */
 .dialogue-pod {
   display: flex;
   margin-bottom: 8px;
   position: relative;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 .dialogue-pod.me {
@@ -263,25 +413,34 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: flex-start;
 }
 
-/* Message Bubble */
+/* Instagram / Messenger Dynamic Gradient Pill Bubbles */
 .dialogue-bubble {
   max-width: 68%;
   min-width: 80px;
-  padding: 8px 14px;
-  border-radius: 16px;
+  padding: 10px 16px;
+  border-radius: 20px;
   position: relative;
   font-size: 0.90625rem;
   line-height: 1.45;
   box-shadow: var(--shadow-sm);
   word-wrap: break-word;
-  transition: all var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  user-select: text;
 }
 
+/* Dynamic theme gradients for outgoing messages */
 .dialogue-bubble.me {
-  background: var(--grad-bubble-me);
+  background: var(--grad-active-chat);
   color: #ffffff;
   border-bottom-right-radius: 4px;
 }
+
+.theme-prism .dialogue-bubble.me { background: var(--chat-theme-prism); }
+.theme-sunset .dialogue-bubble.me { background: var(--chat-theme-sunset); }
+.theme-ocean .dialogue-bubble.me { background: var(--chat-theme-ocean); }
+.theme-neon .dialogue-bubble.me { background: var(--chat-theme-neon); }
+.theme-emerald .dialogue-bubble.me { background: var(--chat-theme-emerald); }
+.theme-berry .dialogue-bubble.me { background: var(--chat-theme-berry); }
 
 .dialogue-bubble.them {
   background: var(--bg-elevated);
@@ -291,33 +450,81 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dialogue-bubble.pinned {
-  border: 1px solid rgba(245, 158, 11, 0.45);
+  border: 1px solid rgba(245, 158, 11, 0.5);
 }
 
-/* Message Meta (Timestamp) */
 .bubble-meta {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   float: right;
-  margin-left: 10px;
+  margin-left: 12px;
   margin-top: 4px;
   font-size: 0.6875rem;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
-/* Floating Action Capsule */
-.message-action-capsule {
+/* Double-click Heart Celebration */
+.heart-burst {
   position: absolute;
-  top: -14px;
-  right: 24px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 2.2rem;
+  pointer-events: none;
+  animation: heartBurstAnim 600ms ease-out forwards;
+  z-index: 25;
+}
+
+@keyframes heartBurstAnim {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  40% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
+  80% { transform: translate(-50%, -60%) scale(1.1); opacity: 0.9; }
+  100% { transform: translate(-50%, -80%) scale(0.9); opacity: 0; }
+}
+
+/* Floating Reactions on Bubbles */
+.bubble-reaction-badge {
+  position: absolute;
+  bottom: -9px;
   background: var(--bg-card);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-full);
-  padding: 2px 4px;
+  padding: 1px 6px;
+  font-size: 0.6875rem;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+  z-index: 5;
+}
+
+.dialogue-pod.me .bubble-reaction-badge {
+  right: 12px;
+}
+
+.dialogue-pod.them .bubble-reaction-badge {
+  left: 12px;
+}
+
+.bubble-reaction-badge:hover {
+  transform: scale(1.12);
+}
+
+/* Action Capsule on Hover */
+.message-action-capsule {
+  position: absolute;
+  top: -14px;
+  right: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-fast);
@@ -330,26 +537,72 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: auto;
 }
 
-/* Modern Composer */
-.modern-composer-card {
-  margin: 12px 18px 16px 18px;
+/* ============================================================
+   7. INSTAGRAM DIRECT FLOATING PILL COMPOSER
+   ============================================================ */
+.floating-composer-deck {
+  margin: 10px 24px 18px 24px;
   background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  padding: 6px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.modern-composer-card:focus-within {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+.floating-composer-deck:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
 }
 
-/* Scrollbars */
+/* Quick Like Heart Button */
+.quick-heart-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-rose);
+  font-size: 1.35rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: transform 160ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.quick-heart-btn:hover {
+  transform: scale(1.25);
+}
+
+.quick-heart-btn:active {
+  transform: scale(0.85);
+}
+
+/* ============================================================
+   8. CHAT THEME PALETTE SWATCHES
+   ============================================================ */
+.theme-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.theme-swatch:hover {
+  transform: scale(1.15);
+}
+
+.theme-swatch.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

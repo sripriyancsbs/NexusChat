@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { IconPlus, IconLock, IconHash, IconUsers } from '../common/Icons.jsx';
+import { IconPlus, IconLock, IconHash, IconMessageSquare } from '../common/Icons.jsx';
+
+const STATUS_NOTES = ['vibing ✨', 'coding 💻', 'music 🎧', 'online 🟢', 'coffee ☕', 'studying 📚', 'deep work 🚀'];
 
 export default function ChannelSidebar({
   onOpenCreateChannel,
@@ -11,7 +13,9 @@ export default function ChannelSidebar({
   onOpenProfile,
   onNavigateAdmin,
   isMobileOpen,
-  onCloseMobile
+  onCloseMobile,
+  activeFilter = 'ALL',
+  setActiveFilter
 }) {
   const {
     channels,
@@ -23,7 +27,10 @@ export default function ChannelSidebar({
   } = useChat();
   const { user } = useAuth();
 
-  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'CHANNELS' | 'DIRECT'
+  const [localFilter, setLocalFilter] = useState('ALL');
+  const currentFilter = setActiveFilter ? activeFilter : localFilter;
+  const updateFilter = setActiveFilter || setLocalFilter;
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const formatName = (name) => {
@@ -44,112 +51,184 @@ export default function ChannelSidebar({
     return name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
+  // Extract contacts for Instagram Notes & Active Story Rail
+  const activeContacts = conversations
+    .filter((conv) => conv.other_user)
+    .map((conv, idx) => {
+      const isOnline = presenceMap[conv.other_user.id] === 'online' || conv.other_user.status === 'online';
+      const note = STATUS_NOTES[idx % STATUS_NOTES.length];
+      return {
+        conv,
+        user: conv.other_user,
+        isOnline,
+        note
+      };
+    });
+
   return (
     <aside
-      className={`sidebar ${isMobileOpen ? 'open' : ''}`}
+      className={`floating-island ${isMobileOpen ? 'open' : ''}`}
       style={{
         width: '320px',
-        backgroundColor: 'var(--bg-surface)',
-        borderRight: '1px solid var(--border-subtle)',
-        display: 'flex',
-        flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
         userSelect: 'none',
         position: 'relative'
       }}
     >
-      {/* Sidebar Header */}
+      {/* Sidebar Header: Instagram Direct Header */}
       <div
         style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid var(--border-subtle)',
+          padding: '14px 16px 10px 16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}
       >
-        <span
-          style={{
-            fontSize: '0.9375rem',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.01em'
-          }}
-        >
-          Conversations
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span
+            style={{
+              fontSize: '1.0625rem',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              fontFamily: 'var(--font-display)'
+            }}
+          >
+            Direct & Spaces
+          </span>
+        </div>
 
-        {/* Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <button
             type="button"
             onClick={onOpenCreateChannel}
-            title="Create Channel"
+            title="Create Space"
             className="btn btn-secondary"
             style={{
-              padding: '4px 8px',
+              padding: '5px 9px',
               fontSize: '0.75rem',
-              borderRadius: 'var(--radius-sm)',
+              borderRadius: 'var(--radius-full)',
               gap: '4px'
             }}
           >
-            <IconPlus size={13} />
-            <span>Channel</span>
+            <IconPlus size={12} />
+            <span>Space</span>
           </button>
 
           <button
             type="button"
             onClick={onOpenNewDM}
             title="New Direct Message"
-            className="btn btn-secondary"
+            className="btn btn-primary"
             style={{
-              padding: '4px 8px',
+              padding: '5px 10px',
               fontSize: '0.75rem',
-              borderRadius: 'var(--radius-sm)'
+              borderRadius: 'var(--radius-full)',
+              gap: '4px'
             }}
           >
-            <span>+ DM</span>
+            <IconPlus size={12} />
+            <span>Chat</span>
           </button>
         </div>
       </div>
 
-      {/* Search Input & Filter Pills */}
+      {/* Instagram Notes & Active Story Rail */}
+      {activeContacts.length > 0 && (
+        <div className="story-rail">
+          {activeContacts.map(({ conv, user: contactUser, isOnline, note }) => (
+            <div
+              key={contactUser.id}
+              onClick={() => {
+                selectConversation(conv);
+                if (onCloseMobile) onCloseMobile();
+              }}
+              className="story-node"
+              title={`Message ${contactUser.full_name || contactUser.username} (${isOnline ? 'Online' : 'Offline'})`}
+            >
+              {/* Instagram Note Bubble */}
+              <div className="story-note-bubble">
+                {note}
+              </div>
+
+              {/* Gradient Rainbow Ring */}
+              <div
+                className="story-ring"
+                style={{
+                  background: isOnline ? 'var(--grad-avatar-ring)' : 'rgba(255, 255, 255, 0.12)'
+                }}
+              >
+                <div className="story-avatar">
+                  {(contactUser.full_name || contactUser.username || 'U')[0].toUpperCase()}
+                </div>
+              </div>
+
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 500,
+                  color: isOnline ? 'var(--text-primary)' : 'var(--text-muted)',
+                  maxWidth: '52px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  textAlign: 'center'
+                }}
+              >
+                {(contactUser.full_name || contactUser.username).split(' ')[0]}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Search Input & Segmented Filters */}
       <div style={{ padding: '10px 14px 6px 14px' }}>
         <input
           type="text"
-          placeholder="Filter channels or direct messages..."
+          placeholder="Search chats, people, or spaces..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input"
           style={{
-            padding: '7px 12px',
+            padding: '7px 14px',
             fontSize: '0.8125rem',
             borderRadius: 'var(--radius-full)'
           }}
         />
 
         {/* Filter Pills */}
-        <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '4px',
+            marginTop: '10px',
+            padding: '3px',
+            backgroundColor: 'var(--bg-elevated)',
+            borderRadius: 'var(--radius-full)'
+          }}
+        >
           {[
             { id: 'ALL', label: 'All' },
-            { id: 'CHANNELS', label: 'Channels' },
-            { id: 'DIRECT', label: 'Direct' }
+            { id: 'DIRECT', label: 'Direct' },
+            { id: 'SPACES', label: 'Spaces' }
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
-              onClick={() => setActiveFilter(tab.id)}
+              onClick={() => updateFilter(tab.id)}
               style={{
                 flex: 1,
-                padding: '4px 8px',
+                padding: '4px 10px',
                 borderRadius: 'var(--radius-full)',
                 fontSize: '0.75rem',
-                fontWeight: 500,
+                fontWeight: currentFilter === tab.id ? 600 : 500,
                 cursor: 'pointer',
-                border: '1px solid transparent',
-                backgroundColor: activeFilter === tab.id ? 'var(--bg-active)' : 'transparent',
-                color: activeFilter === tab.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                border: 'none',
+                backgroundColor: currentFilter === tab.id ? 'var(--bg-card)' : 'transparent',
+                color: currentFilter === tab.id ? 'var(--text-primary)' : 'var(--text-secondary)',
+                boxShadow: currentFilter === tab.id ? 'var(--shadow-sm)' : 'none',
                 transition: 'all var(--transition-fast)'
               }}
             >
@@ -159,20 +238,20 @@ export default function ChannelSidebar({
         </div>
       </div>
 
-      {/* Conversations List */}
+      {/* Conversations Feed */}
       <div
         style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '6px 0'
+          padding: '6px 4px'
         }}
       >
-        {/* Channels */}
-        {(activeFilter === 'ALL' || activeFilter === 'CHANNELS') && (
-          <div>
+        {/* Direct Messages (Instagram Direct priority) */}
+        {(currentFilter === 'ALL' || currentFilter === 'DIRECT') && (
+          <div style={{ marginBottom: '8px' }}>
             <div
               style={{
-                padding: '6px 16px 4px 16px',
+                padding: '6px 14px 4px 14px',
                 fontSize: '0.6875rem',
                 fontWeight: 600,
                 color: 'var(--text-muted)',
@@ -180,12 +259,141 @@ export default function ChannelSidebar({
                 textTransform: 'uppercase'
               }}
             >
-              Channels ({filteredChannels.length})
+              Direct Messages ({filteredConversations.length})
+            </div>
+
+            {filteredConversations.length === 0 ? (
+              <div style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+                No direct messages
+              </div>
+            ) : (
+              filteredConversations.map((conv) => {
+                const other = conv.other_user;
+                if (!other) return null;
+
+                const isActive = conv.id === activeConversationId;
+                const hasUnread = Boolean(conv.unread_count && conv.unread_count > 0);
+                const presence = presenceMap[other.id] || other.status?.toLowerCase() || 'offline';
+                const isOnline = presence === 'online';
+
+                return (
+                  <div
+                    key={conv.id}
+                    onClick={() => {
+                      selectConversation(conv);
+                      if (onCloseMobile) onCloseMobile();
+                    }}
+                    className={`channel-card ${isActive ? 'active' : ''}`}
+                  >
+                    {/* Circular Avatar with Active Presence */}
+                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--bg-elevated)',
+                          border: isActive ? '2px solid var(--accent-primary)' : '1px solid var(--border-default)',
+                          color: 'var(--text-primary)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.875rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        {(other.full_name || other.username || 'U')[0].toUpperCase()}
+                      </div>
+
+                      {isOnline && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: '0px',
+                            right: '0px',
+                            width: '10px',
+                            height: '10px',
+                            borderRadius: '50%',
+                            backgroundColor: 'var(--accent-emerald)',
+                            border: '2px solid var(--bg-surface)'
+                          }}
+                        />
+                      )}
+                    </div>
+
+                    {/* Contact Info & Preview */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                        <span
+                          style={{
+                            fontSize: '0.875rem',
+                            fontWeight: isActive || hasUnread ? 600 : 500,
+                            color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
+                          {other.full_name || other.username}
+                        </span>
+
+                        {other.role === 'admin' && (
+                          <span style={{ fontSize: '0.625rem', color: 'var(--accent-rose)', fontWeight: 500 }}>
+                            Admin
+                          </span>
+                        )}
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: '0.75rem',
+                          color: isOnline ? 'var(--accent-emerald)' : 'var(--text-muted)',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {isOnline ? 'Active now' : `@${other.username}`}
+                      </div>
+                    </div>
+
+                    {hasUnread && !isActive && (
+                      <span
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--accent-primary)',
+                          flexShrink: 0
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {/* Spaces (Channels) */}
+        {(currentFilter === 'ALL' || currentFilter === 'SPACES') && (
+          <div>
+            <div
+              style={{
+                padding: '6px 14px 4px 14px',
+                fontSize: '0.6875rem',
+                fontWeight: 600,
+                color: 'var(--text-muted)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase'
+              }}
+            >
+              Spaces ({filteredChannels.length})
             </div>
 
             {filteredChannels.length === 0 ? (
-              <div style={{ padding: '8px 16px', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                No matching channels
+              <div style={{ padding: '8px 14px', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+                No matching spaces
               </div>
             ) : (
               filteredChannels.map((channel) => {
@@ -199,20 +407,20 @@ export default function ChannelSidebar({
                       selectChannel(channel);
                       if (onCloseMobile) onCloseMobile();
                     }}
-                    className={`chat-list-item ${isActive ? 'active' : ''}`}
+                    className={`channel-card ${isActive ? 'active' : ''}`}
                   >
-                    {/* Avatar Squircle */}
+                    {/* Modern Squircle Badge */}
                     <div
                       style={{
                         width: '38px',
                         height: '38px',
-                        borderRadius: 'var(--radius-sm)',
+                        borderRadius: '12px',
                         background: isActive ? 'var(--grad-prism)' : 'var(--bg-elevated)',
                         color: isActive ? '#ffffff' : 'var(--text-accent)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '1rem',
+                        fontSize: '0.9375rem',
                         fontWeight: 600,
                         flexShrink: 0
                       }}
@@ -220,13 +428,13 @@ export default function ChannelSidebar({
                       {channel.is_private ? <IconLock size={15} /> : '#'}
                     </div>
 
-                    {/* Info */}
+                    {/* Details */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
                         <span
                           style={{
                             fontSize: '0.875rem',
-                            fontWeight: isActive ? 600 : 500,
+                            fontWeight: isActive || hasUnread ? 600 : 500,
                             color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
@@ -261,125 +469,7 @@ export default function ChannelSidebar({
                           textOverflow: 'ellipsis'
                         }}
                       >
-                        {channel.topic || 'Channel conversation'}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        )}
-
-        {/* Direct Messages */}
-        {(activeFilter === 'ALL' || activeFilter === 'DIRECT') && (
-          <div style={{ marginTop: '8px' }}>
-            <div
-              style={{
-                padding: '6px 16px 4px 16px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Direct Messages ({filteredConversations.length})
-            </div>
-
-            {filteredConversations.length === 0 ? (
-              <div style={{ padding: '8px 16px', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                No direct messages
-              </div>
-            ) : (
-              filteredConversations.map((conv) => {
-                const other = conv.other_user;
-                if (!other) return null;
-
-                const isActive = conv.id === activeConversationId;
-                const hasUnread = Boolean(conv.unread_count && conv.unread_count > 0);
-                const presence = presenceMap[other.id] || other.status?.toLowerCase() || 'offline';
-                const isOnline = presence === 'online';
-
-                return (
-                  <div
-                    key={conv.id}
-                    onClick={() => {
-                      selectConversation(conv);
-                      if (onCloseMobile) onCloseMobile();
-                    }}
-                    className={`chat-list-item ${isActive ? 'active' : ''}`}
-                  >
-                    {/* User Avatar */}
-                    <div style={{ position: 'relative', flexShrink: 0 }}>
-                      <div
-                        style={{
-                          width: '38px',
-                          height: '38px',
-                          borderRadius: '50%',
-                          backgroundColor: 'var(--bg-elevated)',
-                          border: isActive ? '1px solid var(--accent-primary)' : '1px solid var(--border-default)',
-                          color: 'var(--text-primary)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.875rem',
-                          fontWeight: 600
-                        }}
-                      >
-                        {(other.full_name || other.username || 'U')[0].toUpperCase()}
-                      </div>
-
-                      {/* Status Dot */}
-                      {isOnline && (
-                        <span
-                          style={{
-                            position: 'absolute',
-                            bottom: '0px',
-                            right: '0px',
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            backgroundColor: 'var(--accent-emerald)',
-                            border: '2px solid var(--bg-surface)'
-                          }}
-                        />
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                        <span
-                          style={{
-                            fontSize: '0.875rem',
-                            fontWeight: isActive ? 600 : 500,
-                            color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                          }}
-                        >
-                          {other.full_name || other.username}
-                        </span>
-
-                        {other.role === 'admin' && (
-                          <span style={{ fontSize: '0.65rem', color: 'var(--accent-rose)', fontWeight: 500 }}>
-                            Admin
-                          </span>
-                        )}
-                      </div>
-
-                      <div
-                        style={{
-                          fontSize: '0.75rem',
-                          color: 'var(--text-muted)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {isOnline ? 'Active now' : `@${other.username}`}
+                        {channel.topic || 'Space conversation'}
                       </div>
                     </div>
                   </div>
@@ -390,16 +480,15 @@ export default function ChannelSidebar({
         )}
       </div>
 
-      {/* Bottom Privacy Status */}
+      {/* Footer */}
       <div
         style={{
-          padding: '10px 16px',
+          padding: '10px 14px',
           borderTop: '1px solid var(--border-subtle)',
-          backgroundColor: 'var(--bg-elevated)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          fontSize: '0.725rem',
+          fontSize: '0.6875rem',
           color: 'var(--text-muted)'
         }}
       >

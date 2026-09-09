@@ -22,6 +22,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
   const [editContent, setEditContent] = useState(message.content || '');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [showHeartBurst, setShowHeartBurst] = useState(false);
 
   const isAuthor = user?.id === message.sender_id;
   const isDeleted = message.is_deleted;
@@ -58,6 +59,14 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
     await toggleReaction(message.id, emoji);
   };
 
+  // Instagram Direct Signature: Double click message to send Heart
+  const handleDoubleClick = async () => {
+    if (isDeleted) return;
+    setShowHeartBurst(true);
+    setTimeout(() => setShowHeartBurst(false), 650);
+    await toggleReaction(message.id, '❤️');
+  };
+
   const formattedTime = new Date(message.created_at).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit'
@@ -67,7 +76,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
     <div
       className={`dialogue-pod ${isAuthor ? 'me' : 'them'}`}
       style={{
-        padding: '2px 20px',
+        padding: '2px 24px',
         display: 'flex',
         gap: '8px',
         alignItems: 'flex-end',
@@ -78,8 +87,8 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
       {!isAuthor && (
         <div
           style={{
-            width: '28px',
-            height: '28px',
+            width: '30px',
+            height: '30px',
             borderRadius: '50%',
             backgroundColor: 'var(--bg-elevated)',
             border: '1px solid var(--border-default)',
@@ -100,8 +109,12 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
       {/* Message Bubble */}
       <div
         className={`dialogue-bubble ${isAuthor ? 'me' : 'them'} ${isPinned ? 'pinned' : ''}`}
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', cursor: isDeleted ? 'default' : 'pointer' }}
+        onDoubleClick={handleDoubleClick}
       >
+        {/* Animated Heart Burst on double click */}
+        {showHeartBurst && <div className="heart-burst">❤️</div>}
+
         {/* Incoming Author Name */}
         {!isAuthor && (
           <div
@@ -209,7 +222,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
         {/* Replies Branch Link */}
         {!isDeleted && message.reply_count > 0 && (
           <div
-            onClick={() => onOpenThread(message)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenThread(message);
+            }}
             style={{
               marginTop: '6px',
               padding: '4px 8px',
@@ -230,38 +246,26 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           </div>
         )}
 
-        {/* Reactions floating pill */}
+        {/* Reactions floating badge (Instagram/Messenger style corner badge) */}
         {!isDeleted && message.reactions && message.reactions.length > 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-12px',
-              left: isAuthor ? 'auto' : '10px',
-              right: isAuthor ? '10px' : 'auto',
-              display: 'flex',
-              gap: '3px',
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-default)',
-              borderRadius: '12px',
-              padding: '1px 6px',
-              boxShadow: 'var(--shadow-sm)',
-              zIndex: 5
-            }}
-          >
+          <div className="bubble-reaction-badge">
             {message.reactions.map((r, idx) => (
               <button
                 key={idx}
                 type="button"
-                onClick={() => handleToggleReaction(r.reaction)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleReaction(r.reaction);
+                }}
                 style={{
                   background: 'transparent',
                   border: 'none',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '3px',
+                  gap: '2px',
                   cursor: 'pointer',
                   fontSize: '0.75rem',
-                  padding: '1px 3px'
+                  padding: '1px 2px'
                 }}
               >
                 <span>{r.reaction}</span>
@@ -278,7 +282,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           <div className="message-action-capsule">
             <button
               type="button"
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowEmojiPicker((prev) => !prev);
+              }}
               title="React"
               style={{
                 background: 'transparent',
@@ -294,7 +301,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
 
             <button
               type="button"
-              onClick={() => onOpenThread(message)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenThread(message);
+              }}
               title="Reply in thread"
               style={{
                 background: 'transparent',
@@ -310,7 +320,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
 
             <button
               type="button"
-              onClick={() => togglePin(message.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePin(message.id);
+              }}
               title={isPinned ? 'Unpin message' : 'Pin message'}
               style={{
                 background: 'transparent',
@@ -328,7 +341,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
               <>
                 <button
                   type="button"
-                  onClick={() => setIsEditing(true)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditing(true);
+                  }}
                   title="Edit message"
                   style={{
                     background: 'transparent',
@@ -344,7 +360,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
 
                 <button
                   type="button"
-                  onClick={handleDelete}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                  }}
                   title="Delete message"
                   style={{
                     background: 'transparent',
@@ -363,7 +382,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
             {!isAuthor && onReport && (
               <button
                 type="button"
-                onClick={() => onReport(message)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReport(message);
+                }}
                 title="Report message"
                 style={{
                   background: 'transparent',
@@ -402,7 +424,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
               <button
                 key={emoji}
                 type="button"
-                onClick={() => handleToggleReaction(emoji)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleReaction(emoji);
+                }}
                 style={{
                   background: 'transparent',
                   border: 'none',

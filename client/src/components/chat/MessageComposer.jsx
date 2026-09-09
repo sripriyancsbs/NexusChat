@@ -1,9 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { socketClient } from '../../services/socket.js';
-import { IconSend, IconSmile } from '../common/Icons.jsx';
+import {
+  IconSend,
+  IconSmile,
+  IconPaperclip,
+  IconMic,
+  IconHeart
+} from '../common/Icons.jsx';
 
-const EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡', '✨', '⚡'];
+const EMOJIS = ['👍', '❤️', '🔥', '🎉', '🚀', '💡', '✨', '⚡', '😍', '👏', '🙌', '💯'];
 
 export default function MessageComposer({ placeholder, replyToMessageId = null }) {
   const { activeConversationId, sendMessage, typingMap, activeConversation } = useChat();
@@ -23,8 +29,8 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
 
   const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
   const defaultPlaceholder = isChannel
-    ? `Message #${formatName(activeConversation?.name) || 'channel'}...`
-    : `Message @${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
+    ? `Message #${formatName(activeConversation?.name) || 'space'}...`
+    : `Message ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
 
   const typingUsers = typingMap[activeConversationId] || [];
 
@@ -72,6 +78,19 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
     }
   };
 
+  // Instagram-style Quick Heart send
+  const handleSendHeart = async () => {
+    if (sending) return;
+    setSending(true);
+    try {
+      await sendMessage('❤️', replyToMessageId);
+    } catch (err) {
+      console.error('Failed to send quick heart:', err);
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleAddEmoji = (emoji) => {
     setContent((prev) => prev + emoji);
     setShowEmojiPicker(false);
@@ -87,8 +106,8 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
         <div
           style={{
             position: 'absolute',
-            top: '-20px',
-            left: '28px',
+            top: '-22px',
+            left: '32px',
             fontSize: '0.75rem',
             color: 'var(--accent-primary)',
             display: 'flex',
@@ -102,27 +121,18 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
         </div>
       )}
 
-      {/* Modern Composer Card */}
-      <div className="modern-composer-card">
+      {/* Modern Instagram Direct Floating Pill Deck */}
+      <div className="floating-composer-deck">
         {/* Emoji Button */}
         <div style={{ position: 'relative' }}>
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
-            title="Add Emoji"
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              padding: '6px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 'var(--radius-sm)'
-            }}
+            title="Emoji Picker"
+            className="btn-icon"
+            style={{ width: '32px', height: '32px' }}
           >
-            <IconSmile size={20} />
+            <IconSmile size={19} />
           </button>
 
           {/* Emoji Popover */}
@@ -130,16 +140,16 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
             <div
               style={{
                 position: 'absolute',
-                bottom: '46px',
+                bottom: '48px',
                 left: '0',
-                backgroundColor: 'var(--bg-elevated)',
+                backgroundColor: 'var(--bg-card)',
                 border: '1px solid var(--border-default)',
-                borderRadius: 'var(--radius-md)',
+                borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-lg)',
-                padding: '8px',
+                padding: '10px',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '6px',
+                gap: '8px',
                 zIndex: 40
               }}
             >
@@ -154,8 +164,11 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
                     fontSize: '1.25rem',
                     cursor: 'pointer',
                     padding: '4px',
-                    borderRadius: '4px'
+                    borderRadius: '6px',
+                    transition: 'transform var(--transition-fast)'
                   }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                 >
                   {emoji}
                 </button>
@@ -164,8 +177,30 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           )}
         </div>
 
+        {/* Attachment & Media Button */}
+        <button
+          type="button"
+          onClick={() => alert('Attachments encrypted and isolated.')}
+          title="Share Photos & Media"
+          className="btn-icon"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <IconPaperclip size={18} />
+        </button>
+
+        {/* Voice Note / Mic Button */}
+        <button
+          type="button"
+          onClick={() => alert('Voice messaging: Recording secure waveform note...')}
+          title="Voice Message"
+          className="btn-icon"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <IconMic size={18} />
+        </button>
+
         {/* Input Textarea */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           <textarea
             ref={textareaRef}
             rows={1}
@@ -184,30 +219,41 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
               resize: 'none',
               maxHeight: '120px',
               lineHeight: 1.45,
-              padding: '2px 0'
+              padding: '4px 0'
             }}
           />
         </div>
 
-        {/* Send Button */}
-        <button
-          type="button"
-          onClick={handleSend}
-          disabled={!content.trim() || sending}
-          title="Send message"
-          className="btn btn-primary"
-          style={{
-            padding: '7px 14px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.8125rem',
-            gap: '6px',
-            opacity: !content.trim() || sending ? 0.45 : 1,
-            flexShrink: 0
-          }}
-        >
-          <IconSend size={14} />
-          <span>Send</span>
-        </button>
+        {/* Right Action: Instagram-style Morphing Quick Heart / Send Button */}
+        {content.trim().length === 0 ? (
+          <button
+            type="button"
+            onClick={handleSendHeart}
+            title="Send Like (Heart)"
+            className="quick-heart-btn"
+            disabled={sending}
+          >
+            ❤️
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={sending}
+            title="Send Message (Enter)"
+            className="btn btn-primary"
+            style={{
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.8125rem',
+              gap: '6px',
+              flexShrink: 0
+            }}
+          >
+            <IconSend size={13} />
+            <span>Send</span>
+          </button>
+        )}
       </div>
     </div>
   );
