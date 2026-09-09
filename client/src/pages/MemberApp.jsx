@@ -50,7 +50,7 @@ export default function MemberApp({ onNavigateAdmin }) {
     }
   }, [activeConversationId, channels, selectChannel]);
 
-  // Global Ctrl+K / Cmd+K listener
+  // Global Ctrl+K listener
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -73,90 +73,99 @@ export default function MemberApp({ onNavigateAdmin }) {
         backgroundColor: 'var(--bg-canvas)'
       }}
     >
-      {/* Top Nexus Horizon HUD Bar */}
+      {/* Top Application Header */}
       <header
         style={{
-          height: '56px',
-          backgroundColor: 'rgba(10, 15, 29, 0.9)',
-          backdropFilter: 'blur(20px)',
+          height: '52px',
+          backgroundColor: 'var(--bg-surface)',
           borderBottom: '1px solid var(--border-default)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 20px',
+          padding: '0 16px',
           flexShrink: 0,
           zIndex: 40
         }}
       >
-        {/* Left Brand Identity & Telemetry Beacon */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* Brand & Workspace Status */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: '9px',
               cursor: 'pointer'
             }}
             onClick={() => setIsCommandPaletteOpen(true)}
-            title="Nexus Horizon Command Center"
+            title="Open Command Palette (Ctrl+K)"
           >
             <div
               style={{
-                width: '32px',
-                height: '32px',
+                width: '28px',
+                height: '28px',
                 borderRadius: 'var(--radius-sm)',
-                background: 'linear-gradient(135deg, var(--cyber-cyan), var(--cyber-amber))',
+                background: 'var(--grad-brand)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#050810',
-                fontWeight: 900,
-                fontSize: '1rem',
-                boxShadow: '0 0 14px rgba(0, 240, 255, 0.4)'
+                color: '#ffffff',
+                fontWeight: 700,
+                fontSize: '0.85rem'
               }}
             >
               ✦
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontWeight: 800,
-                  fontSize: '0.95rem',
-                  letterSpacing: '0.04em',
+                  fontWeight: 600,
+                  fontSize: '0.9375rem',
+                  letterSpacing: '-0.02em',
                   color: 'var(--text-primary)'
                 }}
               >
-                NEXUS <span style={{ color: 'var(--cyber-cyan)' }}>//</span> HORIZON
+                NexusChat
               </span>
+
               <span
                 style={{
-                  fontSize: '0.625rem',
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--cyber-mint)',
-                  letterSpacing: '0.04em'
+                  fontSize: '0.6875rem',
+                  color: 'var(--accent-emerald)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontWeight: 500
                 }}
               >
-                ● NODE ONLINE // E2EE ACTIVE
+                <span
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--accent-emerald)'
+                  }}
+                />
+                Online
               </span>
             </div>
           </div>
         </div>
 
-        {/* Center Omni-Search Bar */}
-        <div style={{ flex: 1, maxWidth: '520px', margin: '0 20px' }}>
+        {/* Center Search Input */}
+        <div style={{ flex: 1, maxWidth: '480px', margin: '0 20px' }}>
           <button
             type="button"
             onClick={() => setIsCommandPaletteOpen(true)}
             style={{
               width: '100%',
-              padding: '7px 14px',
-              backgroundColor: 'rgba(5, 8, 16, 0.65)',
+              padding: '6px 12px',
+              backgroundColor: 'var(--bg-elevated)',
               border: '1px solid var(--border-default)',
               borderRadius: 'var(--radius-sm)',
               color: 'var(--text-muted)',
-              fontSize: '0.8rem',
+              fontSize: '0.8125rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -164,67 +173,65 @@ export default function MemberApp({ onNavigateAdmin }) {
               transition: 'all var(--transition-fast)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--cyber-cyan)';
-              e.currentTarget.style.boxShadow = '0 0 12px rgba(0, 240, 255, 0.15)';
+              e.currentTarget.style.borderColor = 'var(--border-strong)';
+              e.currentTarget.style.backgroundColor = 'var(--bg-card)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--border-default)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.backgroundColor = 'var(--bg-elevated)';
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <IconSearch size={14} />
-              <span>Omni-Search transmissions, operators, or telemetry...</span>
+              <span>Search messages, channels, or commands...</span>
             </div>
             <kbd
               style={{
-                fontSize: '0.65rem',
-                fontFamily: 'var(--font-mono)',
+                fontSize: '0.6875rem',
+                fontFamily: 'var(--font-sans)',
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                padding: '2px 6px',
+                padding: '2px 5px',
                 borderRadius: 'var(--radius-xs)',
-                color: 'var(--text-secondary)'
+                color: 'var(--text-secondary)',
+                fontWeight: 500
               }}
             >
-              Ctrl + K
+              Ctrl K
             </kbd>
           </button>
         </div>
 
-        {/* Right Horizon Actions & Operator Profile Pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Right Workspace Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {isAdmin && (
             <button
               type="button"
               onClick={onNavigateAdmin}
-              title="Admin Command Vault"
-              className="btn-outline"
+              title="Admin Portal"
+              className="btn btn-secondary"
               style={{
-                padding: '5px 12px',
-                fontSize: '0.725rem',
-                borderRadius: 'var(--radius-xs)',
-                color: 'var(--cyber-coral)',
-                borderColor: 'rgba(255, 45, 85, 0.35)',
-                backgroundColor: 'rgba(255, 45, 85, 0.08)',
-                gap: '6px'
+                padding: '5px 10px',
+                fontSize: '0.75rem',
+                borderRadius: 'var(--radius-sm)',
+                gap: '5px'
               }}
             >
               <IconShield size={13} />
-              <span className="hide-sm">ADMIN VAULT</span>
+              <span className="hide-sm">Admin</span>
             </button>
           )}
 
-          {/* Notifications Trigger */}
+          {/* Notifications */}
           <button
             type="button"
             onClick={() => setIsNotificationsOpen(true)}
-            title="Transmitted Notifications"
+            title="Notifications"
             style={{
               position: 'relative',
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              width: '32px',
+              height: '32px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'transparent',
               border: '1px solid var(--border-subtle)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
@@ -233,18 +240,17 @@ export default function MemberApp({ onNavigateAdmin }) {
               justifyContent: 'center'
             }}
           >
-            <IconBell size={16} />
+            <IconBell size={15} />
             {unreadNotificationsCount > 0 && (
               <span
                 style={{
                   position: 'absolute',
-                  top: '5px',
-                  right: '5px',
-                  width: '7px',
-                  height: '7px',
+                  top: '4px',
+                  right: '4px',
+                  width: '6px',
+                  height: '6px',
                   borderRadius: '50%',
-                  backgroundColor: 'var(--cyber-cyan)',
-                  boxShadow: '0 0 8px var(--cyber-cyan)'
+                  backgroundColor: 'var(--accent-primary)'
                 }}
               />
             )}
@@ -254,12 +260,12 @@ export default function MemberApp({ onNavigateAdmin }) {
           <button
             type="button"
             onClick={toggleTheme}
-            title="Toggle theme palette"
+            title="Toggle theme"
             style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              width: '32px',
+              height: '32px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'transparent',
               border: '1px solid var(--border-subtle)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
@@ -271,84 +277,93 @@ export default function MemberApp({ onNavigateAdmin }) {
             {theme === 'dark' ? <IconSun size={15} /> : <IconMoon size={15} />}
           </button>
 
-          {/* Operator Profile Pill */}
+          {/* User Profile Pill */}
           <div
             onClick={() => setIsProfileOpen(true)}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '4px 10px 4px 6px',
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-sm)',
+              padding: '4px 10px 4px 5px',
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-default)',
+              borderRadius: 'var(--radius-full)',
               cursor: 'pointer',
               transition: 'border-color var(--transition-fast)'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--cyber-cyan)')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
-            title="Operator Identity Details"
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--border-strong)')}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border-default)')}
+            title="View Profile"
           >
             <div
               style={{
-                width: '26px',
-                height: '26px',
-                borderRadius: 'var(--radius-xs)',
-                backgroundColor: 'var(--bg-elevated)',
-                border: '1px solid var(--cyber-cyan)',
-                color: 'var(--cyber-cyan)',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--accent-primary)',
+                color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                fontFamily: 'var(--font-display)'
+                fontWeight: 600,
+                fontSize: '0.75rem'
               }}
             >
               {(user?.full_name || user?.username || 'U')[0].toUpperCase()}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }} className="hide-sm">
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className="hide-sm">
+              <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-primary)' }}>
                 {user?.full_name || user?.username}
               </span>
-              <span style={{ fontSize: '0.625rem', fontFamily: 'var(--font-mono)', color: 'var(--cyber-cyan)' }}>
-                @{user?.username}
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  padding: '1px 5px',
+                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: user?.role === 'admin' ? 'rgba(244, 63, 94, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                  color: user?.role === 'admin' ? 'var(--accent-rose)' : 'var(--text-muted)',
+                  fontWeight: 500
+                }}
+              >
+                {user?.role === 'admin' ? 'Admin' : 'Member'}
               </span>
             </div>
           </div>
 
-          {/* Terminate Session / Log out */}
+          {/* Log out */}
           <button
             type="button"
             onClick={logout}
-            title="Terminate Active Session"
+            title="Log Out"
             style={{
               background: 'transparent',
               border: 'none',
               padding: '6px',
-              color: 'var(--cyber-coral)',
+              color: 'var(--text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center'
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-rose)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
           >
             <IconLogOut size={16} />
           </button>
         </div>
       </header>
 
-      {/* Main Bento Matrix Canvas */}
+      {/* Main Workspace Layout */}
       <div
         style={{
           flex: 1,
           display: 'flex',
-          padding: '12px 14px 14px 14px',
-          gap: '12px',
+          padding: '10px 14px 14px 14px',
+          gap: '10px',
           minHeight: 0,
           overflow: 'hidden'
         }}
       >
-        {/* Left Column: Spectrum Matrix Deck */}
+        {/* Left Column: Channels & DMs Sidebar */}
         <ChannelSidebar
           onOpenCreateChannel={() => setIsCreateChannelOpen(true)}
           onOpenNewDM={() => setIsNewDMOpen(true)}
@@ -360,7 +375,7 @@ export default function MemberApp({ onNavigateAdmin }) {
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
         />
 
-        {/* Center Column: The Transmission Hub */}
+        {/* Center Column: Conversation Hub */}
         <main
           className="bento-panel"
           style={{
@@ -387,7 +402,7 @@ export default function MemberApp({ onNavigateAdmin }) {
           <MessageComposer />
         </main>
 
-        {/* Right Column: Sub-Signal Branch Matrix or Stream Telemetry */}
+        {/* Right Column: Thread Drawer or Context Details */}
         {activeThread && (
           <ThreadDrawer onReport={(msg) => setReportTargetMessage(msg)} />
         )}
@@ -400,7 +415,7 @@ export default function MemberApp({ onNavigateAdmin }) {
         )}
       </div>
 
-      {/* Modals & Dialogs */}
+      {/* Modals */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}

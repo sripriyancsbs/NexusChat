@@ -24,21 +24,27 @@ export default function MessageList({ onOpenThread, onReport }) {
           alignItems: 'center',
           justifyContent: 'center',
           color: 'var(--text-muted)',
-          gap: '12px'
+          gap: '8px'
         }}
       >
-        <span style={{ fontSize: '1.8rem', color: 'var(--cyber-cyan)', animation: 'pulseSlow 1.5s infinite' }}>✦</span>
-        <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
-          SYNCHRONIZING STREAM TELEMETRY...
-        </span>
+        <span style={{ fontSize: '1.2rem', color: 'var(--accent-primary)' }}>✦</span>
+        <span style={{ fontSize: '0.8125rem' }}>Loading messages...</span>
       </div>
     );
   }
 
+  const formatName = (name) => {
+    if (!name) return '';
+    return name
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
   const title = isChannel
-    ? activeConversation?.name
-    : activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'Direct Stream';
+    ? formatName(activeConversation?.name)
+    : activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'Direct Message';
 
   // Group messages by date
   const grouped = [];
@@ -69,92 +75,65 @@ export default function MessageList({ onOpenThread, onReport }) {
         padding: '16px 0'
       }}
     >
-      {/* Frequency Anchor Beacon Card */}
+      {/* Welcome Header */}
       <div
         style={{
-          margin: '12px 20px 24px 20px',
-          padding: '22px',
-          backgroundColor: 'rgba(16, 23, 43, 0.65)',
-          backdropFilter: 'blur(16px)',
+          margin: '8px 18px 20px 18px',
+          padding: '18px 20px',
+          backgroundColor: 'var(--bg-elevated)',
           border: '1px solid var(--border-default)',
-          borderRadius: 'var(--radius-md)',
-          position: 'relative',
-          overflow: 'hidden'
+          borderRadius: 'var(--radius-md)'
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            right: '-30px',
-            top: '-30px',
-            width: '120px',
-            height: '120px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%)',
-            filter: 'blur(20px)',
-            pointerEvents: 'none'
-          }}
-        />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <div
             style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: 'var(--radius-xs)',
-              background: 'linear-gradient(135deg, var(--cyber-cyan), var(--cyber-amber))',
+              width: '36px',
+              height: '36px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-default)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#050810',
-              fontWeight: 900,
-              fontSize: '1.1rem',
-              boxShadow: '0 0 16px rgba(0, 240, 255, 0.3)'
+              color: 'var(--accent-primary)',
+              fontWeight: 700,
+              fontSize: '1.1rem'
             }}
           >
-            {isChannel ? (activeConversation?.is_private ? <IconLock size={18} /> : '⚡') : '◎'}
+            {isChannel ? (activeConversation?.is_private ? <IconLock size={16} /> : '#') : '@'}
           </div>
 
           <div>
-            <div
-              style={{
-                fontSize: '0.675rem',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--cyber-cyan)',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase'
-              }}
-            >
-              {isChannel ? 'FREQUENCY BEACON // ONLINE' : 'DIRECT CIPHER STREAM'}
-            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '1.25rem',
-                fontWeight: 800,
+                fontSize: '1.125rem',
+                fontWeight: 600,
                 margin: 0,
-                color: 'var(--text-primary)',
-                letterSpacing: '-0.02em'
+                color: 'var(--text-primary)'
               }}
             >
-              {isChannel ? `${title.toUpperCase()}` : title}
+              {isChannel ? `Welcome to #${title}` : `Conversation with ${title}`}
             </h2>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {isChannel ? 'Channel created for community interaction' : 'Private direct conversation'}
+            </div>
           </div>
         </div>
 
         <p
           style={{
             color: 'var(--text-secondary)',
-            fontSize: '0.825rem',
+            fontSize: '0.8125rem',
             lineHeight: 1.5,
             maxWidth: '650px',
             margin: 0
           }}
         >
           {isChannel
-            ? activeConversation?.topic || 'Frequency receptor online. Transmit data packets and voice waveforms with zero admin leakage.'
-            : 'Encrypted direct node established. Communication is mathematically isolated from administrative observation.'}
+            ? activeConversation?.topic || 'This is the start of the conversation. Messages posted here are real-time, persistent, and strictly isolated from platform administrators.'
+            : 'Direct messages are private between you and this participant. Platform administrators cannot browse or inspect private message contents.'}
         </p>
       </div>
 
@@ -167,27 +146,25 @@ export default function MessageList({ onOpenThread, onReport }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                margin: '16px 20px',
+                margin: '14px 18px',
                 gap: '12px'
               }}
             >
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-subtle), transparent)' }} />
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border-subtle)' }} />
               <span
                 style={{
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
+                  fontSize: '0.6875rem',
+                  fontWeight: 500,
                   color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-mono)',
-                  letterSpacing: '0.06em',
                   padding: '2px 10px',
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: 'rgba(5, 8, 16, 0.7)',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)'
                 }}
               >
                 {item.date}
               </span>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-subtle), transparent)' }} />
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border-subtle)' }} />
             </div>
           );
         }

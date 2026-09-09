@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { IconPlus, IconLock, IconShield } from '../common/Icons.jsx';
+import { IconPlus, IconLock, IconHash, IconUsers } from '../common/Icons.jsx';
 
 export default function ChannelSidebar({
   onOpenCreateChannel,
@@ -23,8 +23,16 @@ export default function ChannelSidebar({
   } = useChat();
   const { user } = useAuth();
 
-  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'FREQUENCIES' | 'DIRECT'
+  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'CHANNELS' | 'DIRECT'
   const [filterQuery, setFilterQuery] = useState('');
+
+  const formatName = (name) => {
+    if (!name) return '';
+    return name
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
 
   const filteredChannels = channels.filter((c) =>
     c.name.toLowerCase().includes(filterQuery.toLowerCase())
@@ -36,21 +44,11 @@ export default function ChannelSidebar({
     return name.toLowerCase().includes(filterQuery.toLowerCase());
   });
 
-  const getChannelIcon = (name, isPrivate) => {
-    if (isPrivate) return <IconLock size={14} />;
-    const lower = name.toLowerCase();
-    if (lower.includes('dev') || lower.includes('code')) return '⚡';
-    if (lower.includes('sec') || lower.includes('ops')) return '🛡️';
-    if (lower.includes('announc') || lower.includes('alert')) return '📢';
-    if (lower.includes('random') || lower.includes('lounge')) return '☕';
-    return '🌐';
-  };
-
   return (
     <aside
       className={`bento-panel ${isMobileOpen ? 'mobile-open' : ''}`}
       style={{
-        width: '320px',
+        width: '280px',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -60,157 +58,138 @@ export default function ChannelSidebar({
         position: 'relative'
       }}
     >
-      {/* Deck Header */}
+      {/* Sidebar Header */}
       <div
         style={{
-          padding: '16px 18px 12px 18px',
+          padding: '12px 14px',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--cyber-cyan)',
-              boxShadow: '0 0 8px var(--cyber-cyan)',
-              animation: 'pulseSlow 2s infinite'
-            }}
-          />
-          <h2
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '0.85rem',
-              fontWeight: 800,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--text-primary)'
-            }}
-          >
-            Spectrum Matrix
-          </h2>
-        </div>
+        <span
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.01em'
+          }}
+        >
+          Navigation
+        </span>
 
         {/* Action Triggers */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <button
             type="button"
             onClick={onOpenCreateChannel}
-            title="Initialize New Frequency Channel"
-            className="btn-outline"
+            title="Create Channel"
+            className="btn btn-secondary"
             style={{
-              padding: '4px 10px',
-              fontSize: '0.7rem',
-              borderRadius: 'var(--radius-xs)',
-              gap: '4px',
-              color: 'var(--cyber-cyan)',
-              borderColor: 'rgba(0, 240, 255, 0.3)'
+              padding: '4px 8px',
+              fontSize: '0.75rem',
+              borderRadius: 'var(--radius-sm)',
+              gap: '4px'
             }}
           >
-            <IconPlus size={12} />
-            <span>FREQ</span>
+            <IconPlus size={13} />
+            <span>Channel</span>
           </button>
 
           <button
             type="button"
             onClick={onOpenNewDM}
-            title="Open Direct Transmission Node"
-            className="btn-outline"
+            title="New Direct Message"
+            className="btn btn-secondary"
             style={{
-              padding: '4px 10px',
-              fontSize: '0.7rem',
-              borderRadius: 'var(--radius-xs)',
-              gap: '4px',
-              color: 'var(--cyber-amber)',
-              borderColor: 'rgba(255, 149, 0, 0.3)'
+              padding: '4px 8px',
+              fontSize: '0.75rem',
+              borderRadius: 'var(--radius-sm)'
             }}
           >
-            <span>◎ DIRECT</span>
+            <span>+ DM</span>
           </button>
         </div>
       </div>
 
-      {/* Filter and Spectrum Search */}
-      <div style={{ padding: '12px 16px 8px 16px' }}>
+      {/* Filter and Search */}
+      <div style={{ padding: '10px 12px 6px 12px' }}>
         <input
           type="text"
-          placeholder="⌕ Filter spectrum frequencies..."
+          placeholder="Filter channels or members..."
           value={filterQuery}
           onChange={(e) => setFilterQuery(e.target.value)}
           className="input"
           style={{
-            padding: '7px 12px',
-            fontSize: '0.775rem',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'rgba(5, 8, 16, 0.6)'
+            padding: '6px 10px',
+            fontSize: '0.8125rem',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: 'var(--bg-elevated)'
           }}
         />
 
         {/* Filter Pills */}
-        <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
-          {['ALL', 'FREQUENCIES', 'DIRECT'].map((tab) => (
+        <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+          {[
+            { id: 'ALL', label: 'All' },
+            { id: 'CHANNELS', label: 'Channels' },
+            { id: 'DIRECT', label: 'DMs' }
+          ].map((tab) => (
             <button
-              key={tab}
+              key={tab.id}
               type="button"
-              onClick={() => setActiveFilter(tab)}
+              onClick={() => setActiveFilter(tab.id)}
               style={{
                 flex: 1,
-                padding: '4px 6px',
+                padding: '3px 6px',
                 borderRadius: 'var(--radius-xs)',
-                fontSize: '0.675rem',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 700,
+                fontSize: '0.75rem',
+                fontWeight: 500,
                 cursor: 'pointer',
-                border: activeFilter === tab ? '1px solid var(--cyber-cyan)' : '1px solid var(--border-subtle)',
-                backgroundColor: activeFilter === tab ? 'rgba(0, 240, 255, 0.12)' : 'transparent',
-                color: activeFilter === tab ? 'var(--cyber-cyan)' : 'var(--text-muted)',
+                border: activeFilter === tab.id ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid transparent',
+                backgroundColor: activeFilter === tab.id ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
+                color: activeFilter === tab.id ? 'var(--accent-primary)' : 'var(--text-muted)',
                 transition: 'all var(--transition-fast)'
               }}
             >
-              {tab === 'ALL' ? 'ALL' : tab === 'FREQUENCIES' ? 'CHANNELS' : 'DMS'}
+              {tab.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Scrollable Frequency Spectrum Deck */}
+      {/* Scrollable Channels & DMs List */}
       <div
         style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '8px 12px 16px 12px',
+          padding: '8px 8px 12px 8px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px'
+          gap: '14px'
         }}
       >
-        {/* Frequencies Section */}
-        {(activeFilter === 'ALL' || activeFilter === 'FREQUENCIES') && (
+        {/* Channels Section */}
+        {(activeFilter === 'ALL' || activeFilter === 'CHANNELS') && (
           <div>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 6px 6px 6px',
-                fontSize: '0.675rem',
-                fontFamily: 'var(--font-mono)',
+                padding: '4px 8px 6px 8px',
+                fontSize: '0.6875rem',
+                fontWeight: 600,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 textTransform: 'uppercase'
               }}
             >
-              <span>Frequencies [{filteredChannels.length}]</span>
+              Channels ({filteredChannels.length})
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               {filteredChannels.length === 0 ? (
-                <div style={{ padding: '12px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                  No matching frequencies
+                <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                  No channels found
                 </div>
               ) : (
                 filteredChannels.map((channel) => {
@@ -225,87 +204,69 @@ export default function ChannelSidebar({
                         if (onCloseMobile) onCloseMobile();
                       }}
                       className={`frequency-card ${isActive ? 'active' : ''}`}
+                      style={{
+                        position: 'relative',
+                        padding: '6px 10px'
+                      }}
                     >
-                      {/* Domain Icon Pod */}
-                      <div
+                      {/* Active Indicator Strip */}
+                      {isActive && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '2px',
+                            top: '6px',
+                            bottom: '6px',
+                            width: '3px',
+                            borderRadius: '2px',
+                            backgroundColor: 'var(--accent-primary)'
+                          }}
+                        />
+                      )}
+
+                      {/* Icon */}
+                      <span
                         style={{
-                          width: '30px',
-                          height: '30px',
-                          borderRadius: 'var(--radius-xs)',
-                          backgroundColor: isActive ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                          border: isActive ? '1px solid var(--cyber-cyan)' : '1px solid var(--border-subtle)',
+                          color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)',
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.85rem',
-                          color: isActive ? 'var(--cyber-cyan)' : 'var(--text-secondary)',
+                          fontSize: '0.9rem',
                           flexShrink: 0
                         }}
                       >
-                        {getChannelIcon(channel.name, channel.is_private)}
-                      </div>
+                        {channel.is_private ? <IconLock size={14} /> : '#'}
+                      </span>
 
-                      {/* Frequency Title & Snippet */}
+                      {/* Name & Topic */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            gap: '6px'
-                          }}
-                        >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <span
                             style={{
-                              fontFamily: 'var(--font-display)',
-                              fontWeight: isActive ? 700 : 600,
-                              fontSize: '0.825rem',
-                              color: isActive ? 'var(--cyber-cyan)' : 'var(--text-primary)',
+                              fontSize: '0.8125rem',
+                              fontWeight: isActive ? 600 : 400,
+                              color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis'
                             }}
                           >
-                            {channel.name.toUpperCase()}
+                            {formatName(channel.name)}
                           </span>
-
-                          {/* Soundwave Bars if Active */}
-                          {isActive && (
-                            <span className="soundwave-indicator">
-                              <span className="soundwave-bar" />
-                              <span className="soundwave-bar" />
-                              <span className="soundwave-bar" />
-                            </span>
-                          )}
 
                           {hasUnread && !isActive && (
                             <span
                               style={{
                                 padding: '1px 6px',
-                                borderRadius: 'var(--radius-xs)',
-                                backgroundColor: 'var(--cyber-cyan)',
-                                color: '#050810',
-                                fontSize: '0.65rem',
-                                fontFamily: 'var(--font-mono)',
-                                fontWeight: 800
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: 'var(--accent-primary)',
+                                color: '#ffffff',
+                                fontSize: '0.6875rem',
+                                fontWeight: 600
                               }}
                             >
                               {channel.unread_count}
                             </span>
                           )}
-                        </div>
-
-                        <div
-                          style={{
-                            fontSize: '0.7rem',
-                            color: 'var(--text-muted)',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            marginTop: '2px'
-                          }}
-                        >
-                          {channel.topic || (channel.is_private ? 'Encrypted private frequency' : 'Public signal stream')}
                         </div>
                       </div>
                     </div>
@@ -316,29 +277,26 @@ export default function ChannelSidebar({
           </div>
         )}
 
-        {/* Direct Encrypted Streams Section */}
+        {/* Direct Messages Section */}
         {(activeFilter === 'ALL' || activeFilter === 'DIRECT') && (
           <div>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 6px 6px 6px',
-                fontSize: '0.675rem',
-                fontFamily: 'var(--font-mono)',
+                padding: '4px 8px 6px 8px',
+                fontSize: '0.6875rem',
+                fontWeight: 600,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 textTransform: 'uppercase'
               }}
             >
-              <span>Direct Streams [{filteredConversations.length}]</span>
+              Direct Messages ({filteredConversations.length})
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               {filteredConversations.length === 0 ? (
-                <div style={{ padding: '12px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                  No active direct streams
+                <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                  No direct messages
                 </div>
               ) : (
                 filteredConversations.map((conv) => {
@@ -358,70 +316,73 @@ export default function ChannelSidebar({
                         if (onCloseMobile) onCloseMobile();
                       }}
                       className={`frequency-card ${isActive ? 'active' : ''}`}
+                      style={{
+                        position: 'relative',
+                        padding: '6px 10px'
+                      }}
                     >
-                      {/* Operator Hologram Pod with Dual-Ring Radar Presence */}
-                      <div
-                        style={{
-                          position: 'relative',
-                          width: '32px',
-                          height: '32px',
-                          flexShrink: 0
-                        }}
-                      >
+                      {/* Active Indicator Strip */}
+                      {isActive && (
                         <div
                           style={{
-                            width: '32px',
-                            height: '32px',
+                            position: 'absolute',
+                            left: '2px',
+                            top: '6px',
+                            bottom: '6px',
+                            width: '3px',
+                            borderRadius: '2px',
+                            backgroundColor: 'var(--accent-primary)'
+                          }}
+                        />
+                      )}
+
+                      {/* Avatar with clean status dot */}
+                      <div style={{ position: 'relative', flexShrink: 0 }}>
+                        <div
+                          style={{
+                            width: '24px',
+                            height: '24px',
                             borderRadius: '50%',
                             backgroundColor: 'var(--bg-elevated)',
-                            border: isActive ? '1px solid var(--cyber-amber)' : '1px solid var(--border-default)',
-                            color: isActive ? 'var(--cyber-amber)' : 'var(--text-primary)',
+                            border: '1px solid var(--border-default)',
+                            color: 'var(--text-secondary)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 700,
-                            fontSize: '0.8rem'
+                            fontSize: '0.75rem',
+                            fontWeight: 600
                           }}
                         >
                           {(other.full_name || other.username || 'U')[0].toUpperCase()}
                         </div>
 
-                        {/* Dual Presence Ring */}
+                        {/* Status Dot */}
                         <span
                           style={{
                             position: 'absolute',
                             bottom: '-1px',
                             right: '-1px',
-                            width: '10px',
-                            height: '10px',
+                            width: '7px',
+                            height: '7px',
                             borderRadius: '50%',
                             backgroundColor: isOnline
-                              ? 'var(--cyber-mint)'
+                              ? 'var(--accent-emerald)'
                               : isIdle
-                              ? 'var(--cyber-amber)'
-                              : '#475569',
-                            border: '2px solid var(--bg-canvas)',
-                            boxShadow: isOnline ? '0 0 6px var(--cyber-mint)' : 'none'
+                              ? 'var(--accent-amber)'
+                              : '#64748b',
+                            border: '1.5px solid var(--bg-surface)'
                           }}
                         />
                       </div>
 
-                      {/* Operator Info */}
+                      {/* Name & Role */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            gap: '6px'
-                          }}
-                        >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <span
                             style={{
-                              fontFamily: 'var(--font-display)',
-                              fontWeight: isActive ? 700 : 600,
-                              fontSize: '0.825rem',
-                              color: isActive ? 'var(--cyber-amber)' : 'var(--text-primary)',
+                              fontSize: '0.8125rem',
+                              fontWeight: isActive ? 600 : 400,
+                              color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis'
@@ -430,28 +391,17 @@ export default function ChannelSidebar({
                             {other.full_name || other.username}
                           </span>
 
-                          <span
-                            style={{
-                              fontSize: '0.625rem',
-                              fontFamily: 'var(--font-mono)',
-                              color: other.role === 'admin' ? 'var(--cyber-coral)' : 'var(--text-muted)'
-                            }}
-                          >
-                            {other.role === 'admin' ? 'SYS-ADM' : 'NODE'}
-                          </span>
-                        </div>
-
-                        <div
-                          style={{
-                            fontSize: '0.7rem',
-                            color: 'var(--text-muted)',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            marginTop: '2px'
-                          }}
-                        >
-                          {isOnline ? 'Transmitting active' : isIdle ? 'Node idle' : 'Offline'}
+                          {other.role === 'admin' && (
+                            <span
+                              style={{
+                                fontSize: '0.625rem',
+                                color: 'var(--accent-rose)',
+                                fontWeight: 500
+                              }}
+                            >
+                              Admin
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -463,22 +413,20 @@ export default function ChannelSidebar({
         )}
       </div>
 
-      {/* Deck Telemetry Footer */}
+      {/* Footer */}
       <div
         style={{
-          padding: '10px 16px',
+          padding: '8px 12px',
           borderTop: '1px solid var(--border-subtle)',
-          backgroundColor: 'rgba(5, 8, 16, 0.4)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          fontSize: '0.675rem',
-          fontFamily: 'var(--font-mono)',
+          fontSize: '0.6875rem',
           color: 'var(--text-muted)'
         }}
       >
-        <span>E2EE // ACTIVE</span>
-        <span>CTRL+K OMNI</span>
+        <span>🔒 Zero-Admin Access</span>
+        <span>E2EE Active</span>
       </div>
     </aside>
   );

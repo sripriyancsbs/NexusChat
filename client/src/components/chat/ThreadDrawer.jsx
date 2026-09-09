@@ -20,7 +20,7 @@ export default function ThreadDrawer({ onReport }) {
     <aside
       className="bento-panel thread-drawer"
       style={{
-        width: '380px',
+        width: '360px',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -29,43 +29,38 @@ export default function ThreadDrawer({ onReport }) {
         zIndex: 50
       }}
     >
-      {/* Branch Header */}
+      {/* Thread Header */}
       <div
         style={{
-          padding: '14px 18px',
-          borderBottom: '1px solid var(--border-subtle)',
+          padding: '12px 16px',
+          borderBottom: '1px solid var(--border-default)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexShrink: 0,
-          backgroundColor: 'rgba(10, 15, 29, 0.7)'
+          backgroundColor: 'var(--bg-surface)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ color: 'var(--cyber-cyan)', fontSize: '0.9rem' }}>↳</span>
-          <div>
-            <h3
-              style={{
-                fontSize: '0.85rem',
-                fontFamily: 'var(--font-display)',
-                fontWeight: 800,
-                letterSpacing: '0.04em',
-                margin: 0,
-                color: 'var(--text-primary)'
-              }}
-            >
-              SUB-SIGNAL BRANCH
-            </h3>
-            <span style={{ fontSize: '0.675rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              ANCHOR: {activeThread.sender_full_name || activeThread.sender_username}
-            </span>
-          </div>
+        <div>
+          <h3
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              margin: 0,
+              color: 'var(--text-primary)'
+            }}
+          >
+            Thread
+          </h3>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            Started by {activeThread.sender_full_name || activeThread.sender_username}
+          </span>
         </div>
 
         <button
           type="button"
           onClick={closeThread}
-          title="Close Branch"
+          title="Close Thread"
           style={{
             background: 'transparent',
             border: 'none',
@@ -80,28 +75,16 @@ export default function ThreadDrawer({ onReport }) {
         </button>
       </div>
 
-      {/* Branch Body */}
+      {/* Thread Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
-        {/* Parent Anchor Message Card */}
+        {/* Parent Message Card */}
         <div
           style={{
             borderBottom: '1px solid var(--border-subtle)',
-            paddingBottom: '12px',
-            marginBottom: '12px',
-            backgroundColor: 'rgba(0, 240, 255, 0.03)'
+            paddingBottom: '10px',
+            marginBottom: '10px'
           }}
         >
-          <div
-            style={{
-              padding: '0 20px 6px 20px',
-              fontSize: '0.65rem',
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--cyber-cyan)',
-              fontWeight: 700
-            }}
-          >
-            [ANCHOR TRANSMISSION]
-          </div>
           <MessageItem
             message={activeThread}
             onOpenThread={() => {}}
@@ -109,28 +92,27 @@ export default function ThreadDrawer({ onReport }) {
           />
         </div>
 
-        {/* Sub-Signals Ticker Header */}
+        {/* Replies Header */}
         <div
           style={{
-            padding: '0 20px 8px 20px',
-            fontSize: '0.675rem',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
+            padding: '0 18px 6px 18px',
+            fontSize: '0.6875rem',
+            fontWeight: 600,
             color: 'var(--text-muted)',
             textTransform: 'uppercase',
-            letterSpacing: '0.06em',
+            letterSpacing: '0.04em',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
           }}
         >
-          <span>SUB-SIGNALS [{threadMessages.length}]</span>
-          {loadingThread && <span style={{ color: 'var(--cyber-cyan)' }}>SYNCHRONIZING...</span>}
+          <span>Replies ({threadMessages.length})</span>
+          {loadingThread && <span style={{ color: 'var(--accent-primary)' }}>Loading...</span>}
         </div>
 
         {loadingThread ? (
-          <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>
-            Polling branch packets...
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
+            Loading replies...
           </div>
         ) : (
           threadMessages.map((msg) => (
@@ -145,10 +127,10 @@ export default function ThreadDrawer({ onReport }) {
         <div ref={bottomRef} style={{ height: '4px' }} />
       </div>
 
-      {/* Sub-Stream Broadcast Console */}
-      <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '8px' }}>
+      {/* Reply Input */}
+      <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: '8px' }}>
         <MessageComposer
-          placeholder="Transmit sub-signal to branch..."
+          placeholder="Reply in thread..."
           replyToMessageId={activeThread.id}
         />
       </div>

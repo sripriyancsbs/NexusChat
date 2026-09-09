@@ -13,9 +13,19 @@ export default function ChatHeader({
   if (!activeConversation) return null;
 
   const isChannel = activeConversation.type === 'CHANNEL' || Boolean(activeConversation.name);
+  
+  const formatName = (name) => {
+    if (!name) return '';
+    return name
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const title = isChannel
-    ? activeConversation.name
-    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Direct Stream';
+    ? formatName(activeConversation.name)
+    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Direct Message';
+
   const presence = !isChannel
     ? presenceMap[activeConversation.other_user?.id] || activeConversation.other_user?.status?.toLowerCase() || 'offline'
     : null;
@@ -23,20 +33,19 @@ export default function ChatHeader({
   return (
     <header
       style={{
-        padding: '12px 20px',
-        borderBottom: '1px solid var(--border-subtle)',
+        padding: '10px 18px',
+        borderBottom: '1px solid var(--border-default)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(10, 15, 29, 0.75)',
-        backdropFilter: 'var(--glass-blur)',
+        backgroundColor: 'var(--bg-surface)',
         flexShrink: 0,
         zIndex: 10
       }}
     >
-      {/* Stream Info & Telemetry */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0 }}>
-        {/* Mobile menu toggle */}
+      {/* Conversation Info */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+        {/* Mobile menu button */}
         <button
           type="button"
           onClick={onToggleMobileSidebar}
@@ -49,7 +58,7 @@ export default function ChatHeader({
             padding: '4px',
             cursor: 'pointer'
           }}
-          aria-label="Toggle spectrum sidebar"
+          aria-label="Toggle channels menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="12" x2="21" y2="12" />
@@ -58,55 +67,44 @@ export default function ChatHeader({
           </svg>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-          {/* Signal Indicator Orb */}
-          <div
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <span
             style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-xs)',
-              background: isChannel
-                ? 'linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2))'
-                : 'linear-gradient(135deg, rgba(255, 149, 0, 0.2), rgba(0, 240, 255, 0.2))',
-              border: isChannel ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid rgba(255, 149, 0, 0.4)',
+              color: 'var(--text-muted)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              color: isChannel ? 'var(--cyber-cyan)' : 'var(--cyber-amber)',
-              fontWeight: 800,
-              fontSize: '0.85rem'
+              fontSize: '1rem',
+              fontWeight: 600
             }}
           >
-            {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '⚡') : '◎'}
-          </div>
+            {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '#') : '@'}
+          </span>
 
           <div style={{ minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontWeight: 800,
-                  fontSize: '1rem',
-                  letterSpacing: '0.02em',
-                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                  fontSize: '0.9375rem',
+                  letterSpacing: '-0.01em',
                   color: 'var(--text-primary)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}
               >
-                {isChannel ? `${title}` : title}
+                {title}
               </span>
 
-              <span className="privacy-badge" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
-                🔒 AES-256 ZERO-ACCESS
+              <span className="privacy-badge">
+                🔒 Zero-Admin Access
               </span>
             </div>
 
             <div
               style={{
-                fontSize: '0.7rem',
-                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
                 color: 'var(--text-muted)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -114,54 +112,46 @@ export default function ChatHeader({
               }}
             >
               {isChannel
-                ? activeConversation.topic || 'FREQUENCY // LIVE RECEPTOR ACTIVE'
-                : `@${activeConversation.other_user?.username || ''} // SIGNAL: ${presence?.toUpperCase() || 'OFFLINE'}`}
+                ? activeConversation.topic || 'Channel conversation'
+                : `@${activeConversation.other_user?.username || ''} • ${presence === 'online' ? 'Active now' : presence === 'idle' ? 'Away' : 'Offline'}`}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Floating Action Capsules */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Header Actions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
         <button
           type="button"
           onClick={onOpenSearch}
-          title="Search Frequency Signals"
-          className="btn-outline"
+          title="Search in this conversation"
+          className="btn btn-secondary"
           style={{
-            padding: '5px 12px',
-            borderRadius: 'var(--radius-xs)',
-            fontSize: '0.725rem',
-            fontFamily: 'var(--font-mono)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
+            padding: '5px 10px',
+            fontSize: '0.75rem',
+            borderRadius: 'var(--radius-sm)'
           }}
         >
           <IconSearch size={13} />
-          <span className="hide-sm">SEARCH</span>
+          <span className="hide-sm">Search</span>
         </button>
 
         <button
           type="button"
           onClick={onToggleContextPanel}
-          title="Inspect Frequency Telemetry"
-          className="btn-outline"
+          title="Conversation Details"
+          className="btn btn-secondary"
           style={{
-            padding: '5px 12px',
-            borderRadius: 'var(--radius-xs)',
-            fontSize: '0.725rem',
-            fontFamily: 'var(--font-mono)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: isContextOpen ? 'rgba(0, 240, 255, 0.15)' : 'transparent',
-            color: isContextOpen ? 'var(--cyber-cyan)' : 'var(--text-secondary)',
-            borderColor: isContextOpen ? 'var(--cyber-cyan)' : 'var(--border-default)'
+            padding: '5px 10px',
+            fontSize: '0.75rem',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: isContextOpen ? 'var(--bg-active)' : 'var(--bg-elevated)',
+            color: isContextOpen ? 'var(--accent-primary)' : 'var(--text-primary)',
+            borderColor: isContextOpen ? 'var(--accent-primary)' : 'var(--border-default)'
           }}
         >
           <IconInfo size={13} />
-          <span className="hide-sm">TELEMETRY</span>
+          <span className="hide-sm">Details</span>
         </button>
       </div>
     </header>
