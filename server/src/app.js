@@ -5,6 +5,7 @@ import { config } from './config/env.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import accessRequestRoutes from './routes/accessRequestRoutes.js';
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.get('/api', (req, res) => {
 // Modular Feature Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/access-requests', accessRequestRoutes);
 
 // 404 & Error Handlers
 app.use(notFound);
