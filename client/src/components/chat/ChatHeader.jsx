@@ -253,14 +253,20 @@ export default function ChatHeader({
                       className={`theme-swatch ${isActive ? 'active' : ''}`}
                       style={{
                         background: th.gradient,
-                        height: '36px',
+                        height: '38px',
                         borderRadius: '8px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        border: isActive ? '2px solid #ffffff' : '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: isActive ? '0 0 10px rgba(255, 255, 255, 0.6)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'transform var(--transition-fast)'
                       }}
                       title={`${th.label} — ${th.subtitle}`}
                     >
                       {isActive && (
-                        <span style={{ color: '#ffffff', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                        <span style={{ color: '#ffffff', fontSize: '0.8125rem', fontWeight: 'bold', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
                           ✓
                         </span>
                       )}
@@ -269,8 +275,13 @@ export default function ChatHeader({
                 })}
               </div>
 
-              <div style={{ marginTop: '10px', fontSize: '0.6875rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                {CHAT_THEMES.find((t) => t.id === chatTheme)?.subtitle || 'Select an atmosphere'}
+              <div style={{ marginTop: '12px', padding: '8px 10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px' }}>
+                  {CHAT_THEMES.find((t) => t.id === chatTheme)?.label || 'Atmosphere'}
+                </div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>
+                  {CHAT_THEMES.find((t) => t.id === chatTheme)?.subtitle || 'Select a visual atmosphere'}
+                </div>
               </div>
             </div>
           )}

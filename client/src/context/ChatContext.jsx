@@ -6,59 +6,59 @@ import { useAuth } from './AuthContext.jsx';
 export const CHAT_THEMES = [
   {
     id: 'sapphire',
-    label: 'Sapphire Pro',
-    subtitle: 'Electric Blue & Cyber Cyan',
+    label: 'Midnight Horizon',
+    subtitle: 'Electric Azure & Cyber Cyan',
     gradient: 'linear-gradient(135deg, #007acc 0%, #0284c7 50%, #0ea5e9 100%)',
     preview: '#007acc'
   },
   {
     id: 'neon',
-    label: 'Neon Cyberpunk',
-    subtitle: 'Ultraviolet & Hot Magenta',
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #ec4899 100%)',
-    preview: '#d946ef'
+    label: 'Cyber Neon',
+    subtitle: 'Astral Violet & Hot Magenta',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #c026d3 50%, #ec4899 100%)',
+    preview: '#c026d3'
   },
   {
-    id: 'sunset',
-    label: 'Sunset Flare',
-    subtitle: 'Golden Coral & Sunset Rose',
-    gradient: 'linear-gradient(135deg, #f97316 0%, #f43f5e 50%, #e11d48 100%)',
-    preview: '#f43f5e'
+    id: 'amber',
+    label: 'Solar Ember',
+    subtitle: 'Warm Titanium & Amber Gold',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)',
+    preview: '#f59e0b'
   },
   {
     id: 'emerald',
-    label: 'Emerald Matrix',
-    subtitle: 'Electric Mint & Forest Jade',
+    label: 'Matrix Jade',
+    subtitle: 'Deep Forest & Electric Mint',
     gradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
     preview: '#10b981'
   },
   {
     id: 'indigo',
-    label: 'Cosmic Indigo',
-    subtitle: 'Deep Royal Blue & Starlight',
+    label: 'Deep Cosmos',
+    subtitle: 'Royal Blue & Starlight Iris',
     gradient: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
     preview: '#6366f1'
   },
   {
-    id: 'berry',
-    label: 'Velvet Berry',
-    subtitle: 'Rich Mulberry & Crimson Flame',
-    gradient: 'linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%)',
-    preview: '#be123c'
+    id: 'sunset',
+    label: 'Crimson Eclipse',
+    subtitle: 'Matte Carbon & Coral Rose',
+    gradient: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%)',
+    preview: '#f43f5e'
   },
   {
-    id: 'amber',
-    label: 'Solar Amber',
-    subtitle: 'Honey Gold & Radiant Ember',
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)',
-    preview: '#f59e0b'
+    id: 'frost',
+    label: 'Nordic Frost',
+    subtitle: 'Arctic Navy & Pure Aquamarine',
+    gradient: 'linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #14b8a6 100%)',
+    preview: '#06b6d4'
   },
   {
     id: 'obsidian',
-    label: 'Midnight Stealth',
-    subtitle: 'Titanium Slate & Carbon Dark',
-    gradient: 'linear-gradient(135deg, #3f3f46 0%, #27272a 50%, #18181b 100%)',
-    preview: '#27272a'
+    label: 'Monochrome Stealth',
+    subtitle: 'Pitch Black & Titanium Silver',
+    gradient: 'linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%)',
+    preview: '#64748b'
   }
 ];
 
