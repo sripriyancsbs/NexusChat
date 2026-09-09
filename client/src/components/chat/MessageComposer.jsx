@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { socketClient } from '../../services/socket.js';
 import { IconSend, IconSmile } from '../common/Icons.jsx';
 
-const EMOJIS = ['👍', '❤️', '🔥', '🚀', '🎉', '😊', '💡', '✅'];
+const EMOJIS = ['👍', '🔥', '🚀', '❤️', '🎉', '💡', '✨', '⚡'];
 
 export default function MessageComposer({ placeholder, replyToMessageId = null }) {
   const { activeConversationId, sendMessage, typingMap, activeConversation } = useChat();
@@ -15,16 +15,14 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
 
   const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
   const defaultPlaceholder = isChannel
-    ? `Message #${activeConversation?.name || 'channel'}`
-    : `Message ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}`;
+    ? `Transmit signal to #${activeConversation?.name || 'channel'}...`
+    : `Direct signal to ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
 
-  // Get active typing users for this conversation
   const typingUsers = typingMap[activeConversationId] || [];
 
   const handleTyping = (text) => {
     setContent(text);
 
-    // Emit typing indicator
     if (activeConversationId) {
       socketClient.setTyping(activeConversationId, true);
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
@@ -60,7 +58,7 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
       }
     } catch (err) {
       console.error('Failed to send message:', err);
-      setContent(msgText); // Restore on error
+      setContent(msgText);
     } finally {
       setSending(false);
     }
@@ -75,53 +73,48 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
   };
 
   return (
-    <div style={{ padding: '0 20px 16px 20px', flexShrink: 0, position: 'relative' }}>
-      {/* Typing indicator banner */}
+    <div style={{ padding: '0 24px 20px 24px', flexShrink: 0, position: 'relative' }}>
+      {/* Live Waveform Indicator */}
       <div
         style={{
-          minHeight: '20px',
-          fontSize: '0.75rem',
-          color: 'var(--text-muted)',
+          minHeight: '22px',
+          fontSize: '0.725rem',
+          color: 'var(--accent-cyan)',
           display: 'flex',
           alignItems: 'center',
-          gap: '6px',
-          marginBottom: '4px'
+          gap: '8px',
+          marginBottom: '6px'
         }}
       >
         {typingUsers.length > 0 && (
           <>
-            <span style={{ display: 'inline-flex', gap: '2px', alignItems: 'center' }}>
-              <span className="dot" style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
-              <span className="dot" style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
-              <span className="dot" style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
+            <span style={{ display: 'inline-flex', gap: '3px', alignItems: 'center' }}>
+              <span style={{ width: '4px', height: '8px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite' }} />
+              <span style={{ width: '4px', height: '14px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite 0.2s' }} />
+              <span style={{ width: '4px', height: '6px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite 0.4s' }} />
             </span>
             <span>
-              {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
+              {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} transmitting...
             </span>
           </>
         )}
       </div>
 
-      {/* Composer Input Box */}
+      {/* Floating Modern Capsule Composer */}
       <div
         style={{
-          backgroundColor: 'var(--bg-surface)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: 'var(--bg-elevated)',
+          border: '1px solid var(--border-strong)',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: 'var(--shadow-sm)',
+          boxShadow: 'var(--shadow-md)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          transition: 'border-color var(--transition-fast)'
-        }}
-        onFocus={() => {
-          const el = document.getElementById('composer-box');
-          if (el) el.style.borderColor = 'var(--accent-primary)';
+          transition: 'all var(--transition-fast)'
         }}
       >
         <textarea
           ref={textareaRef}
-          className="composer-textarea"
           rows={1}
           placeholder={placeholder || defaultPlaceholder}
           value={content}
@@ -129,12 +122,12 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           onKeyDown={handleKeyDown}
           style={{
             width: '100%',
-            padding: '12px 16px',
+            padding: '14px 18px',
             backgroundColor: 'transparent',
             border: 'none',
             outline: 'none',
             color: 'var(--text-primary)',
-            fontSize: '0.9rem',
+            fontSize: '0.925rem',
             fontFamily: 'var(--font-sans)',
             resize: 'none',
             maxHeight: '180px',
@@ -142,10 +135,10 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           }}
         />
 
-        {/* Composer Toolbar */}
+        {/* Action Dock inside Composer */}
         <div
           style={{
-            padding: '6px 12px',
+            padding: '8px 16px',
             backgroundColor: 'var(--bg-canvas)',
             borderTop: '1px solid var(--border-subtle)',
             display: 'flex',
@@ -153,24 +146,27 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
             justifyContent: 'space-between'
           }}
         >
-          {/* Left formatting & emoji */}
+          {/* Emoji & Quick Tools */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative' }}>
             <button
               type="button"
               onClick={() => setShowEmojiPicker((prev) => !prev)}
               title="Insert Emoji"
               style={{
-                background: 'transparent',
-                border: 'none',
-                padding: '4px 6px',
-                borderRadius: 'var(--radius-xs)',
-                color: 'var(--text-muted)',
+                background: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+                padding: '6px 10px',
+                borderRadius: 'var(--radius-full)',
+                color: 'var(--text-secondary)',
                 cursor: 'pointer',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.8rem'
               }}
             >
-              <IconSmile size={16} />
+              <IconSmile size={15} />
+              <span className="hide-sm">Emoji</span>
             </button>
 
             {/* Emoji popover */}
@@ -180,15 +176,15 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
                   position: 'absolute',
                   bottom: '100%',
                   left: 0,
-                  marginBottom: '8px',
+                  marginBottom: '10px',
                   backgroundColor: 'var(--bg-card)',
                   border: '1px solid var(--border-default)',
                   borderRadius: 'var(--radius-md)',
-                  boxShadow: 'var(--shadow-md)',
-                  padding: '6px',
+                  boxShadow: 'var(--shadow-lg)',
+                  padding: '8px',
                   display: 'flex',
                   gap: '6px',
-                  zIndex: 20
+                  zIndex: 30
                 }}
               >
                 {EMOJIS.map((emoji) => (
@@ -199,9 +195,9 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      fontSize: '1.2rem',
+                      fontSize: '1.25rem',
                       cursor: 'pointer',
-                      padding: '2px',
+                      padding: '4px',
                       borderRadius: 'var(--radius-sm)'
                     }}
                   >
@@ -212,10 +208,10 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
             )}
           </div>
 
-          {/* Right send button & keyboard hint */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }} className="hide-sm">
-              ↵ to send
+          {/* Transmit Button */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }} className="hide-sm">
+              Press ↵ Enter
             </span>
             <button
               type="button"
@@ -223,14 +219,15 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
               disabled={!content.trim() || sending}
               className="btn btn-primary"
               style={{
-                padding: '6px 12px',
-                fontSize: '0.8rem',
-                borderRadius: 'var(--radius-sm)',
-                opacity: !content.trim() || sending ? 0.5 : 1
+                padding: '8px 18px',
+                fontSize: '0.825rem',
+                borderRadius: 'var(--radius-full)',
+                gap: '8px',
+                opacity: !content.trim() || sending ? 0.45 : 1
               }}
             >
               <IconSend size={14} />
-              <span>Send</span>
+              <span>Transmit</span>
             </button>
           </div>
         </div>

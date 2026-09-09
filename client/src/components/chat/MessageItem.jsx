@@ -12,7 +12,7 @@ import {
   IconX
 } from '../common/Icons.jsx';
 
-const QUICK_EMOJIS = ['👍', '❤️', '🎉', '🚀', '👀', '💡'];
+const QUICK_EMOJIS = ['👍', '🔥', '🚀', '❤️', '💡', '✨'];
 
 export default function MessageItem({ message, onOpenThread, onReport }) {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this message?')) {
+    if (window.confirm('Delete this message?')) {
       try {
         await deleteMessage(message.id);
       } catch (err) {
@@ -64,86 +64,108 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
       style={{
         position: 'relative',
         display: 'flex',
-        gap: '12px',
-        padding: '8px 16px',
-        margin: '2px 0',
-        borderRadius: 'var(--radius-sm)',
-        transition: 'background-color var(--transition-fast)',
-        backgroundColor: isPinned ? 'rgba(99, 102, 241, 0.05)' : 'transparent',
-        borderLeft: isPinned ? '3px solid var(--accent-primary)' : '3px solid transparent'
+        gap: '14px',
+        padding: '10px 20px',
+        margin: '3px 12px',
+        borderRadius: 'var(--radius-md)',
+        transition: 'all var(--transition-fast)',
+        backgroundColor: isPinned ? 'rgba(124, 58, 237, 0.08)' : 'transparent',
+        border: isPinned ? '1px solid rgba(124, 58, 237, 0.3)' : '1px solid transparent'
       }}
       onMouseEnter={(e) => {
-        if (!isDeleted) e.currentTarget.style.backgroundColor = isPinned ? 'rgba(99, 102, 241, 0.08)' : 'var(--bg-hover)';
+        if (!isDeleted) {
+          e.currentTarget.style.backgroundColor = isPinned ? 'rgba(124, 58, 237, 0.12)' : 'var(--bg-hover)';
+          e.currentTarget.style.borderColor = isPinned ? 'rgba(124, 58, 237, 0.4)' : 'var(--border-subtle)';
+        }
         const toolbar = e.currentTarget.querySelector('.message-toolbar');
         if (toolbar) toolbar.style.opacity = '1';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = isPinned ? 'rgba(99, 102, 241, 0.05)' : 'transparent';
+        e.currentTarget.style.backgroundColor = isPinned ? 'rgba(124, 58, 237, 0.08)' : 'transparent';
+        e.currentTarget.style.borderColor = isPinned ? 'rgba(124, 58, 237, 0.3)' : 'transparent';
         const toolbar = e.currentTarget.querySelector('.message-toolbar');
         if (toolbar) toolbar.style.opacity = '0';
         setShowEmojiPicker(false);
       }}
     >
-      {/* Sender Avatar */}
+      {/* Sender Squircle Avatar */}
       <div
         style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: 'var(--radius-full)',
-          backgroundColor: 'var(--accent-primary-subtle)',
-          color: 'var(--accent-primary)',
+          width: '38px',
+          height: '38px',
+          borderRadius: 'var(--radius-md)',
+          background: 'linear-gradient(135deg, rgba(13, 245, 196, 0.2), rgba(124, 58, 237, 0.25))',
+          border: '1px solid var(--border-default)',
+          color: 'var(--accent-cyan)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontWeight: 700,
-          fontSize: '0.9rem',
+          fontWeight: 800,
+          fontSize: '0.95rem',
           flexShrink: 0
         }}
       >
         {(message.sender_full_name || message.sender_username || 'U')[0].toUpperCase()}
       </div>
 
-      {/* Message Body */}
+      {/* Message Body Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Author Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-          <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>
+        {/* Header Metadata */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.01em'
+            }}
+          >
             {message.sender_full_name || message.sender_username}
           </span>
-          <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.7rem',
+              color: 'var(--text-muted)'
+            }}
+          >
             {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
+
           {message.is_edited && !isDeleted && (
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>(edited)</span>
+            <span style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)' }}>[edited]</span>
           )}
+
           {isPinned && (
             <span
               style={{
                 fontSize: '0.65rem',
-                padding: '1px 6px',
+                padding: '1px 8px',
                 borderRadius: 'var(--radius-full)',
-                backgroundColor: 'var(--accent-primary-subtle)',
-                color: 'var(--accent-primary)',
-                fontWeight: 600,
+                backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                color: 'var(--accent-violet)',
+                fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '3px'
+                gap: '4px'
               }}
             >
-              <IconPin size={10} /> Pinned
+              <IconPin size={10} /> PINNED
             </span>
           )}
         </div>
 
         {/* Content */}
         {isEditing ? (
-          <div style={{ marginTop: '6px' }}>
+          <div style={{ marginTop: '8px' }}>
             <textarea
               className="input"
               rows="2"
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              style={{ width: '100%', marginBottom: '6px' }}
+              style={{ width: '100%', marginBottom: '8px', backgroundColor: 'var(--bg-elevated)' }}
               autoFocus
             />
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -152,15 +174,15 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 onClick={handleSaveEdit}
                 disabled={savingEdit}
                 className="btn btn-primary"
-                style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                style={{ padding: '4px 12px', fontSize: '0.75rem' }}
               >
-                <IconCheck size={14} /> Save
+                <IconCheck size={14} /> Update
               </button>
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
                 className="btn btn-outline"
-                style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                style={{ padding: '4px 12px', fontSize: '0.75rem' }}
               >
                 <IconX size={14} /> Cancel
               </button>
@@ -169,10 +191,10 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
         ) : (
           <div
             style={{
-              fontSize: '0.9rem',
+              fontSize: '0.925rem',
               color: isDeleted ? 'var(--text-muted)' : 'var(--text-primary)',
               fontStyle: isDeleted ? 'italic' : 'normal',
-              lineHeight: 1.5,
+              lineHeight: 1.55,
               wordBreak: 'break-word',
               whiteSpace: 'pre-wrap'
             }}
@@ -181,9 +203,9 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           </div>
         )}
 
-        {/* Reactions List */}
+        {/* Neon Reaction Pods */}
         {!isDeleted && message.reactions && message.reactions.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '6px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
             {message.reactions.map((r, idx) => {
               const hasReacted = r.users?.includes(user?.id);
               return (
@@ -194,68 +216,72 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
-                    padding: '2px 8px',
+                    gap: '5px',
+                    padding: '3px 10px',
                     borderRadius: 'var(--radius-full)',
-                    backgroundColor: hasReacted ? 'var(--accent-primary-subtle)' : 'var(--bg-canvas)',
-                    border: hasReacted ? '1px solid var(--accent-primary)' : '1px solid var(--border-subtle)',
-                    color: hasReacted ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    backgroundColor: hasReacted ? 'var(--accent-cyan-subtle)' : 'var(--bg-elevated)',
+                    border: hasReacted ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                    color: hasReacted ? 'var(--accent-cyan)' : 'var(--text-secondary)',
                     cursor: 'pointer',
                     fontSize: '0.75rem',
                     transition: 'all var(--transition-fast)'
                   }}
                 >
                   <span>{r.reaction}</span>
-                  <span style={{ fontWeight: 600 }}>{r.count}</span>
+                  <span style={{ fontWeight: 700 }}>{r.count}</span>
                 </button>
               );
             })}
           </div>
         )}
 
-        {/* Thread replies button */}
+        {/* Thread replies pill */}
         {!isDeleted && message.reply_count > 0 && (
-          <div style={{ marginTop: '6px' }}>
+          <div style={{ marginTop: '8px' }}>
             <button
               type="button"
               onClick={() => onOpenThread(message)}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '4px 8px',
-                borderRadius: 'var(--radius-sm)',
-                backgroundColor: 'var(--accent-cyan-subtle)',
-                border: 'none',
-                color: 'var(--accent-cyan)',
+                gap: '8px',
+                padding: '4px 12px',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                border: '1px solid rgba(124, 58, 237, 0.35)',
+                color: 'var(--accent-violet)',
                 fontSize: '0.75rem',
-                fontWeight: 600,
-                cursor: 'pointer'
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-1px)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
             >
               <IconReply size={12} />
-              <span>{message.reply_count} {message.reply_count === 1 ? 'reply' : 'replies'}</span>
+              <span>{message.reply_count} {message.reply_count === 1 ? 'Reply Stream' : 'Reply Streams'}</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Floating Action Toolbar on Hover */}
+      {/* Floating Translucent Capsule Dock on Hover */}
       {!isDeleted && !isEditing && (
         <div
           className="message-toolbar"
           style={{
             position: 'absolute',
-            right: '16px',
+            right: '20px',
             top: '-12px',
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-default)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-sm)',
+            backgroundColor: 'var(--glass-elevated)',
+            backdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--border-strong)',
+            borderRadius: 'var(--radius-full)',
+            boxShadow: 'var(--shadow-md)',
             display: 'flex',
             alignItems: 'center',
-            padding: '2px 4px',
-            gap: '2px',
+            padding: '3px 8px',
+            gap: '4px',
             opacity: 0,
             transition: 'opacity var(--transition-fast)',
             zIndex: 10
@@ -265,36 +291,36 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
-            title="React"
+            title="React with emoji"
             style={{
               background: 'transparent',
               border: 'none',
-              padding: '4px',
-              borderRadius: 'var(--radius-xs)',
+              padding: '5px',
+              borderRadius: 'var(--radius-full)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'flex'
             }}
           >
-            <IconSmile size={16} />
+            <IconSmile size={15} />
           </button>
 
           {/* Reply in thread */}
           <button
             type="button"
             onClick={() => onOpenThread(message)}
-            title="Reply in thread"
+            title="Open reply thread"
             style={{
               background: 'transparent',
               border: 'none',
-              padding: '4px',
-              borderRadius: 'var(--radius-xs)',
+              padding: '5px',
+              borderRadius: 'var(--radius-full)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'flex'
             }}
           >
-            <IconReply size={16} />
+            <IconReply size={15} />
           </button>
 
           {/* Pin toggle */}
@@ -305,14 +331,14 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
             style={{
               background: 'transparent',
               border: 'none',
-              padding: '4px',
-              borderRadius: 'var(--radius-xs)',
-              color: isPinned ? 'var(--accent-primary)' : 'var(--text-secondary)',
+              padding: '5px',
+              borderRadius: 'var(--radius-full)',
+              color: isPinned ? 'var(--accent-cyan)' : 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'flex'
             }}
           >
-            <IconPin size={16} />
+            <IconPin size={15} />
           </button>
 
           {/* Author actions */}
@@ -325,14 +351,14 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  padding: '4px',
-                  borderRadius: 'var(--radius-xs)',
+                  padding: '5px',
+                  borderRadius: 'var(--radius-full)',
                   color: 'var(--text-secondary)',
                   cursor: 'pointer',
                   display: 'flex'
                 }}
               >
-                <IconEdit size={16} />
+                <IconEdit size={15} />
               </button>
               <button
                 type="button"
@@ -341,33 +367,32 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  padding: '4px',
-                  borderRadius: 'var(--radius-xs)',
+                  padding: '5px',
+                  borderRadius: 'var(--radius-full)',
                   color: 'var(--status-danger)',
                   cursor: 'pointer',
                   display: 'flex'
                 }}
               >
-                <IconTrash size={16} />
+                <IconTrash size={15} />
               </button>
             </>
           ) : (
-            /* Report content */
             <button
               type="button"
               onClick={() => onReport(message)}
-              title="Report content to moderators"
+              title="Report content"
               style={{
                 background: 'transparent',
                 border: 'none',
-                padding: '4px',
-                borderRadius: 'var(--radius-xs)',
+                padding: '5px',
+                borderRadius: 'var(--radius-full)',
                 color: 'var(--text-muted)',
                 cursor: 'pointer',
                 display: 'flex'
               }}
             >
-              <IconAlertCircle size={16} />
+              <IconAlertCircle size={15} />
             </button>
           )}
 
@@ -378,15 +403,15 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                 position: 'absolute',
                 top: '100%',
                 right: 0,
-                marginTop: '4px',
-                backgroundColor: 'var(--bg-card)',
+                marginTop: '6px',
+                backgroundColor: 'var(--bg-elevated)',
                 border: '1px solid var(--border-default)',
                 borderRadius: 'var(--radius-md)',
-                boxShadow: 'var(--shadow-md)',
-                padding: '4px 6px',
+                boxShadow: 'var(--shadow-lg)',
+                padding: '6px 8px',
                 display: 'flex',
-                gap: '4px',
-                zIndex: 20
+                gap: '6px',
+                zIndex: 30
               }}
             >
               {QUICK_EMOJIS.map((emoji) => (
@@ -397,13 +422,14 @@ export default function MessageItem({ message, onOpenThread, onReport }) {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    fontSize: '1.1rem',
+                    fontSize: '1.2rem',
                     cursor: 'pointer',
                     padding: '4px',
-                    borderRadius: 'var(--radius-sm)'
+                    borderRadius: 'var(--radius-sm)',
+                    transition: 'transform var(--transition-fast)'
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                 >
                   {emoji}
                 </button>

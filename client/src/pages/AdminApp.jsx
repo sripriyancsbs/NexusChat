@@ -61,9 +61,9 @@ export default function AdminApp({ onNavigateChat }) {
           <div style={{ color: 'var(--status-danger)', marginBottom: '16px' }}>
             <IconAlertCircle size={48} />
           </div>
-          <h2 style={{ fontSize: '1.4rem', marginBottom: '8px' }}>Restricted Administrative Area</h2>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', marginBottom: '8px' }}>Restricted Area</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '24px', lineHeight: 1.5 }}>
-            Access to the Platform Administration Portal is strictly restricted to accounts with the <strong>ADMIN</strong> role.
+            Access to the Platform Administration Command Center is strictly restricted to accounts with the <strong>ADMIN</strong> role.
           </p>
           <button type="button" onClick={onNavigateChat} className="btn btn-primary">
             Return to Community Chat
@@ -74,17 +74,17 @@ export default function AdminApp({ onNavigateChat }) {
   }
 
   const navTabs = [
-    { id: 'OVERVIEW', label: 'Overview', icon: <IconShield size={16} /> },
-    { id: 'USERS', label: 'Users & Roles', icon: <IconUsers size={16} /> },
+    { id: 'OVERVIEW', label: 'Telemetry & Grid', icon: <IconShield size={16} /> },
+    { id: 'USERS', label: 'Identities & Roles', icon: <IconUsers size={16} /> },
     {
       id: 'REQUESTS',
-      label: 'Access Requests',
+      label: 'Access Clearance',
       icon: <IconKey size={16} />,
       badge: dashboard?.pendingRequests > 0 ? dashboard.pendingRequests : null
     },
-    { id: 'SESSIONS', label: 'Active Sessions', icon: <IconShield size={16} /> },
+    { id: 'SESSIONS', label: 'Active Tokens', icon: <IconShield size={16} /> },
     { id: 'AUDIT', label: 'Audit Trail', icon: <IconShield size={16} /> },
-    { id: 'REPORTS', label: 'Moderation Queue', icon: <IconAlertCircle size={16} /> }
+    { id: 'REPORTS', label: 'Moderation Tickets', icon: <IconAlertCircle size={16} /> }
   ];
 
   return (
@@ -97,43 +97,45 @@ export default function AdminApp({ onNavigateChat }) {
         flexDirection: 'column'
       }}
     >
-      {/* Admin Top Header */}
+      {/* Cybernetic Admin Header */}
       <header
         style={{
-          height: '64px',
+          height: '70px',
           borderBottom: '1px solid var(--border-subtle)',
-          backgroundColor: 'var(--bg-surface)',
+          backgroundColor: 'var(--glass-bg)',
+          backdropFilter: 'var(--glass-blur)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 24px',
+          padding: '0 28px',
           flexShrink: 0
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div
               style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: 'var(--radius-sm)',
+                width: '36px',
+                height: '36px',
+                borderRadius: 'var(--radius-md)',
                 background: 'linear-gradient(135deg, var(--status-danger), var(--accent-primary))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '0.9rem'
+                fontWeight: 800,
+                fontSize: '1rem',
+                boxShadow: '0 0 16px rgba(255, 51, 102, 0.3)'
               }}
             >
-              A
+              ✦
             </div>
             <div>
-              <span style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>
-                NexusChat Admin
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.02em' }}>
+                Nexus Governance
               </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: '8px' }}>
-                Platform Security &amp; Accounts
+              <span style={{ fontSize: '0.65rem', color: 'var(--status-danger)', marginLeft: '10px', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                SEC-COMMAND
               </span>
             </div>
           </div>
@@ -141,13 +143,13 @@ export default function AdminApp({ onNavigateChat }) {
           <span
             className="privacy-badge"
             style={{
-              borderColor: 'rgba(244, 63, 94, 0.3)',
-              backgroundColor: 'rgba(244, 63, 94, 0.1)',
+              borderColor: 'rgba(255, 51, 102, 0.4)',
+              backgroundColor: 'rgba(255, 51, 102, 0.12)',
               color: 'var(--status-danger)',
               fontSize: '0.75rem'
             }}
           >
-            🔒 Privacy Boundary Active: Private Messages Inaccessible
+            🔒 Privacy Barrier Enforced: Message Bodies Inaccessible
           </span>
         </div>
 
@@ -156,7 +158,7 @@ export default function AdminApp({ onNavigateChat }) {
             type="button"
             onClick={onNavigateChat}
             className="btn btn-secondary"
-            style={{ fontSize: '0.8rem', padding: '6px 14px' }}
+            style={{ fontSize: '0.8rem', padding: '7px 16px', borderRadius: 'var(--radius-full)' }}
           >
             ← Back to Chat Workspace
           </button>
@@ -166,7 +168,7 @@ export default function AdminApp({ onNavigateChat }) {
             onClick={toggleTheme}
             title="Toggle theme"
             className="btn-outline"
-            style={{ padding: '8px', borderRadius: 'var(--radius-sm)' }}
+            style={{ padding: '8px', borderRadius: 'var(--radius-md)' }}
           >
             {theme === 'dark' ? <IconSun size={16} /> : <IconMoon size={16} />}
           </button>
@@ -176,21 +178,21 @@ export default function AdminApp({ onNavigateChat }) {
             onClick={logout}
             title="Log Out"
             className="btn-outline"
-            style={{ padding: '8px', borderRadius: 'var(--radius-sm)', color: 'var(--status-danger)' }}
+            style={{ padding: '8px', borderRadius: 'var(--radius-md)', color: 'var(--status-danger)' }}
           >
             <IconLogOut size={16} />
           </button>
         </div>
       </header>
 
-      {/* Admin Tab Navigation Subheader */}
+      {/* Cyber Tab Bar */}
       <nav
         style={{
           borderBottom: '1px solid var(--border-subtle)',
           backgroundColor: 'var(--bg-elevated)',
-          padding: '0 24px',
+          padding: '0 28px',
           display: 'flex',
-          gap: '4px',
+          gap: '6px',
           overflowX: 'auto'
         }}
       >
@@ -202,13 +204,14 @@ export default function AdminApp({ onNavigateChat }) {
               type="button"
               onClick={() => setActiveTab(tab.id)}
               style={{
-                padding: '12px 16px',
+                padding: '14px 18px',
                 background: 'transparent',
                 border: 'none',
-                borderBottom: isActive ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                fontWeight: isActive ? 600 : 400,
+                borderBottom: isActive ? '2px solid var(--accent-cyan)' : '2px solid transparent',
+                color: isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+                fontWeight: isActive ? 700 : 500,
                 fontSize: '0.85rem',
+                fontFamily: 'var(--font-sans)',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -223,11 +226,11 @@ export default function AdminApp({ onNavigateChat }) {
                 <span
                   style={{
                     fontSize: '0.7rem',
-                    padding: '1px 6px',
+                    padding: '2px 7px',
                     borderRadius: 'var(--radius-full)',
                     backgroundColor: 'var(--status-danger)',
                     color: '#ffffff',
-                    fontWeight: 700
+                    fontWeight: 800
                   }}
                 >
                   {tab.badge}
@@ -238,8 +241,8 @@ export default function AdminApp({ onNavigateChat }) {
         })}
       </nav>
 
-      {/* Admin Main Body */}
-      <main style={{ flex: 1, padding: '24px', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
+      {/* Admin Content Canvas */}
+      <main style={{ flex: 1, padding: '28px', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
         {activeTab === 'OVERVIEW' && (
           <AdminOverview dashboard={dashboard} onNavigateTab={(tab) => setActiveTab(tab)} />
         )}

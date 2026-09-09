@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import AccessRequestModal from '../components/common/AccessRequestModal.jsx';
-import { IconShield, IconUsers, IconAlertCircle } from '../components/common/Icons.jsx';
+import { IconAlertCircle } from '../components/common/Icons.jsx';
 
 export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
   const { login } = useAuth();
@@ -14,7 +14,7 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!identifier.trim() || !password) {
-      setError('Please enter your username/email and password.');
+      setError('Please enter your identifier and password.');
       return;
     }
 
@@ -25,7 +25,7 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
       const loggedUser = await login(identifier.trim(), password);
       onLoginSuccess(loggedUser);
     } catch (err) {
-      setError(err.message || 'Login failed. Please verify your credentials.');
+      setError(err.message || 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
@@ -56,11 +56,39 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '24px'
+        padding: '24px',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
+      {/* Background Aurora Orbs */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-80px',
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(13, 245, 196, 0.15) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+          pointerEvents: 'none'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-80px',
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none'
+        }}
+      />
+
       {/* Brand Header */}
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px', zIndex: 1 }}>
         <div
           onClick={onNavigateHome}
           style={{
@@ -68,66 +96,75 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
             alignItems: 'center',
             gap: '12px',
             cursor: 'pointer',
-            marginBottom: '8px'
+            marginBottom: '10px'
           }}
         >
           <div
             style={{
-              width: '38px',
-              height: '38px',
+              width: '44px',
+              height: '44px',
               borderRadius: 'var(--radius-md)',
-              background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-cyan))',
+              background: 'var(--grad-brand)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 800,
-              fontSize: '1.2rem',
-              color: '#ffffff'
+              fontSize: '1.25rem',
+              color: '#06090f',
+              boxShadow: 'var(--glow-cyan)'
             }}
           >
-            N
+            ✦
           </div>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.6rem', letterSpacing: '-0.02em' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.8rem', letterSpacing: '-0.03em' }}>
             NexusChat
           </span>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-          Privacy-Focused Community Communication Platform
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, letterSpacing: '0.02em' }}>
+          Autonomous &amp; Privacy-Enforced Workspace Matrix
         </p>
       </div>
 
-      {/* Login Card */}
+      {/* Floating Glass Authentication Terminal */}
       <div
         style={{
           width: '100%',
-          maxWidth: '440px',
-          backgroundColor: 'var(--bg-surface)',
-          border: '1px solid var(--border-default)',
+          maxWidth: '460px',
+          backgroundColor: 'var(--glass-elevated)',
+          backdropFilter: 'var(--glass-blur)',
+          border: '1px solid var(--border-strong)',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: 'var(--shadow-md)',
-          padding: '32px 28px'
+          boxShadow: 'var(--shadow-lg)',
+          padding: '36px 32px',
+          position: 'relative',
+          zIndex: 1
         }}
       >
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '6px' }}>
-          Welcome back
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '20px' }}>
-          Sign in to your account to enter your workspace.
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 800, margin: 0 }}>
+            Authenticate Signal
+          </h2>
+          <span className="privacy-badge" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+            🔒 E2E Privacy Guard
+          </span>
+        </div>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '24px', lineHeight: 1.5 }}>
+          Enter your node identifier or use an evaluation teleport key.
         </p>
 
         {error && (
           <div
             style={{
-              padding: '10px 14px',
+              padding: '12px 16px',
               backgroundColor: 'var(--status-danger-subtle)',
-              border: '1px solid rgba(244, 63, 94, 0.3)',
+              border: '1px solid rgba(255, 51, 102, 0.35)',
               borderRadius: 'var(--radius-md)',
               color: 'var(--status-danger)',
               fontSize: '0.85rem',
-              marginBottom: '16px',
+              marginBottom: '20px',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '10px'
             }}
           >
             <IconAlertCircle size={16} />
@@ -135,9 +172,9 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
               Username or Email
             </label>
             <input
@@ -152,15 +189,15 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-              Password
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+              Passcode
             </label>
             <input
               type="password"
               className="input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="••••••••••••"
               required
             />
           </div>
@@ -169,27 +206,37 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
             type="submit"
             disabled={loading}
             className="btn btn-primary"
-            style={{ width: '100%', padding: '11px', marginTop: '6px', fontSize: '0.95rem', fontWeight: 600 }}
+            style={{ width: '100%', padding: '12px', marginTop: '6px', fontSize: '0.95rem', borderRadius: 'var(--radius-full)' }}
           >
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? 'Authenticating Node...' : 'Access Workspace →'}
           </button>
         </form>
 
-        {/* Quick Demo Test Buttons */}
-        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
-            Instant Evaluation Accounts
+        {/* Evaluation Teleport Keys */}
+        <div style={{ marginTop: '28px', paddingTop: '22px', borderTop: '1px solid var(--border-subtle)' }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '12px', textAlign: 'center' }}>
+            Instant Evaluation Access
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             <button
               type="button"
               onClick={() => handleQuickLogin('admin', 'admin123')}
               disabled={loading}
               className="btn btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '2px' }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '10px 6px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '3px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'rgba(255, 51, 102, 0.08)',
+                borderColor: 'rgba(255, 51, 102, 0.3)'
+              }}
             >
-              <span style={{ fontWeight: 700, color: 'var(--status-danger)' }}>Admin</span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>admin123</span>
+              <span style={{ fontWeight: 800, color: 'var(--status-danger)' }}>Admin</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>admin123</span>
             </button>
 
             <button
@@ -197,10 +244,19 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
               onClick={() => handleQuickLogin('priya', 'user123')}
               disabled={loading}
               className="btn btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '2px' }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '10px 6px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '3px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'rgba(13, 245, 196, 0.08)',
+                borderColor: 'rgba(13, 245, 196, 0.3)'
+              }}
             >
-              <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>Priya</span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>user123</span>
+              <span style={{ fontWeight: 800, color: 'var(--accent-cyan)' }}>Priya</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>user123</span>
             </button>
 
             <button
@@ -208,17 +264,26 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
               onClick={() => handleQuickLogin('agen', 'user123')}
               disabled={loading}
               className="btn btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '2px' }}
+              style={{
+                fontSize: '0.75rem',
+                padding: '10px 6px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '3px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'rgba(124, 58, 237, 0.08)',
+                borderColor: 'rgba(124, 58, 237, 0.3)'
+              }}
             >
-              <span style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>Agen</span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>user123</span>
+              <span style={{ fontWeight: 800, color: 'var(--accent-violet)' }}>Agen</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>user123</span>
             </button>
           </div>
         </div>
 
-        {/* Footer links */}
-        <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Need community access?{' '}
+        {/* Request Account link */}
+        <div style={{ marginTop: '22px', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          Need new workspace access?{' '}
           <button
             type="button"
             onClick={() => setIsAccessModalOpen(true)}
@@ -226,18 +291,18 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
               background: 'transparent',
               border: 'none',
               color: 'var(--accent-cyan)',
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: 'pointer',
               padding: 0
             }}
           >
-            Request an account
+            Request Access
           </button>
         </div>
       </div>
 
-      {/* Back button */}
-      <div style={{ marginTop: '18px' }}>
+      {/* Back to Home */}
+      <div style={{ marginTop: '20px', zIndex: 1 }}>
         <button
           type="button"
           onClick={onNavigateHome}
@@ -250,7 +315,7 @@ export default function LoginPage({ onNavigateHome, onLoginSuccess }) {
             cursor: 'pointer'
           }}
         >
-          ← Back to Homepage
+          ← Return to Landing Stream
         </button>
       </div>
 

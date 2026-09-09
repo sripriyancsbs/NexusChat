@@ -14,34 +14,40 @@ export default function LandingPage({ onNavigateLogin }) {
 
   const features = [
     {
-      icon: <IconHash size={24} />,
-      title: 'Channels & Conversations',
-      description: 'Topic-based public and private channels, threaded replies, reactions, and pinned messages for high-signal communication.'
+      icon: '⌗',
+      tag: 'COLLABORATION',
+      title: 'Transmission Channels',
+      description: 'Dynamic communication spaces with threaded reply branches, live reactions, and pinned stream memories.'
     },
     {
-      icon: <IconShield size={24} />,
-      title: 'Architectural Privacy Boundary',
-      description: 'Strict separation of concerns. Platform administrators cannot browse or inspect private direct messages or conversations.'
+      icon: '🛡️',
+      tag: 'CRYPTOGRAPHIC',
+      title: 'Architectural Privacy Vault',
+      description: 'Platform administrators possess zero access to private message content or direct communications by system design.'
     },
     {
-      icon: <IconSearch size={24} />,
-      title: 'Scoped Global Search',
-      description: 'Fast, relational full-text search with database-enforced boundaries ensuring results never leak unauthorized messages.'
+      icon: '🔍',
+      tag: 'INTELLIGENCE',
+      title: 'Scoped Relational Search',
+      description: 'Instant full-text query matching strictly bounded by user access permissions to prevent data leakage.'
     },
     {
-      icon: <IconUsers size={24} />,
-      title: 'Presence & Real-Time Sync',
-      description: 'Authenticated native WebSockets with room-scoped multicasting, live typing indicators, and presence updates.'
+      icon: '⚡',
+      tag: 'REAL-TIME',
+      title: 'Sub-Second Pulse Engine',
+      description: 'Room-scoped WebSocket broadcasting with live presence dots, typing indicators, and instant synchronization.'
     },
     {
-      icon: <IconKey size={24} />,
-      title: 'Platform Security & RBAC',
-      description: 'Role-based access control, active session inspection, force-logout, and comprehensive sanitized audit trails.'
+      icon: '✦',
+      tag: 'SECURITY',
+      title: 'Governance & Session Control',
+      description: 'Role-based access enforcement, active token inspection, one-click session revocation, and sanitized audit logs.'
     },
     {
-      icon: <IconAlertCircle size={24} />,
-      title: 'Isolated Moderation',
-      description: 'Moderators review content strictly through member-submitted violation reports, preserving member privacy.'
+      icon: '◎',
+      tag: 'MODERATION',
+      title: 'Isolated Violation Queue',
+      description: 'Admin content moderation is strictly restricted to isolated tickets submitted explicitly by community members.'
     }
   ];
 
@@ -52,63 +58,98 @@ export default function LandingPage({ onNavigateLogin }) {
         backgroundColor: 'var(--bg-canvas)',
         color: 'var(--text-primary)',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        position: 'relative',
+        overflowX: 'hidden'
       }}
     >
-      {/* Navigation Bar */}
+      {/* Background Aurora Glow Orbs */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-150px',
+          left: '20%',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(13, 245, 196, 0.12) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none',
+          animation: 'auroraFloat 8s ease-in-out infinite'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '200px',
+          right: '15%',
+          width: '450px',
+          height: '450px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+          pointerEvents: 'none',
+          animation: 'auroraFloat 10s ease-in-out infinite 2s'
+        }}
+      />
+
+      {/* Top Glass Navigation Bar */}
       <header
         style={{
-          height: '70px',
+          height: '76px',
           borderBottom: '1px solid var(--border-subtle)',
-          backgroundColor: 'rgba(15, 21, 35, 0.85)',
-          backdropFilter: 'blur(12px)',
+          backgroundColor: 'var(--glass-bg)',
+          backdropFilter: 'var(--glass-blur)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 32px',
+          padding: '0 40px',
           position: 'sticky',
           top: 0,
           zIndex: 100
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div
             style={{
-              width: '36px',
-              height: '36px',
+              width: '42px',
+              height: '42px',
               borderRadius: 'var(--radius-md)',
-              background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-cyan))',
+              background: 'var(--grad-brand)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 800,
-              fontSize: '1.1rem',
-              color: '#ffffff'
+              fontSize: '1.2rem',
+              color: '#06090f',
+              boxShadow: 'var(--glow-cyan)'
             }}
           >
-            N
+            ✦
           </div>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.3rem', letterSpacing: '-0.02em' }}>
-            NexusChat
-          </span>
-          <span className="privacy-badge">
-            🔒 Privacy-Focused
-          </span>
+          <div>
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.35rem', letterSpacing: '-0.03em' }}>
+              NexusChat
+            </span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', marginLeft: '10px', fontWeight: 600, letterSpacing: '0.05em' }}>
+              NEO-COMMUNICATION
+            </span>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span
-            className={`badge ${apiStatus === 'healthy' ? 'badge-success' : 'badge-danger'}`}
-            style={{ fontSize: '0.75rem' }}
+            className="badge badge-success"
+            style={{ fontSize: '0.75rem', padding: '4px 12px' }}
           >
-            ● {apiStatus === 'healthy' ? 'API Online' : 'Connecting...'}
+            ● {apiStatus === 'healthy' ? 'Grid Connected' : 'Synchronizing...'}
           </span>
 
           <button
             type="button"
             onClick={() => setIsAccessModalOpen(true)}
             className="btn btn-outline"
-            style={{ fontSize: '0.85rem' }}
+            style={{ fontSize: '0.85rem', borderRadius: 'var(--radius-full)' }}
           >
             Request Access
           </button>
@@ -117,9 +158,9 @@ export default function LandingPage({ onNavigateLogin }) {
             type="button"
             onClick={onNavigateLogin}
             className="btn btn-primary"
-            style={{ fontSize: '0.85rem' }}
+            style={{ fontSize: '0.85rem', borderRadius: 'var(--radius-full)', padding: '9px 22px' }}
           >
-            Sign In
+            Enter Workspace →
           </button>
         </div>
       </header>
@@ -127,13 +168,15 @@ export default function LandingPage({ onNavigateLogin }) {
       {/* Hero Section */}
       <section
         style={{
-          padding: '80px 24px 60px 24px',
+          padding: '100px 24px 80px 24px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          maxWidth: '900px',
-          margin: '0 auto'
+          maxWidth: '960px',
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 1
         }}
       >
         <div
@@ -141,139 +184,151 @@ export default function LandingPage({ onNavigateLogin }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '6px 16px',
+            padding: '6px 18px',
             borderRadius: 'var(--radius-full)',
-            backgroundColor: 'var(--accent-primary-subtle)',
-            border: '1px solid var(--border-accent)',
-            color: 'var(--accent-primary)',
+            background: 'linear-gradient(135deg, rgba(13, 245, 196, 0.12), rgba(124, 58, 237, 0.12))',
+            border: '1px solid rgba(13, 245, 196, 0.35)',
+            color: 'var(--accent-cyan)',
             fontSize: '0.825rem',
-            fontWeight: 600,
-            marginBottom: '24px'
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            marginBottom: '28px'
           }}
         >
-          <span>✨</span> Modern Community Communication Platform
+          <span>✦</span> ZERO-COMPROMISE PRIVACY PLATFORM
         </div>
 
         <h1
           style={{
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            fontSize: 'clamp(2.8rem, 6vw, 4.8rem)',
             fontWeight: 800,
-            lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            marginBottom: '20px'
+            lineHeight: 1.1,
+            letterSpacing: '-0.04em',
+            marginBottom: '24px'
           }}
         >
-          Private conversations.<br />
+          Untethered conversations.<br />
           <span
             style={{
-              background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-primary))',
+              background: 'var(--grad-brand)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}
           >
-            Connected community.
+            Architectural privacy.
           </span>
         </h1>
 
         <p
           style={{
-            fontSize: '1.15rem',
+            fontSize: '1.2rem',
             color: 'var(--text-secondary)',
-            lineHeight: 1.6,
-            maxWidth: '720px',
-            marginBottom: '36px'
+            lineHeight: 1.65,
+            maxWidth: '740px',
+            marginBottom: '40px'
           }}
         >
-          NexusChat combines the real-time velocity of channels and direct messaging with an uncompromising administrative privacy boundary. Administrators manage accounts and security—never your private conversations.
+          NexusChat reinvents community interaction with dynamic transmission nodes, sub-second real-time sync, and an unbreakable boundary. Administrators manage platform security—never your private conversations.
         </p>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
           <button
             type="button"
             onClick={onNavigateLogin}
             className="btn btn-primary"
-            style={{ padding: '12px 28px', fontSize: '1rem', fontWeight: 600 }}
+            style={{ padding: '14px 36px', fontSize: '1.05rem', borderRadius: 'var(--radius-full)' }}
           >
-            Sign In to Workspace →
+            Launch Workspace Stream →
           </button>
 
           <button
             type="button"
             onClick={() => setIsAccessModalOpen(true)}
             className="btn btn-secondary"
-            style={{ padding: '12px 24px', fontSize: '1rem' }}
+            style={{ padding: '14px 28px', fontSize: '1.05rem', borderRadius: 'var(--radius-full)' }}
           >
-            Request Community Access
+            Request Access Key
           </button>
         </div>
       </section>
 
-      {/* Feature Highlights Grid */}
+      {/* Feature Cards Grid */}
       <section
         style={{
-          maxWidth: '1200px',
+          maxWidth: '1240px',
           margin: '0 auto',
-          padding: '40px 24px 80px 24px',
-          width: '100%'
+          padding: '20px 24px 100px 24px',
+          width: '100%',
+          position: 'relative',
+          zIndex: 1
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '8px' }}>
-            Built for Privacy, Speed, and Scale
+        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+          <div style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
+            ENGINEERED WITH RIGOR
+          </div>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
+            Next-Generation Community Matrix
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Engineered with a strict separation between communication channels and administrative controls.
-          </p>
         </div>
 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '20px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+            gap: '24px'
           }}
         >
           {features.map((f, idx) => (
             <div
               key={idx}
               style={{
-                backgroundColor: 'var(--bg-surface)',
+                backgroundColor: 'var(--glass-elevated)',
+                backdropFilter: 'var(--glass-blur)',
                 border: '1px solid var(--border-default)',
                 borderRadius: 'var(--radius-lg)',
-                padding: '28px 24px',
+                padding: '32px 28px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
+                gap: '14px',
                 boxShadow: 'var(--shadow-sm)',
-                transition: 'all var(--transition-fast)'
+                transition: 'all var(--transition-normal)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.borderColor = 'var(--accent-cyan)';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = 'var(--glow-cyan)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-default)';
                 e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
               }}
             >
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--accent-primary-subtle)',
-                  color: 'var(--accent-cyan)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                {f.icon}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '1.4rem' }}>{f.icon}</span>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'var(--bg-canvas)',
+                    color: 'var(--accent-cyan)',
+                    border: '1px solid var(--border-subtle)'
+                  }}
+                >
+                  {f.tag}
+                </span>
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>
+
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
                 {f.title}
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.5, margin: 0 }}>
+
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
                 {f.description}
               </p>
             </div>
@@ -286,7 +341,7 @@ export default function LandingPage({ onNavigateLogin }) {
         style={{
           marginTop: 'auto',
           borderTop: '1px solid var(--border-subtle)',
-          padding: '24px 32px',
+          padding: '28px 40px',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
@@ -295,15 +350,17 @@ export default function LandingPage({ onNavigateLogin }) {
           color: 'var(--text-muted)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>NexusChat</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>NexusChat</span>
           <span>&copy; {new Date().getFullYear()}</span>
           <span>•</span>
-          <span>Privacy-Focused Community Communication</span>
+          <span style={{ color: 'var(--accent-cyan)' }}>Neo-Aero Edition</span>
         </div>
 
         <div style={{ display: 'flex', gap: '16px' }}>
-          <span style={{ color: 'var(--status-success)' }}>Node.js • PostgreSQL • React • WebSocket</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            Node.js ESM • Express • PostgreSQL • Native WebSockets • React 18
+          </span>
         </div>
       </footer>
 

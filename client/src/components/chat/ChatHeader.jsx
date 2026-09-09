@@ -1,6 +1,6 @@
 import React from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
-import { IconHash, IconLock, IconPin, IconUsers, IconInfo, IconSearch } from '../common/Icons.jsx';
+import { IconLock, IconInfo, IconSearch } from '../common/Icons.jsx';
 
 export default function ChatHeader({
   onToggleContextPanel,
@@ -15,29 +15,29 @@ export default function ChatHeader({
   const isChannel = activeConversation.type === 'CHANNEL' || Boolean(activeConversation.name);
   const title = isChannel
     ? activeConversation.name
-    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Direct Message';
-  const subtitle = isChannel
-    ? activeConversation.topic || (activeConversation.is_private ? 'Private channel' : 'Public channel')
-    : `@${activeConversation.other_user?.username || ''} • ${
-        presenceMap[activeConversation.other_user?.id] || 'offline'
-      }`;
+    : activeConversation.other_user?.full_name || activeConversation.other_user?.username || 'Direct Stream';
+  const presence = !isChannel
+    ? presenceMap[activeConversation.other_user?.id] || activeConversation.other_user?.status?.toLowerCase() || 'offline'
+    : null;
 
   return (
     <header
       style={{
-        height: '56px',
-        padding: '0 20px',
+        height: '60px',
+        padding: '0 24px',
         borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'var(--bg-surface)',
-        flexShrink: 0
+        backgroundColor: 'var(--glass-bg)',
+        backdropFilter: 'var(--glass-blur)',
+        flexShrink: 0,
+        zIndex: 10
       }}
     >
-      {/* Left Title & Status */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-        {/* Mobile menu button */}
+      {/* Stream Info & Telemetry */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0 }}>
+        {/* Mobile menu toggle */}
         <button
           type="button"
           onClick={onToggleMobileSidebar}
@@ -52,53 +52,81 @@ export default function ChatHeader({
           }}
           aria-label="Toggle sidebar"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-          <span style={{ color: 'var(--accent-cyan)', display: 'flex' }}>
-            {isChannel ? (
-              activeConversation.is_private ? <IconLock size={18} /> : <IconHash size={18} />
-            ) : (
-              <IconUsers size={18} />
-            )}
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+          <div
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: 'var(--radius-sm)',
+              background: isChannel
+                ? 'linear-gradient(135deg, rgba(13, 245, 196, 0.2), rgba(124, 58, 237, 0.2))'
+                : 'linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(56, 189, 248, 0.2))',
+              border: '1px solid var(--border-default)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--accent-cyan)',
+              fontWeight: 700,
+              fontSize: '0.9rem'
+            }}
+          >
+            {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '⌗') : '◎'}
+          </div>
+
           <div style={{ minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {isChannel ? `#${title}` : title}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 700,
+                  fontSize: '1.05rem',
+                  letterSpacing: '-0.02em',
+                  color: 'var(--text-primary)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {isChannel ? `${title}` : title}
               </span>
-              <span className="privacy-badge" style={{ fontSize: '0.65rem', padding: '2px 6px' }}>
-                🔒 Privacy Protected
+
+              <span className="privacy-badge" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
+                🔒 Zero-Admin Access
               </span>
             </div>
-            {subtitle && (
-              <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {subtitle}
-              </div>
-            )}
+
+            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {isChannel
+                ? activeConversation.topic || 'Secure community transmission space'
+                : `@${activeConversation.other_user?.username || ''} • Signal: ${presence?.toUpperCase() || 'OFFLINE'}`}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Floating Action Capsules */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <button
           type="button"
           onClick={onOpenSearch}
-          title="Search in workspace"
+          title="Search Workspace (Ctrl+K)"
           className="btn-outline"
           style={{
-            padding: '6px 10px',
-            borderRadius: 'var(--radius-sm)',
+            padding: '6px 14px',
+            borderRadius: 'var(--radius-full)',
             fontSize: '0.75rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px'
+            gap: '6px',
+            backgroundColor: 'var(--bg-elevated)',
+            borderColor: 'var(--border-subtle)'
           }}
         >
           <IconSearch size={14} />
@@ -108,21 +136,23 @@ export default function ChatHeader({
         <button
           type="button"
           onClick={onToggleContextPanel}
-          title="Channel details & pinned messages"
-          className={`btn-outline ${isContextOpen ? 'active' : ''}`}
+          title="Conversation Inspector"
           style={{
-            padding: '6px 10px',
-            borderRadius: 'var(--radius-sm)',
+            padding: '6px 14px',
+            borderRadius: 'var(--radius-full)',
             fontSize: '0.75rem',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            backgroundColor: isContextOpen ? 'var(--bg-active)' : 'transparent',
-            borderColor: isContextOpen ? 'var(--border-strong)' : 'var(--border-subtle)'
+            cursor: 'pointer',
+            backgroundColor: isContextOpen ? 'var(--accent-cyan-subtle)' : 'var(--bg-elevated)',
+            color: isContextOpen ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+            border: isContextOpen ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+            transition: 'all var(--transition-fast)'
           }}
         >
-          <IconInfo size={15} />
-          <span className="hide-sm">Details</span>
+          <IconInfo size={14} />
+          <span className="hide-sm">Inspector</span>
         </button>
       </div>
     </header>
