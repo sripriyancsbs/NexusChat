@@ -4,8 +4,6 @@ import {
   IconSearch,
   IconInfo,
   IconLock,
-  IconPhone,
-  IconVideo,
   IconPalette,
   IconX
 } from '../common/Icons.jsx';
@@ -29,7 +27,6 @@ export default function ChatHeader({
 }) {
   const { activeConversation, presenceMap } = useChat();
   const [showThemePicker, setShowThemePicker] = useState(false);
-  const [callModal, setCallModal] = useState(null); // 'audio' | 'video' | null
 
   if (!activeConversation) return null;
 
@@ -183,28 +180,8 @@ export default function ChatHeader({
           </div>
         </div>
 
-        {/* Header Right: Social Actions (flex-shrink: 0 ensures no clipping) */}
+        {/* Header Right: Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, position: 'relative' }}>
-          {/* Audio Call */}
-          <button
-            type="button"
-            onClick={() => setCallModal('audio')}
-            title="Start Audio Call"
-            className="btn-icon"
-          >
-            <IconPhone size={17} />
-          </button>
-
-          {/* Video Call */}
-          <button
-            type="button"
-            onClick={() => setCallModal('video')}
-            title="Start Video Call"
-            className="btn-icon"
-          >
-            <IconVideo size={18} />
-          </button>
-
           {/* Chat Theme Customizer */}
           <button
             type="button"
@@ -275,95 +252,6 @@ export default function ChatHeader({
           </button>
         </div>
       </header>
-
-      {/* Call Dialog Modal Simulation */}
-      {callModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100
-          }}
-          onClick={() => setCallModal(null)}
-        >
-          <div
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-default)',
-              borderRadius: 'var(--radius-xl)',
-              boxShadow: 'var(--shadow-lg)',
-              padding: '32px 28px',
-              textAlign: 'center',
-              width: '100%',
-              maxWidth: '340px'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="story-ring"
-              style={{
-                width: '76px',
-                height: '76px',
-                margin: '0 auto 16px auto',
-                padding: '3px',
-                background: 'var(--grad-avatar-ring)'
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--bg-elevated)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.75rem',
-                  fontWeight: 700,
-                  color: '#ffffff'
-                }}
-              >
-                {(title[0] || 'U').toUpperCase()}
-              </div>
-            </div>
-
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>
-              {title}
-            </h3>
-            <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
-              {callModal === 'video' ? 'Connecting HD video...' : 'Calling securely (E2EE)...'}
-            </p>
-
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-              <button
-                type="button"
-                onClick={() => setCallModal(null)}
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--accent-rose)',
-                  color: '#ffffff',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(244, 63, 94, 0.4)'
-                }}
-                title="End Call"
-              >
-                <IconX size={22} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
