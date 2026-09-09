@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { IconPlus, IconLock, IconHash, IconMessageSquare } from '../common/Icons.jsx';
+import { IconPlus, IconLock, IconHash, IconMessageSquare, IconPin } from '../common/Icons.jsx';
 
 const STATUS_NOTES = ['vibing ✨', 'coding 💻', 'music 🎧', 'online 🟢', 'coffee ☕', 'studying 📚', 'deep work 🚀'];
 
 export default function ChannelSidebar({
   onOpenCreateChannel,
   onOpenNewDM,
-  onOpenSearch,
-  onOpenNotifications,
-  onOpenProfile,
-  onNavigateAdmin,
   isMobileOpen,
-  onCloseMobile,
-  activeFilter = 'ALL',
-  setActiveFilter
+  onCloseMobile
 }) {
   const {
     channels,
@@ -27,10 +21,8 @@ export default function ChannelSidebar({
   } = useChat();
   const { user } = useAuth();
 
-  const [localFilter, setLocalFilter] = useState('ALL');
-  const currentFilter = setActiveFilter ? activeFilter : localFilter;
-  const updateFilter = setActiveFilter || setLocalFilter;
-
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const formatName = (name) => {
@@ -51,7 +43,7 @@ export default function ChannelSidebar({
     return name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  // Extract contacts for Instagram Notes & Active Story Rail
+  // Extract contacts for Instagram Notes & Story Rail
   const activeContacts = conversations
     .filter((conv) => conv.other_user)
     .map((conv, idx) => {
@@ -67,188 +59,240 @@ export default function ChannelSidebar({
 
   return (
     <aside
-      className={`floating-island ${isMobileOpen ? 'open' : ''}`}
+      className={`floating-island collapsible-sidebar-deck ${isPinned ? 'pinned' : ''} ${isHovered ? 'is-hovered' : ''} ${isMobileOpen ? 'open' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        width: '320px',
-        height: '100%',
-        flexShrink: 0,
         userSelect: 'none',
         position: 'relative'
       }}
     >
-      {/* Sidebar Header: Instagram Direct Header */}
-      <div
-        style={{
-          padding: '14px 16px 10px 16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            style={{
-              fontSize: '1.0625rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-              fontFamily: 'var(--font-display)'
-            }}
-          >
-            Direct & Spaces
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <button
-            type="button"
-            onClick={onOpenCreateChannel}
-            title="Create Space"
-            className="btn btn-secondary"
-            style={{
-              padding: '5px 9px',
-              fontSize: '0.75rem',
-              borderRadius: 'var(--radius-full)',
-              gap: '4px'
-            }}
-          >
-            <IconPlus size={12} />
-            <span>Space</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenNewDM}
-            title="New Direct Message"
-            className="btn btn-primary"
-            style={{
-              padding: '5px 10px',
-              fontSize: '0.75rem',
-              borderRadius: 'var(--radius-full)',
-              gap: '4px'
-            }}
-          >
-            <IconPlus size={12} />
-            <span>Chat</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Instagram Notes & Active Story Rail */}
-      {activeContacts.length > 0 && (
-        <div className="story-rail">
-          {activeContacts.map(({ conv, user: contactUser, isOnline, note }) => (
-            <div
-              key={contactUser.id}
-              onClick={() => {
-                selectConversation(conv);
-                if (onCloseMobile) onCloseMobile();
-              }}
-              className="story-node"
-              title={`Message ${contactUser.full_name || contactUser.username} (${isOnline ? 'Online' : 'Offline'})`}
-            >
-              {/* Instagram Note Bubble */}
-              <div className="story-note-bubble">
-                {note}
-              </div>
-
-              {/* Gradient Rainbow Ring */}
-              <div
-                className="story-ring"
-                style={{
-                  background: isOnline ? 'var(--grad-avatar-ring)' : 'rgba(255, 255, 255, 0.12)'
-                }}
-              >
-                <div className="story-avatar">
-                  {(contactUser.full_name || contactUser.username || 'U')[0].toUpperCase()}
-                </div>
-              </div>
-
-              <span
-                style={{
-                  fontSize: '0.6875rem',
-                  fontWeight: 500,
-                  color: isOnline ? 'var(--text-primary)' : 'var(--text-muted)',
-                  maxWidth: '52px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  textAlign: 'center'
-                }}
-              >
-                {(contactUser.full_name || contactUser.username).split(' ')[0]}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Search Input & Segmented Filters */}
-      <div style={{ padding: '10px 14px 6px 14px' }}>
-        <input
-          type="text"
-          placeholder="Search chats, people, or spaces..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="input"
+      {/* Mini Preview Strip (Visible when unhovered) */}
+      <div className="sidebar-mini-strip">
+        <button
+          type="button"
+          title="Direct Messages & Spaces (Hover to expand)"
           style={{
-            padding: '7px 14px',
-            fontSize: '0.8125rem',
-            borderRadius: 'var(--radius-full)'
-          }}
-        />
-
-        {/* Filter Pills */}
-        <div
-          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--accent-primary)',
+            cursor: 'pointer',
+            padding: '4px',
             display: 'flex',
-            gap: '4px',
-            marginTop: '10px',
-            padding: '3px',
-            backgroundColor: 'var(--bg-elevated)',
-            borderRadius: 'var(--radius-full)'
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          {[
-            { id: 'ALL', label: 'All' },
-            { id: 'DIRECT', label: 'Direct' },
-            { id: 'SPACES', label: 'Spaces' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => updateFilter(tab.id)}
-              style={{
-                flex: 1,
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.75rem',
-                fontWeight: currentFilter === tab.id ? 600 : 500,
-                cursor: 'pointer',
-                border: 'none',
-                backgroundColor: currentFilter === tab.id ? 'var(--bg-card)' : 'transparent',
-                color: currentFilter === tab.id ? 'var(--text-primary)' : 'var(--text-secondary)',
-                boxShadow: currentFilter === tab.id ? 'var(--shadow-sm)' : 'none',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <IconMessageSquare size={20} />
+        </button>
+
+        {/* Mini Contact Avatars */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
+          {conversations.slice(0, 5).map((conv) => {
+            const other = conv.other_user;
+            if (!other) return null;
+            const isOnline = presenceMap[other.id] === 'online';
+            const isActive = conv.id === activeConversationId;
+
+            return (
+              <div
+                key={conv.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  selectConversation(conv.id, conv);
+                }}
+                title={`Chat with ${other.full_name || other.username}`}
+                style={{
+                  position: 'relative',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  background: isActive ? 'var(--grad-prism)' : 'var(--bg-elevated)',
+                  border: isActive ? '2px solid var(--accent-primary)' : '1px solid var(--border-default)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.8125rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                {(other.full_name || other.username || 'U')[0].toUpperCase()}
+                {isOnline && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      bottom: '-1px',
+                      right: '-1px',
+                      width: '9px',
+                      height: '9px',
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--accent-emerald)',
+                      border: '1.5px solid var(--bg-surface)'
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Conversations Feed */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '6px 4px'
-        }}
-      >
-        {/* Direct Messages (Instagram Direct priority) */}
-        {(currentFilter === 'ALL' || currentFilter === 'DIRECT') && (
-          <div style={{ marginBottom: '8px' }}>
+      {/* Full Sidebar Content (Visible on Hover / Pinned) */}
+      <div className="sidebar-full-content">
+        {/* Header */}
+        <div
+          style={{
+            padding: '14px 16px 10px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontSize: '1.0625rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                letterSpacing: '-0.02em',
+                fontFamily: 'var(--font-display)'
+              }}
+            >
+              Direct & Spaces
+            </span>
+
+            {/* Pin Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsPinned((prev) => !prev)}
+              title={isPinned ? 'Unpin sidebar (Auto-hide)' : 'Pin sidebar'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: isPinned ? 'var(--accent-primary)' : 'var(--text-muted)',
+                cursor: 'pointer',
+                padding: '3px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 'var(--radius-xs)',
+                transition: 'color var(--transition-fast)'
+              }}
+            >
+              <IconPin size={13} />
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button
+              type="button"
+              onClick={onOpenCreateChannel}
+              title="Create Space"
+              className="btn btn-secondary"
+              style={{
+                padding: '5px 9px',
+                fontSize: '0.75rem',
+                gap: '4px'
+              }}
+            >
+              <IconPlus size={12} />
+              <span>Space</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenNewDM}
+              title="New Direct Message"
+              className="btn btn-primary"
+              style={{
+                padding: '5px 11px',
+                fontSize: '0.75rem',
+                gap: '4px'
+              }}
+            >
+              <IconPlus size={12} />
+              <span>Chat</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Instagram Notes & Story Rail */}
+        {activeContacts.length > 0 && (
+          <div className="story-rail">
+            {activeContacts.map(({ conv, user: contactUser, isOnline, note }) => (
+              <div
+                key={contactUser.id}
+                onClick={() => {
+                  selectConversation(conv.id, conv);
+                  if (onCloseMobile) onCloseMobile();
+                }}
+                className="story-node"
+                title={`Message ${contactUser.full_name || contactUser.username} (${isOnline ? 'Online' : 'Offline'})`}
+              >
+                {/* Note Bubble */}
+                <div className="story-note-bubble">
+                  {note}
+                </div>
+
+                {/* Ring & Avatar */}
+                <div
+                  className="story-ring"
+                  style={{
+                    background: isOnline ? 'var(--grad-avatar-ring)' : 'rgba(255, 255, 255, 0.12)'
+                  }}
+                >
+                  <div className="story-avatar">
+                    {(contactUser.full_name || contactUser.username || 'U')[0].toUpperCase()}
+                  </div>
+                </div>
+
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    fontWeight: 500,
+                    color: isOnline ? 'var(--text-primary)' : 'var(--text-muted)',
+                    maxWidth: '52px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    textAlign: 'center'
+                  }}
+                >
+                  {(contactUser.full_name || contactUser.username).split(' ')[0]}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Clean Search Input (No redundant All/Direct/Spaces tabs) */}
+        <div style={{ padding: '10px 14px 6px 14px' }}>
+          <input
+            type="text"
+            placeholder="Search chats, people, or spaces..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input"
+            style={{
+              padding: '7px 14px',
+              fontSize: '0.8125rem'
+            }}
+          />
+        </div>
+
+        {/* Unified Conversations Feed (Direct Messages & Spaces together) */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '6px 4px'
+          }}
+        >
+          {/* Direct Messages Section */}
+          <div style={{ marginBottom: '12px' }}>
             <div
               style={{
                 padding: '6px 14px 4px 14px',
@@ -280,17 +324,17 @@ export default function ChannelSidebar({
                   <div
                     key={conv.id}
                     onClick={() => {
-                      selectConversation(conv);
+                      selectConversation(conv.id, conv);
                       if (onCloseMobile) onCloseMobile();
                     }}
                     className={`channel-card ${isActive ? 'active' : ''}`}
                   >
-                    {/* Circular Avatar with Active Presence */}
+                    {/* Circular Avatar */}
                     <div style={{ position: 'relative', flexShrink: 0 }}>
                       <div
                         style={{
-                          width: '40px',
-                          height: '40px',
+                          width: '38px',
+                          height: '38px',
                           borderRadius: '50%',
                           backgroundColor: 'var(--bg-elevated)',
                           border: isActive ? '2px solid var(--accent-primary)' : '1px solid var(--border-default)',
@@ -321,9 +365,9 @@ export default function ChannelSidebar({
                       )}
                     </div>
 
-                    {/* Contact Info & Preview */}
+                    {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1px' }}>
                         <span
                           style={{
                             fontSize: '0.875rem',
@@ -373,10 +417,8 @@ export default function ChannelSidebar({
               })
             )}
           </div>
-        )}
 
-        {/* Spaces (Channels) */}
-        {(currentFilter === 'ALL' || currentFilter === 'SPACES') && (
+          {/* Spaces Section */}
           <div>
             <div
               style={{
@@ -409,12 +451,12 @@ export default function ChannelSidebar({
                     }}
                     className={`channel-card ${isActive ? 'active' : ''}`}
                   >
-                    {/* Modern Squircle Badge */}
+                    {/* Squircle Badge */}
                     <div
                       style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '12px',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '10px',
                         background: isActive ? 'var(--grad-prism)' : 'var(--bg-elevated)',
                         color: isActive ? '#ffffff' : 'var(--text-accent)',
                         display: 'flex',
@@ -430,7 +472,7 @@ export default function ChannelSidebar({
 
                     {/* Details */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1px' }}>
                         <span
                           style={{
                             fontSize: '0.875rem',
@@ -477,23 +519,24 @@ export default function ChannelSidebar({
               })
             )}
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Footer */}
-      <div
-        style={{
-          padding: '10px 14px',
-          borderTop: '1px solid var(--border-subtle)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '0.6875rem',
-          color: 'var(--text-muted)'
-        }}
-      >
-        <span>🔒 Zero-Admin Access</span>
-        <span>E2EE Isolated</span>
+        {/* Footer */}
+        <div
+          style={{
+            padding: '10px 14px',
+            borderTop: '1px solid var(--border-subtle)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '0.6875rem',
+            color: 'var(--text-muted)',
+            flexShrink: 0
+          }}
+        >
+          <span>🔒 Zero-Admin Access</span>
+          <span>E2EE Isolated</span>
+        </div>
       </div>
     </aside>
   );

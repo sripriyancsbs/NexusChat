@@ -83,30 +83,40 @@ export const ChatProvider = ({ children }) => {
     }
   }, [token, user, refreshChannelsAndConversations, refreshNotifications]);
 
-  // Select a conversation by conversationId
+  // Select a conversation by conversationId or conversation object
   const selectConversation = useCallback(async (conversationId, convObject = null) => {
     if (!conversationId) return;
 
+    // Extract real ID if an object was passed directly
+    let actualId = conversationId;
+    let actualConv = convObject;
+    if (typeof conversationId === 'object' && conversationId !== null) {
+      actualId = conversationId.id || conversationId.conversation_id;
+      actualConv = conversationId;
+    }
+
+    if (!actualId) return;
+
     // Unsubscribe from previous conversation
-    if (activeIdRef.current && activeIdRef.current !== conversationId) {
+    if (activeIdRef.current && activeIdRef.current !== actualId) {
       socketClient.unsubscribe(activeIdRef.current);
     }
 
-    setActiveConversationId(conversationId);
+    setActiveConversationId(actualId);
     setLoadingMessages(true);
     setActiveThread(null);
     setThreadMessages([]);
 
     // Determine metadata
-    if (convObject) {
-      setActiveConversation(convObject);
+    if (actualConv) {
+      setActiveConversation(actualConv);
     } else {
       // Find from channels or conversations list
-      const chan = channels.find((c) => c.conversation_id === conversationId);
+      const chan = channels.find((c) => c.conversation_id === actualId);
       if (chan) {
         setActiveConversation({ ...chan, type: 'CHANNEL' });
       } else {
-        const conv = conversations.find((c) => c.id === conversationId);
+        const conv = conversations.find((c) => c.id === actualId);
         if (conv) {
           setActiveConversation(conv);
         }
@@ -114,19 +124,19 @@ export const ChatProvider = ({ children }) => {
     }
 
     // Subscribe to socket room
-    socketClient.subscribe(conversationId);
+    socketClient.subscribe(actualId);
 
     // Fetch messages
     try {
-      const res = await api.getMessages(conversationId);
+      const res = await api.getMessages(actualId);
       setMessages(res.messages || []);
       // Mark as read in backend and WS
-      api.markAsRead(conversationId).catch(() => {});
-      socketClient.ackRead(conversationId);
+      api.markAsRead(actualId).catch(() => {});
+      socketClient.ackRead(actualId);
 
       // Reset unread count in local list
       setConversations((prev) =>
-        prev.map((c) => (c.id === conversationId ? { ...c, unread_count: 0 } : c))
+        prev.map((c) => (c.id === actualId ? { ...c, unread_count: 0 } : c))
       );
     } catch (err) {
       console.error('Failed to load messages for conversation:', err);

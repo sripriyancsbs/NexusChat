@@ -11,12 +11,12 @@ import {
 } from '../common/Icons.jsx';
 
 const THEMES = [
-  { id: 'sunset', label: 'Sunset Glow', gradient: 'var(--chat-theme-sunset)' },
-  { id: 'prism', label: 'Prism Violet', gradient: 'var(--chat-theme-prism)' },
-  { id: 'ocean', label: 'Ocean Breeze', gradient: 'var(--chat-theme-ocean)' },
-  { id: 'neon', label: 'Electric Neon', gradient: 'var(--chat-theme-neon)' },
-  { id: 'emerald', label: 'Emerald Zen', gradient: 'var(--chat-theme-emerald)' },
-  { id: 'berry', label: 'Sweet Berry', gradient: 'var(--chat-theme-berry)' }
+  { id: 'sapphire', label: 'Sapphire Blue', gradient: 'var(--chat-theme-sapphire)' },
+  { id: 'indigo', label: 'Electric Indigo', gradient: 'var(--chat-theme-indigo)' },
+  { id: 'cyan', label: 'Midnight Cyan', gradient: 'var(--chat-theme-cyan)' },
+  { id: 'emerald', label: 'Emerald Pine', gradient: 'var(--chat-theme-emerald)' },
+  { id: 'graphite', label: 'Graphite Minimal', gradient: 'var(--chat-theme-graphite)' },
+  { id: 'berry', label: 'Velvet Berry', gradient: 'var(--chat-theme-berry)' }
 ];
 
 export default function ChatHeader({
@@ -24,7 +24,7 @@ export default function ChatHeader({
   isContextOpen,
   onOpenSearch,
   onToggleMobileSidebar,
-  currentTheme = 'sunset',
+  currentTheme = 'sapphire',
   onSelectTheme
 }) {
   const { activeConversation, presenceMap } = useChat();
@@ -56,14 +56,16 @@ export default function ChatHeader({
       <header
         style={{
           height: '62px',
-          padding: '0 20px',
+          padding: '0 18px',
           backgroundColor: 'var(--bg-surface)',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexShrink: 0,
-          zIndex: 20
+          zIndex: 20,
+          gap: '12px',
+          overflow: 'hidden'
         }}
       >
         {/* Header Left: Avatar & Info */}
@@ -74,7 +76,9 @@ export default function ChatHeader({
             alignItems: 'center',
             gap: '12px',
             cursor: 'pointer',
-            minWidth: 0
+            minWidth: 0,
+            flex: 1,
+            overflow: 'hidden'
           }}
         >
           {/* Mobile hamburger */}
@@ -106,8 +110,8 @@ export default function ChatHeader({
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div
               style={{
-                width: '42px',
-                height: '42px',
+                width: '40px',
+                height: '40px',
                 borderRadius: isChannel ? '12px' : '50%',
                 background: isChannel ? 'var(--grad-prism)' : 'var(--bg-elevated)',
                 border: isChannel ? 'none' : '2px solid var(--border-default)',
@@ -116,7 +120,7 @@ export default function ChatHeader({
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 600,
-                fontSize: '1rem'
+                fontSize: '0.9375rem'
               }}
             >
               {isChannel ? (activeConversation.is_private ? <IconLock size={16} /> : '#') : (title[0] || 'U').toUpperCase()}
@@ -128,8 +132,8 @@ export default function ChatHeader({
                   position: 'absolute',
                   bottom: '0px',
                   right: '0px',
-                  width: '11px',
-                  height: '11px',
+                  width: '10px',
+                  height: '10px',
                   borderRadius: '50%',
                   backgroundColor: 'var(--accent-emerald)',
                   border: '2px solid var(--bg-surface)'
@@ -139,13 +143,13 @@ export default function ChatHeader({
           </div>
 
           {/* Title & Status */}
-          <div style={{ minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontWeight: 600,
-                  fontSize: '0.975rem',
+                  fontSize: '0.9375rem',
                   letterSpacing: '-0.01em',
                   color: 'var(--text-primary)',
                   whiteSpace: 'nowrap',
@@ -157,7 +161,7 @@ export default function ChatHeader({
               </span>
 
               <span className="privacy-badge">
-                🔒 Zero-Admin Access
+                🔒 Zero-Admin
               </span>
             </div>
 
@@ -179,8 +183,8 @@ export default function ChatHeader({
           </div>
         </div>
 
-        {/* Header Right: Instagram / Messenger Social Action Icons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative' }}>
+        {/* Header Right: Social Actions (flex-shrink: 0 ensures no clipping) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, position: 'relative' }}>
           {/* Audio Call */}
           <button
             type="button"
@@ -188,7 +192,7 @@ export default function ChatHeader({
             title="Start Audio Call"
             className="btn-icon"
           >
-            <IconPhone size={18} />
+            <IconPhone size={17} />
           </button>
 
           {/* Video Call */}
@@ -198,7 +202,7 @@ export default function ChatHeader({
             title="Start Video Call"
             className="btn-icon"
           >
-            <IconVideo size={19} />
+            <IconVideo size={18} />
           </button>
 
           {/* Chat Theme Customizer */}
@@ -209,7 +213,7 @@ export default function ChatHeader({
             className="btn-icon"
             style={{ color: showThemePicker ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
           >
-            <IconPalette size={19} />
+            <IconPalette size={18} />
           </button>
 
           {/* Theme Picker Popover */}
@@ -225,11 +229,11 @@ export default function ChatHeader({
                 boxShadow: 'var(--shadow-lg)',
                 padding: '12px 14px',
                 zIndex: 50,
-                width: '200px'
+                width: '210px'
               }}
             >
               <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                Chat Theme Gradients
+                Chat Themes
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                 {THEMES.map((th) => (
@@ -256,7 +260,7 @@ export default function ChatHeader({
             title="Search Messages"
             className="btn-icon"
           >
-            <IconSearch size={18} />
+            <IconSearch size={17} />
           </button>
 
           {/* Details Toggle */}
@@ -267,7 +271,7 @@ export default function ChatHeader({
             className="btn-icon"
             style={{ color: isContextOpen ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
           >
-            <IconInfo size={19} />
+            <IconInfo size={18} />
           </button>
         </div>
       </header>

@@ -27,8 +27,8 @@ export default function MemberApp({ onNavigateAdmin }) {
   // Social Navigation state: 'ALL' | 'DIRECT' | 'SPACES'
   const [activeView, setActiveView] = useState('ALL');
 
-  // Messenger / Instagram Dynamic Chat Theme state: 'sunset' | 'prism' | 'ocean' | 'neon' | 'emerald' | 'berry'
-  const [chatTheme, setChatTheme] = useState('sunset');
+  // Professional Chat Theme state: 'sapphire' | 'indigo' | 'cyan' | 'emerald' | 'graphite' | 'berry'
+  const [chatTheme, setChatTheme] = useState('sapphire');
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const [isNewDMOpen, setIsNewDMOpen] = useState(false);
@@ -93,18 +93,12 @@ export default function MemberApp({ onNavigateAdmin }) {
           overflow: 'hidden'
         }}
       >
-        {/* Left Floating Island: Instagram Direct & Spaces Deck */}
+        {/* Left Floating Island: Auto-collapsing hover sidebar */}
         <ChannelSidebar
           onOpenCreateChannel={() => setIsCreateChannelOpen(true)}
           onOpenNewDM={() => setIsNewDMOpen(true)}
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenNotifications={() => setIsNotificationsOpen(true)}
-          onOpenProfile={() => setIsProfileOpen(true)}
-          onNavigateAdmin={onNavigateAdmin}
           isMobileOpen={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
-          activeFilter={activeView}
-          setActiveFilter={setActiveView}
         />
 
         {/* Center Floating Island: Main Dialogue Feed & Instagram Floating Composer */}

@@ -3,15 +3,15 @@ import { useChat } from '../../context/ChatContext.jsx';
 import { IconX, IconPin, IconLock, IconUsers, IconInfo, IconPalette } from '../common/Icons.jsx';
 
 const THEMES = [
-  { id: 'sunset', label: 'Sunset Glow', gradient: 'var(--chat-theme-sunset)' },
-  { id: 'prism', label: 'Prism Violet', gradient: 'var(--chat-theme-prism)' },
-  { id: 'ocean', label: 'Ocean Breeze', gradient: 'var(--chat-theme-ocean)' },
-  { id: 'neon', label: 'Electric Neon', gradient: 'var(--chat-theme-neon)' },
-  { id: 'emerald', label: 'Emerald Zen', gradient: 'var(--chat-theme-emerald)' },
-  { id: 'berry', label: 'Sweet Berry', gradient: 'var(--chat-theme-berry)' }
+  { id: 'sapphire', label: 'Sapphire Blue', gradient: 'var(--chat-theme-sapphire)' },
+  { id: 'indigo', label: 'Electric Indigo', gradient: 'var(--chat-theme-indigo)' },
+  { id: 'cyan', label: 'Midnight Cyan', gradient: 'var(--chat-theme-cyan)' },
+  { id: 'emerald', label: 'Emerald Pine', gradient: 'var(--chat-theme-emerald)' },
+  { id: 'graphite', label: 'Graphite Minimal', gradient: 'var(--chat-theme-graphite)' },
+  { id: 'berry', label: 'Velvet Berry', gradient: 'var(--chat-theme-berry)' }
 ];
 
-export default function ContextPanel({ isOpen, onClose, currentTheme = 'sunset', onSelectTheme }) {
+export default function ContextPanel({ isOpen, onClose, currentTheme = 'sapphire', onSelectTheme }) {
   const { activeConversation, messages, togglePin } = useChat();
   const [activeTab, setActiveTab] = useState('DETAILS');
 
@@ -193,7 +193,7 @@ export default function ContextPanel({ isOpen, onClose, currentTheme = 'sunset',
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
                 <IconPalette size={15} />
-                <span>Chat Gradient Theme</span>
+                <span>Chat Themes</span>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
@@ -238,8 +238,8 @@ export default function ContextPanel({ isOpen, onClose, currentTheme = 'sunset',
             <div
               style={{
                 padding: '12px 14px',
-                backgroundColor: 'rgba(99, 102, 241, 0.08)',
-                border: '1px solid rgba(99, 102, 241, 0.2)',
+                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
                 borderRadius: 'var(--radius-sm)'
               }}
             >

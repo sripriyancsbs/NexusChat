@@ -6,31 +6,31 @@
    ============================================================ */
 
 :root {
-  /* Core Foundation - Deep Obsidian Canvas */
-  --bg-canvas: #090b10;
-  --bg-surface: #11141d;
-  --bg-elevated: #181d2a;
-  --bg-card: #1f2537;
-  --bg-card-hover: #262c41;
-  --bg-hover: rgba(255, 255, 255, 0.05);
-  --bg-active: rgba(99, 102, 241, 0.15);
+  /* Core Foundation - Deep Atmospheric Canvas */
+  --bg-canvas: #090c13;
+  --bg-surface: rgba(17, 21, 32, 0.88);
+  --bg-elevated: #161b28;
+  --bg-card: #1c2233;
+  --bg-card-hover: #232a3f;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(59, 130, 246, 0.16);
 
-  /* Signature Instagram / Messenger Dynamic Chat Theme Gradients */
-  --chat-theme-prism: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #c026d3 100%);
-  --chat-theme-sunset: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  --chat-theme-ocean: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #10b981 100%);
-  --chat-theme-neon: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #ec4899 100%);
-  --chat-theme-emerald: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
-  --chat-theme-berry: linear-gradient(135deg, #db2777 0%, #f43f5e 50%, #fb7185 100%);
+  /* Modern Refined Chat Theme Gradients (Professional & Sleek) */
+  --chat-theme-sapphire: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  --chat-theme-indigo: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  --chat-theme-cyan: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);
+  --chat-theme-emerald: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --chat-theme-graphite: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  --chat-theme-berry: linear-gradient(135deg, #9d174d 0%, #be123c 100%);
 
-  /* Active Theme Alias (Defaults to Sunset/Prism) */
-  --grad-active-chat: var(--chat-theme-sunset);
-  --grad-prism: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
-  --grad-avatar-ring: linear-gradient(135deg, #f09433, #dc2743, #bc1888);
+  /* Active Theme Alias (Defaults to Professional Sapphire Blue) */
+  --grad-active-chat: var(--chat-theme-sapphire);
+  --grad-prism: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #06b6d4 100%);
+  --grad-avatar-ring: linear-gradient(135deg, #3b82f6, #6366f1, #06b6d4);
 
   /* Accents */
-  --accent-primary: #6366f1;
-  --accent-primary-hover: #4f46e5;
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
   --accent-cyan: #06b6d4;
   --accent-emerald: #10b981;
   --accent-amber: #f59e0b;
@@ -41,7 +41,7 @@
   --cyber-cyan: #06b6d4;
   --cyber-amber: #f59e0b;
   --cyber-mint: #10b981;
-  --cyber-violet: #8b5cf6;
+  --cyber-violet: #6366f1;
   --cyber-coral: #f43f5e;
   --whatsapp-green: #10b981;
 
@@ -49,7 +49,7 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --text-accent: #a5b4fc;
+  --text-accent: #93c5fd;
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -57,15 +57,15 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Borders & Dividers */
-  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-subtle: rgba(255, 255, 255, 0.08);
   --border-default: rgba(255, 255, 255, 0.12);
-  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-strong: rgba(255, 255, 255, 0.22);
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.35);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.35);
 
   /* Radii */
   --radius-xs: 4px;
@@ -76,27 +76,27 @@
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 140ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 240ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Light Theme Variables */
 [data-theme='light'] {
-  --bg-canvas: #f0f2f5;
-  --bg-surface: #ffffff;
+  --bg-canvas: #f0f2f7;
+  --bg-surface: rgba(255, 255, 255, 0.92);
   --bg-elevated: #f8fafc;
   --bg-card: #ffffff;
   --bg-card-hover: #f1f5f9;
   --bg-hover: rgba(0, 0, 0, 0.04);
-  --bg-active: rgba(99, 102, 241, 0.1);
+  --bg-active: rgba(59, 130, 246, 0.12);
 
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-default: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.18);
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.2);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -115,6 +115,11 @@ html, body {
   font-family: var(--font-sans);
   font-size: 14.5px;
   background-color: var(--bg-canvas);
+  background-image:
+    radial-gradient(at 15% 15%, rgba(59, 130, 246, 0.12) 0px, transparent 55%),
+    radial-gradient(at 85% 85%, rgba(99, 102, 241, 0.10) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.04) 0px, transparent 65%);
+  background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
@@ -134,6 +139,8 @@ html, body {
   width: 64px;
   height: 100%;
   background-color: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
@@ -168,7 +175,7 @@ html, body {
 .social-nav-item.active {
   color: #ffffff;
   background: var(--grad-prism);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
 .social-nav-badge {
@@ -187,13 +194,15 @@ html, body {
    ============================================================ */
 .floating-island {
   background: var(--bg-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .floating-island:hover {
@@ -201,7 +210,67 @@ html, body {
 }
 
 /* ============================================================
-   3. INSTAGRAM NOTES & ACTIVE STORY RAIL
+   3. AUTO-COLLAPSING HOVER SIDEBAR (Expands on hover)
+   ============================================================ */
+.collapsible-sidebar-deck {
+  width: 60px;
+  height: 100%;
+  transition: width 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  z-index: 25;
+}
+
+.collapsible-sidebar-deck:hover,
+.collapsible-sidebar-deck.pinned,
+.collapsible-sidebar-deck.is-hovered {
+  width: 320px;
+}
+
+/* Full content shown when hovered/pinned */
+.sidebar-full-content {
+  width: 320px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease 50ms;
+}
+
+.collapsible-sidebar-deck:hover .sidebar-full-content,
+.collapsible-sidebar-deck.pinned .sidebar-full-content,
+.collapsible-sidebar-deck.is-hovered .sidebar-full-content {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mini preview strip shown when not hovered */
+.sidebar-mini-strip {
+  position: absolute;
+  inset: 0;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+  gap: 12px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 140ms ease;
+  overflow: hidden;
+}
+
+.collapsible-sidebar-deck:hover .sidebar-mini-strip,
+.collapsible-sidebar-deck.pinned .sidebar-mini-strip,
+.collapsible-sidebar-deck.is-hovered .sidebar-mini-strip {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   4. INSTAGRAM NOTES & ACTIVE STORY RAIL
    ============================================================ */
 .story-rail {
   display: flex;
@@ -278,15 +347,15 @@ html, body {
 }
 
 /* ============================================================
-   4. BUTTONS & UI CONTROLS
+   5. REFINED MODERN BUTTONS (Clean, Professional, Glass)
    ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -297,25 +366,27 @@ html, body {
 }
 
 .btn-primary {
-  background: var(--grad-prism);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:hover {
-  opacity: 0.92;
+  opacity: 0.94;
   transform: translateY(-0.5px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
 }
 
 .btn-secondary {
-  background: var(--bg-elevated);
+  background: rgba(255, 255, 255, 0.07);
   color: var(--text-primary);
-  border: 1px solid var(--border-default);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .btn-secondary:hover {
-  background: var(--bg-card);
-  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .btn-icon {
@@ -330,6 +401,7 @@ html, body {
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .btn-icon:hover {
@@ -353,7 +425,7 @@ html, body {
 .input:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
 }
 
 /* Privacy Security Badge */
@@ -362,16 +434,18 @@ html, body {
   align-items: center;
   gap: 5px;
   padding: 3px 9px;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.22);
   border-radius: var(--radius-full);
   color: var(--text-accent);
   font-size: 0.6875rem;
   font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ============================================================
-   5. CONVERSATION CARDS (Instagram / Messenger Inbox Rows)
+   6. CONVERSATION CARDS
    ============================================================ */
 .channel-card {
   padding: 10px 12px;
@@ -396,7 +470,7 @@ html, body {
 }
 
 /* ============================================================
-   6. DIALOGUE FEED & BUBBLE STYLING
+   7. DIALOGUE FEED & BUBBLE STYLING
    ============================================================ */
 .dialogue-pod {
   display: flex;
@@ -435,11 +509,11 @@ html, body {
   border-bottom-right-radius: 4px;
 }
 
-.theme-prism .dialogue-bubble.me { background: var(--chat-theme-prism); }
-.theme-sunset .dialogue-bubble.me { background: var(--chat-theme-sunset); }
-.theme-ocean .dialogue-bubble.me { background: var(--chat-theme-ocean); }
-.theme-neon .dialogue-bubble.me { background: var(--chat-theme-neon); }
+.theme-sapphire .dialogue-bubble.me { background: var(--chat-theme-sapphire); }
+.theme-indigo .dialogue-bubble.me { background: var(--chat-theme-indigo); }
+.theme-cyan .dialogue-bubble.me { background: var(--chat-theme-cyan); }
 .theme-emerald .dialogue-bubble.me { background: var(--chat-theme-emerald); }
+.theme-graphite .dialogue-bubble.me { background: var(--chat-theme-graphite); }
 .theme-berry .dialogue-bubble.me { background: var(--chat-theme-berry); }
 
 .dialogue-bubble.them {
@@ -538,7 +612,7 @@ html, body {
 }
 
 /* ============================================================
-   7. INSTAGRAM DIRECT FLOATING PILL COMPOSER
+   8. INSTAGRAM DIRECT FLOATING PILL COMPOSER
    ============================================================ */
 .floating-composer-deck {
   margin: 10px 24px 18px 24px;
@@ -555,7 +629,7 @@ html, body {
 
 .floating-composer-deck:focus-within {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
 }
 
 /* Quick Like Heart Button */
@@ -582,7 +656,7 @@ html, body {
 }
 
 /* ============================================================
-   8. CHAT THEME PALETTE SWATCHES
+   9. CHAT THEME PALETTE SWATCHES
    ============================================================ */
 .theme-swatch {
   width: 32px;
