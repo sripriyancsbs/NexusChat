@@ -18,46 +18,62 @@ export const listConversations = async (req, res) => {
         c.created_at,
         cm.last_read_at,
         ch.name AS channel_name,
-        ch.type AS channel_type,
-        (
-          SELECT json_build_object(
-            'id', m.id,
-            'content', m.content,
-            'createdAt', m.created_at,
-            'senderId', m.sender_id,
-            'deletedAt', m.deleted_at
-          )
-          FROM messages m
-          WHERE m.conversation_id = c.id
-          ORDER BY m.created_at DESC
-          LIMIT 1
-        ) AS last_message,
-        (
-          SELECT count(*) 
-          FROM messages m2
-          WHERE m2.conversation_id = c.id 
-            AND m2.created_at > cm.last_read_at
-            AND m2.sender_id != $1
-        ) AS unread_count
+        ch.type AS channel_type
       FROM conversations c
       JOIN conversation_members cm ON c.id = cm.conversation_id AND cm.user_id = $1
       LEFT JOIN channels ch ON c.channel_id = ch.id
       ORDER BY c.created_at DESC
     `, [userId]);
 
-    // For DIRECT conversations, enrich with other participant details
     const conversations = [];
     for (const row of result.rows) {
+      // Get latest message for this conversation
+      const msgRes = await query(`
+        SELECT id, content, created_at, sender_id, deleted_at
+        FROM messages
+        WHERE conversation_id = $1
+        ORDER BY created_at DESC
+        LIMIT 1
+      `, [row.id]);
+
+      let unreadCount = 0;
+      if (row.last_read_at) {
+        const unreadRes = await query(`
+          SELECT count(*) as count
+          FROM messages
+          WHERE conversation_id = $1
+            AND created_at > $2
+            AND sender_id != $3
+        `, [row.id, row.last_read_at, userId]);
+        unreadCount = parseInt(unreadRes.rows[0]?.count || '0', 10);
+      }
+
+      const lastMsg = msgRes.rows[0] ? {
+        id: msgRes.rows[0].id,
+        content: msgRes.rows[0].content,
+        createdAt: msgRes.rows[0].created_at,
+        created_at: msgRes.rows[0].created_at,
+        senderId: msgRes.rows[0].sender_id,
+        sender_id: msgRes.rows[0].sender_id
+      } : null;
+
       const conv = {
         id: row.id,
         type: row.type,
         channelId: row.channel_id,
+        channel_id: row.channel_id,
         channelName: row.channel_name,
+        channel_name: row.channel_name,
         channelType: row.channel_type,
+        channel_type: row.channel_type,
         createdAt: row.created_at,
+        created_at: row.created_at,
         lastReadAt: row.last_read_at,
-        lastMessage: row.last_message,
-        unreadCount: parseInt(row.unread_count || '0', 10),
+        last_read_at: row.last_read_at,
+        lastMessage: lastMsg,
+        last_message: lastMsg,
+        unreadCount,
+        unread_count: unreadCount,
         participants: []
       };
 
@@ -69,16 +85,20 @@ export const listConversations = async (req, res) => {
           WHERE cm2.conversation_id = $1
         `, [row.id]);
 
-        conv.participants = members.rows.map(m => ({
+        conv.participants = members.rows.map((m) => ({
           id: m.id,
           username: m.username,
           displayName: m.display_name,
+          full_name: m.display_name || m.username,
           avatarUrl: m.avatar_url,
+          status: m.status,
           role: m.role
         }));
 
         if (row.type === 'DIRECT') {
-          conv.targetUser = conv.participants.find(p => p.id !== userId) || null;
+          const other = conv.participants.find((p) => p.id !== userId) || null;
+          conv.targetUser = other;
+          conv.other_user = other;
         }
       }
 
