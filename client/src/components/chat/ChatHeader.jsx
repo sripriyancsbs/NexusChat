@@ -23,13 +23,12 @@ export default function ChatHeader({
   return (
     <header
       style={{
-        height: '60px',
-        padding: '0 24px',
+        padding: '12px 20px',
         borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'var(--glass-bg)',
+        backgroundColor: 'rgba(10, 15, 29, 0.75)',
         backdropFilter: 'var(--glass-blur)',
         flexShrink: 0,
         zIndex: 10
@@ -50,9 +49,9 @@ export default function ChatHeader({
             padding: '4px',
             cursor: 'pointer'
           }}
-          aria-label="Toggle sidebar"
+          aria-label="Toggle spectrum sidebar"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="18" x2="21" y2="18" />
@@ -60,34 +59,36 @@ export default function ChatHeader({
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+          {/* Signal Indicator Orb */}
           <div
             style={{
               width: '32px',
               height: '32px',
-              borderRadius: 'var(--radius-sm)',
+              borderRadius: 'var(--radius-xs)',
               background: isChannel
-                ? 'linear-gradient(135deg, rgba(13, 245, 196, 0.2), rgba(124, 58, 237, 0.2))'
-                : 'linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(56, 189, 248, 0.2))',
-              border: '1px solid var(--border-default)',
+                ? 'linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2))'
+                : 'linear-gradient(135deg, rgba(255, 149, 0, 0.2), rgba(0, 240, 255, 0.2))',
+              border: isChannel ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid rgba(255, 149, 0, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--accent-cyan)',
-              fontWeight: 700,
-              fontSize: '0.9rem'
+              color: isChannel ? 'var(--cyber-cyan)' : 'var(--cyber-amber)',
+              fontWeight: 800,
+              fontSize: '0.85rem'
             }}
           >
-            {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '⌗') : '◎'}
+            {isChannel ? (activeConversation.is_private ? <IconLock size={15} /> : '⚡') : '◎'}
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  fontSize: '1.05rem',
-                  letterSpacing: '-0.02em',
+                  fontWeight: 800,
+                  fontSize: '1rem',
+                  letterSpacing: '0.02em',
+                  textTransform: 'uppercase',
                   color: 'var(--text-primary)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
@@ -97,62 +98,70 @@ export default function ChatHeader({
                 {isChannel ? `${title}` : title}
               </span>
 
-              <span className="privacy-badge" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-                🔒 Zero-Admin Access
+              <span className="privacy-badge" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+                🔒 AES-256 ZERO-ACCESS
               </span>
             </div>
 
-            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div
+              style={{
+                fontSize: '0.7rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
               {isChannel
-                ? activeConversation.topic || 'Secure community transmission space'
-                : `@${activeConversation.other_user?.username || ''} • Signal: ${presence?.toUpperCase() || 'OFFLINE'}`}
+                ? activeConversation.topic || 'FREQUENCY // LIVE RECEPTOR ACTIVE'
+                : `@${activeConversation.other_user?.username || ''} // SIGNAL: ${presence?.toUpperCase() || 'OFFLINE'}`}
             </div>
           </div>
         </div>
       </div>
 
       {/* Floating Action Capsules */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <button
           type="button"
           onClick={onOpenSearch}
-          title="Search Workspace (Ctrl+K)"
+          title="Search Frequency Signals"
           className="btn-outline"
           style={{
-            padding: '6px 14px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.75rem',
+            padding: '5px 12px',
+            borderRadius: 'var(--radius-xs)',
+            fontSize: '0.725rem',
+            fontFamily: 'var(--font-mono)',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--bg-elevated)',
-            borderColor: 'var(--border-subtle)'
+            gap: '6px'
           }}
         >
-          <IconSearch size={14} />
-          <span className="hide-sm">Search</span>
+          <IconSearch size={13} />
+          <span className="hide-sm">SEARCH</span>
         </button>
 
         <button
           type="button"
           onClick={onToggleContextPanel}
-          title="Conversation Inspector"
+          title="Inspect Frequency Telemetry"
+          className="btn-outline"
           style={{
-            padding: '6px 14px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.75rem',
+            padding: '5px 12px',
+            borderRadius: 'var(--radius-xs)',
+            fontSize: '0.725rem',
+            fontFamily: 'var(--font-mono)',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            cursor: 'pointer',
-            backgroundColor: isContextOpen ? 'var(--accent-cyan-subtle)' : 'var(--bg-elevated)',
-            color: isContextOpen ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-            border: isContextOpen ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
-            transition: 'all var(--transition-fast)'
+            backgroundColor: isContextOpen ? 'rgba(0, 240, 255, 0.15)' : 'transparent',
+            color: isContextOpen ? 'var(--cyber-cyan)' : 'var(--text-secondary)',
+            borderColor: isContextOpen ? 'var(--cyber-cyan)' : 'var(--border-default)'
           }}
         >
-          <IconInfo size={14} />
-          <span className="hide-sm">Inspector</span>
+          <IconInfo size={13} />
+          <span className="hide-sm">TELEMETRY</span>
         </button>
       </div>
     </header>

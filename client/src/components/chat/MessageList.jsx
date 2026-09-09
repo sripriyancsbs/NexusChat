@@ -27,8 +27,10 @@ export default function MessageList({ onOpenThread, onReport }) {
           gap: '12px'
         }}
       >
-        <span style={{ fontSize: '1.5rem', animation: 'pulse 1.5s infinite' }}>✦</span>
-        <span style={{ fontSize: '0.85rem' }}>Synchronizing stream telemetry...</span>
+        <span style={{ fontSize: '1.8rem', color: 'var(--cyber-cyan)', animation: 'pulseSlow 1.5s infinite' }}>✦</span>
+        <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
+          SYNCHRONIZING STREAM TELEMETRY...
+        </span>
       </div>
     );
   }
@@ -64,18 +66,18 @@ export default function MessageList({ onOpenThread, onReport }) {
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        padding: '20px 0'
+        padding: '16px 0'
       }}
     >
-      {/* Nexus Stream Anchor Card */}
+      {/* Frequency Anchor Beacon Card */}
       <div
         style={{
-          margin: '20px 24px 28px 24px',
-          padding: '28px',
-          backgroundColor: 'var(--bg-elevated)',
+          margin: '12px 20px 24px 20px',
+          padding: '22px',
+          backgroundColor: 'rgba(16, 23, 43, 0.65)',
+          backdropFilter: 'blur(16px)',
           border: '1px solid var(--border-default)',
-          borderRadius: 'var(--radius-lg)',
-          background: 'linear-gradient(135deg, rgba(13, 245, 196, 0.04) 0%, rgba(124, 58, 237, 0.06) 100%)',
+          borderRadius: 'var(--radius-md)',
           position: 'relative',
           overflow: 'hidden'
         }}
@@ -83,50 +85,76 @@ export default function MessageList({ onOpenThread, onReport }) {
         <div
           style={{
             position: 'absolute',
-            right: '-20px',
-            top: '-20px',
+            right: '-30px',
+            top: '-30px',
             width: '120px',
             height: '120px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(13, 245, 196, 0.15) 0%, transparent 70%)',
-            filter: 'blur(10px)',
+            background: 'radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%)',
+            filter: 'blur(20px)',
             pointerEvents: 'none'
           }}
         />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '10px' }}>
           <div
             style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--grad-brand)',
+              width: '40px',
+              height: '40px',
+              borderRadius: 'var(--radius-xs)',
+              background: 'linear-gradient(135deg, var(--cyber-cyan), var(--cyber-amber))',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#06090f',
-              fontWeight: 800,
-              fontSize: '1.2rem',
-              boxShadow: 'var(--glow-cyan)'
+              color: '#050810',
+              fontWeight: 900,
+              fontSize: '1.1rem',
+              boxShadow: '0 0 16px rgba(0, 240, 255, 0.3)'
             }}
           >
-            {isChannel ? (activeConversation?.is_private ? <IconLock size={20} /> : '⌗') : '◎'}
+            {isChannel ? (activeConversation?.is_private ? <IconLock size={18} /> : '⚡') : '◎'}
           </div>
 
           <div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {isChannel ? 'TRANSMISSION NODE' : 'ENCRYPTED DIRECT STREAM'}
+            <div
+              style={{
+                fontSize: '0.675rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--cyber-cyan)',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase'
+              }}
+            >
+              {isChannel ? 'FREQUENCY BEACON // ONLINE' : 'DIRECT CIPHER STREAM'}
             </div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>
-              {isChannel ? `${title}` : title}
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '1.25rem',
+                fontWeight: 800,
+                margin: 0,
+                color: 'var(--text-primary)',
+                letterSpacing: '-0.02em'
+              }}
+            >
+              {isChannel ? `${title.toUpperCase()}` : title}
             </h2>
           </div>
         </div>
 
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: '650px', margin: 0 }}>
+        <p
+          style={{
+            color: 'var(--text-secondary)',
+            fontSize: '0.825rem',
+            lineHeight: 1.5,
+            maxWidth: '650px',
+            margin: 0
+          }}
+        >
           {isChannel
-            ? activeConversation?.topic || 'This transmission node is ready for communications. Messages broadcast to members in real-time.'
-            : 'Direct stream established. All communication between participants is private and isolated from platform administrative browsing.'}
+            ? activeConversation?.topic || 'Frequency receptor online. Transmit data packets and voice waveforms with zero admin leakage.'
+            : 'Encrypted direct node established. Communication is mathematically isolated from administrative observation.'}
         </p>
       </div>
 
@@ -139,27 +167,27 @@ export default function MessageList({ onOpenThread, onReport }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                margin: '18px 24px',
-                gap: '14px'
+                margin: '16px 20px',
+                gap: '12px'
               }}
             >
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-default), transparent)' }} />
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-subtle), transparent)' }} />
               <span
                 style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.65rem',
                   fontWeight: 700,
                   color: 'var(--text-muted)',
                   fontFamily: 'var(--font-mono)',
                   letterSpacing: '0.06em',
-                  padding: '3px 12px',
-                  borderRadius: 'var(--radius-full)',
-                  backgroundColor: 'var(--bg-elevated)',
+                  padding: '2px 10px',
+                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: 'rgba(5, 8, 16, 0.7)',
                   border: '1px solid var(--border-subtle)'
                 }}
               >
                 {item.date}
               </span>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-default), transparent)' }} />
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, var(--border-subtle), transparent)' }} />
             </div>
           );
         }
@@ -174,7 +202,7 @@ export default function MessageList({ onOpenThread, onReport }) {
         );
       })}
 
-      <div ref={bottomRef} style={{ height: '1px' }} />
+      <div ref={bottomRef} style={{ height: '4px' }} />
     </div>
   );
 }

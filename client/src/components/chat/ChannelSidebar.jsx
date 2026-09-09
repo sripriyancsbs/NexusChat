@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import { useChat } from '../../context/ChatContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { useTheme } from '../../context/ThemeContext.jsx';
-import {
-  IconPlus,
-  IconSearch,
-  IconBell,
-  IconSun,
-  IconMoon,
-  IconLogOut,
-  IconShield,
-  IconLock
-} from '../common/Icons.jsx';
+import { IconPlus, IconLock, IconShield } from '../common/Icons.jsx';
 
 export default function ChannelSidebar({
   onOpenCreateChannel,
@@ -29,591 +19,466 @@ export default function ChannelSidebar({
     activeConversationId,
     selectChannel,
     selectConversation,
-    presenceMap,
-    unreadNotificationsCount
+    presenceMap
   } = useChat();
-  const { user, logout, isAdmin } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('ALL'); // 'ALL' | 'CHANNELS' | 'DMS'
+  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'FREQUENCIES' | 'DIRECT'
+  const [filterQuery, setFilterQuery] = useState('');
+
+  const filteredChannels = channels.filter((c) =>
+    c.name.toLowerCase().includes(filterQuery.toLowerCase())
+  );
+
+  const filteredConversations = conversations.filter((conv) => {
+    const other = conv.other_user;
+    const name = other?.full_name || other?.username || '';
+    return name.toLowerCase().includes(filterQuery.toLowerCase());
+  });
+
+  const getChannelIcon = (name, isPrivate) => {
+    if (isPrivate) return <IconLock size={14} />;
+    const lower = name.toLowerCase();
+    if (lower.includes('dev') || lower.includes('code')) return '⚡';
+    if (lower.includes('sec') || lower.includes('ops')) return '🛡️';
+    if (lower.includes('announc') || lower.includes('alert')) return '📢';
+    if (lower.includes('random') || lower.includes('lounge')) return '☕';
+    return '🌐';
+  };
 
   return (
     <aside
-      className={`sidebar ${isMobileOpen ? 'open' : ''}`}
+      className={`bento-panel ${isMobileOpen ? 'mobile-open' : ''}`}
       style={{
-        width: '300px',
-        backgroundColor: 'var(--bg-surface)',
-        borderRight: '1px solid var(--border-default)',
+        width: '320px',
         display: 'flex',
+        flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
         userSelect: 'none',
-        boxShadow: 'var(--shadow-md)',
-        zIndex: 20
+        overflow: 'hidden',
+        position: 'relative'
       }}
     >
-      {/* Micro Activity Rail (Slim Left Bar) */}
+      {/* Deck Header */}
       <div
         style={{
-          width: '64px',
-          backgroundColor: 'var(--bg-canvas)',
-          borderRight: '1px solid var(--border-subtle)',
+          padding: '16px 18px 12px 18px',
+          borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '16px 0',
-          flexShrink: 0
+          justifyContent: 'space-between'
         }}
       >
-        {/* Top Brand Orb */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-          <div
-            title="NexusChat Aurora Core"
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span
             style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--grad-brand)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#06090f',
-              fontWeight: 800,
-              fontSize: '1.1rem',
-              boxShadow: 'var(--glow-cyan)',
-              cursor: 'pointer',
-              transition: 'transform var(--transition-fast)'
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--cyber-cyan)',
+              boxShadow: '0 0 8px var(--cyber-cyan)',
+              animation: 'pulseSlow 2s infinite'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          />
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--text-primary)'
+            }}
           >
-            ✦
-          </div>
-
-          {/* Quick Tab Filters */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button
-              type="button"
-              onClick={() => setActiveTab('ALL')}
-              title="All Streams"
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: activeTab === 'ALL' ? 'var(--accent-cyan-subtle)' : 'transparent',
-                color: activeTab === 'ALL' ? 'var(--accent-cyan)' : 'var(--text-muted)',
-                border: activeTab === 'ALL' ? '1px solid var(--accent-cyan)' : '1px solid transparent',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              ALL
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('CHANNELS')}
-              title="Channels Only"
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: activeTab === 'CHANNELS' ? 'var(--accent-cyan-subtle)' : 'transparent',
-                color: activeTab === 'CHANNELS' ? 'var(--accent-cyan)' : 'var(--text-muted)',
-                border: activeTab === 'CHANNELS' ? '1px solid var(--accent-cyan)' : '1px solid transparent',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1rem',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              ⌗
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('DMS')}
-              title="Direct Streams Only"
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: activeTab === 'DMS' ? 'var(--accent-cyan-subtle)' : 'transparent',
-                color: activeTab === 'DMS' ? 'var(--accent-cyan)' : 'var(--text-muted)',
-                border: activeTab === 'DMS' ? '1px solid var(--accent-cyan)' : '1px solid transparent',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1rem',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              ◎
-            </button>
-          </div>
+            Spectrum Matrix
+          </h2>
         </div>
 
-        {/* Bottom Rail Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={onNavigateAdmin}
-              title="Admin Command Center"
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--radius-full)',
-                backgroundColor: 'rgba(255, 51, 102, 0.15)',
-                color: 'var(--status-danger)',
-                border: '1px solid rgba(255, 51, 102, 0.3)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              <IconShield size={16} />
-            </button>
-          )}
-
+        {/* Action Triggers */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <button
             type="button"
-            onClick={onOpenNotifications}
-            title="Notifications"
+            onClick={onOpenCreateChannel}
+            title="Initialize New Frequency Channel"
+            className="btn-outline"
             style={{
-              position: 'relative',
-              width: '36px',
-              height: '36px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'transparent',
-              color: 'var(--text-secondary)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              padding: '4px 10px',
+              fontSize: '0.7rem',
+              borderRadius: 'var(--radius-xs)',
+              gap: '4px',
+              color: 'var(--cyber-cyan)',
+              borderColor: 'rgba(0, 240, 255, 0.3)'
             }}
           >
-            <IconBell size={18} />
-            {unreadNotificationsCount > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '4px',
-                  right: '4px',
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--accent-cyan)',
-                  boxShadow: 'var(--glow-cyan)'
-                }}
-              />
-            )}
+            <IconPlus size={12} />
+            <span>FREQ</span>
           </button>
 
           <button
             type="button"
-            onClick={toggleTheme}
-            title="Toggle theme"
+            onClick={onOpenNewDM}
+            title="Open Direct Transmission Node"
+            className="btn-outline"
             style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'transparent',
-              color: 'var(--text-secondary)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              padding: '4px 10px',
+              fontSize: '0.7rem',
+              borderRadius: 'var(--radius-xs)',
+              gap: '4px',
+              color: 'var(--cyber-amber)',
+              borderColor: 'rgba(255, 149, 0, 0.3)'
             }}
           >
-            {theme === 'dark' ? <IconSun size={17} /> : <IconMoon size={17} />}
+            <span>◎ DIRECT</span>
           </button>
-
-          {/* User Presence Avatar Orb */}
-          <div
-            onClick={onOpenProfile}
-            title="Your Profile"
-            style={{
-              position: 'relative',
-              cursor: 'pointer',
-              marginTop: '4px'
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--radius-full)',
-                background: 'linear-gradient(135deg, #162035, #1e293b)',
-                border: '2px solid var(--accent-cyan)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-primary)',
-                fontWeight: 700,
-                fontSize: '0.85rem'
-              }}
-            >
-              {(user?.full_name || user?.username || 'U')[0].toUpperCase()}
-            </div>
-            <span
-              style={{
-                position: 'absolute',
-                bottom: '-1px',
-                right: '-1px',
-                width: '9px',
-                height: '9px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--status-online)',
-                border: '1.5px solid var(--bg-canvas)'
-              }}
-            />
-          </div>
         </div>
       </div>
 
-      {/* Main Stream Hub Panel */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        {/* Workspace Brand Capsule */}
-        <div
+      {/* Filter and Spectrum Search */}
+      <div style={{ padding: '12px 16px 8px 16px' }}>
+        <input
+          type="text"
+          placeholder="⌕ Filter spectrum frequencies..."
+          value={filterQuery}
+          onChange={(e) => setFilterQuery(e.target.value)}
+          className="input"
           style={{
-            padding: '16px',
-            borderBottom: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
+            padding: '7px 12px',
+            fontSize: '0.775rem',
+            borderRadius: 'var(--radius-xs)',
+            backgroundColor: 'rgba(5, 8, 16, 0.6)'
           }}
-        >
-          <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.05rem', letterSpacing: '-0.02em' }}>
-              Nexus Space
-            </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)', boxShadow: 'var(--glow-cyan)' }} />
-              Live Mesh Stream
-            </div>
-          </div>
+        />
 
-          <button
-            type="button"
-            onClick={onOpenSearch}
-            title="Search Workspace (Ctrl+K)"
-            style={{
-              padding: '6px 10px',
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-full)',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.75rem'
-            }}
-          >
-            <IconSearch size={13} />
-            <kbd style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>⌘K</kbd>
-          </button>
+        {/* Filter Pills */}
+        <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
+          {['ALL', 'FREQUENCIES', 'DIRECT'].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveFilter(tab)}
+              style={{
+                flex: 1,
+                padding: '4px 6px',
+                borderRadius: 'var(--radius-xs)',
+                fontSize: '0.675rem',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: activeFilter === tab ? '1px solid var(--cyber-cyan)' : '1px solid var(--border-subtle)',
+                backgroundColor: activeFilter === tab ? 'rgba(0, 240, 255, 0.12)' : 'transparent',
+                color: activeFilter === tab ? 'var(--cyber-cyan)' : 'var(--text-muted)',
+                transition: 'all var(--transition-fast)'
+              }}
+            >
+              {tab === 'ALL' ? 'ALL' : tab === 'FREQUENCIES' ? 'CHANNELS' : 'DMS'}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Scrollable Channels & DMs List */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 10px' }}>
-          {/* CHANNELS */}
-          {(activeTab === 'ALL' || activeTab === 'CHANNELS') && (
-            <div style={{ marginBottom: '22px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '4px 10px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  color: 'var(--text-muted)'
-                }}
-              >
-                <span>Channels</span>
-                <button
-                  type="button"
-                  onClick={onOpenCreateChannel}
-                  title="Create Channel"
-                  style={{
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-subtle)',
-                    color: 'var(--accent-cyan)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: 'var(--radius-xs)'
-                  }}
-                >
-                  <IconPlus size={12} />
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '6px' }}>
-                {channels.map((chan) => {
-                  const isActive = activeConversationId === chan.conversation_id;
-                  return (
-                    <button
-                      key={chan.id}
-                      type="button"
-                      onClick={() => {
-                        selectChannel(chan);
-                        onCloseMobile?.();
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '8px 12px',
-                        borderRadius: 'var(--radius-md)',
-                        background: isActive
-                          ? 'linear-gradient(90deg, rgba(13, 245, 196, 0.12), rgba(124, 58, 237, 0.08))'
-                          : 'transparent',
-                        border: isActive ? '1px solid rgba(13, 245, 196, 0.35)' : '1px solid transparent',
-                        cursor: 'pointer',
-                        color: isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                        fontWeight: isActive ? 700 : 500,
-                        fontSize: '0.85rem',
-                        textAlign: 'left',
-                        width: '100%',
-                        transition: 'all var(--transition-fast)'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
-                        <span style={{ color: isActive ? 'var(--accent-cyan)' : 'var(--text-muted)', fontSize: '0.85rem' }}>
-                          {chan.is_private ? <IconLock size={14} /> : '⌗'}
-                        </span>
-                        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {chan.name}
-                        </span>
-                      </div>
-                      {isActive && (
-                        <span
-                          style={{
-                            width: '4px',
-                            height: '14px',
-                            borderRadius: 'var(--radius-full)',
-                            backgroundColor: 'var(--accent-cyan)',
-                            boxShadow: 'var(--glow-cyan)'
-                          }}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+      {/* Scrollable Frequency Spectrum Deck */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '8px 12px 16px 12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px'
+        }}
+      >
+        {/* Frequencies Section */}
+        {(activeFilter === 'ALL' || activeFilter === 'FREQUENCIES') && (
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 6px 6px 6px',
+                fontSize: '0.675rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase'
+              }}
+            >
+              <span>Frequencies [{filteredChannels.length}]</span>
             </div>
-          )}
 
-          {/* DIRECT STREAMS */}
-          {(activeTab === 'ALL' || activeTab === 'DMS') && (
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '4px 10px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  color: 'var(--text-muted)'
-                }}
-              >
-                <span>Direct Streams</span>
-                <button
-                  type="button"
-                  onClick={onOpenNewDM}
-                  title="New Direct Message"
-                  style={{
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-subtle)',
-                    color: 'var(--accent-cyan)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: 'var(--radius-xs)'
-                  }}
-                >
-                  <IconPlus size={12} />
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '6px' }}>
-                {conversations.map((conv) => {
-                  const isActive = activeConversationId === conv.id;
-                  const otherUser = conv.other_user || conv.targetUser;
-                  const displayName = otherUser?.displayName || otherUser?.full_name || otherUser?.username || 'Direct Stream';
-                  const presence = presenceMap[otherUser?.id] || otherUser?.status?.toLowerCase() || 'offline';
-                  const hasUnread = conv.unread_count > 0;
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {filteredChannels.length === 0 ? (
+                <div style={{ padding: '12px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                  No matching frequencies
+                </div>
+              ) : (
+                filteredChannels.map((channel) => {
+                  const isActive = channel.id === activeConversationId;
+                  const hasUnread = Boolean(channel.unread_count && channel.unread_count > 0);
 
                   return (
-                    <button
-                      key={conv.id}
-                      type="button"
+                    <div
+                      key={channel.id}
                       onClick={() => {
-                        selectConversation(conv.id, conv);
-                        onCloseMobile?.();
+                        selectChannel(channel);
+                        if (onCloseMobile) onCloseMobile();
                       }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '8px 12px',
-                        borderRadius: 'var(--radius-md)',
-                        background: isActive
-                          ? 'linear-gradient(90deg, rgba(124, 58, 237, 0.15), rgba(13, 245, 196, 0.08))'
-                          : 'transparent',
-                        border: isActive ? '1px solid rgba(124, 58, 237, 0.4)' : '1px solid transparent',
-                        cursor: 'pointer',
-                        color: isActive ? 'var(--text-primary)' : hasUnread ? 'var(--text-primary)' : 'var(--text-secondary)',
-                        fontWeight: isActive || hasUnread ? 700 : 500,
-                        fontSize: '0.85rem',
-                        textAlign: 'left',
-                        width: '100%',
-                        transition: 'all var(--transition-fast)'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) e.currentTarget.style.backgroundColor = 'var(--bg-hover)';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
+                      className={`frequency-card ${isActive ? 'active' : ''}`}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
-                        <div style={{ position: 'relative' }}>
-                          <div
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: 'var(--radius-sm)',
-                              backgroundColor: 'var(--bg-elevated)',
-                              color: 'var(--accent-sky)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '0.75rem',
-                              fontWeight: 700
-                            }}
-                          >
-                            {displayName[0].toUpperCase()}
-                          </div>
-                          <span
-                            style={{
-                              position: 'absolute',
-                              bottom: '-1px',
-                              right: '-1px',
-                              width: '7px',
-                              height: '7px',
-                              borderRadius: '50%',
-                              backgroundColor:
-                                presence === 'online'
-                                  ? 'var(--status-online)'
-                                  : presence === 'away'
-                                  ? 'var(--status-away)'
-                                  : 'var(--status-offline)'
-                            }}
-                          />
-                        </div>
-                        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {displayName}
-                        </span>
+                      {/* Domain Icon Pod */}
+                      <div
+                        style={{
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: 'var(--radius-xs)',
+                          backgroundColor: isActive ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                          border: isActive ? '1px solid var(--cyber-cyan)' : '1px solid var(--border-subtle)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.85rem',
+                          color: isActive ? 'var(--cyber-cyan)' : 'var(--text-secondary)',
+                          flexShrink: 0
+                        }}
+                      >
+                        {getChannelIcon(channel.name, channel.is_private)}
                       </div>
 
-                      {hasUnread && (
-                        <span
+                      {/* Frequency Title & Snippet */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
                           style={{
-                            padding: '1px 6px',
-                            borderRadius: 'var(--radius-full)',
-                            background: 'var(--grad-brand)',
-                            color: '#06090f',
-                            fontSize: '0.65rem',
-                            fontWeight: 800
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '6px'
                           }}
                         >
-                          {conv.unread_count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+                          <span
+                            style={{
+                              fontFamily: 'var(--font-display)',
+                              fontWeight: isActive ? 700 : 600,
+                              fontSize: '0.825rem',
+                              color: isActive ? 'var(--cyber-cyan)' : 'var(--text-primary)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            {channel.name.toUpperCase()}
+                          </span>
 
-        {/* User Identity Panel at Bottom of Hub */}
-        <div
-          style={{
-            padding: '12px 14px',
-            borderTop: '1px solid var(--border-subtle)',
-            backgroundColor: 'var(--bg-canvas)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}
-        >
-          <div
-            onClick={onOpenProfile}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', overflow: 'hidden' }}
-          >
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {user?.full_name || user?.username}
-              </div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                @{user?.username} • {user?.role}
-              </div>
+                          {/* Soundwave Bars if Active */}
+                          {isActive && (
+                            <span className="soundwave-indicator">
+                              <span className="soundwave-bar" />
+                              <span className="soundwave-bar" />
+                              <span className="soundwave-bar" />
+                            </span>
+                          )}
+
+                          {hasUnread && !isActive && (
+                            <span
+                              style={{
+                                padding: '1px 6px',
+                                borderRadius: 'var(--radius-xs)',
+                                backgroundColor: 'var(--cyber-cyan)',
+                                color: '#050810',
+                                fontSize: '0.65rem',
+                                fontFamily: 'var(--font-mono)',
+                                fontWeight: 800
+                              }}
+                            >
+                              {channel.unread_count}
+                            </span>
+                          )}
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: '0.7rem',
+                            color: 'var(--text-muted)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            marginTop: '2px'
+                          }}
+                        >
+                          {channel.topic || (channel.is_private ? 'Encrypted private frequency' : 'Public signal stream')}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
+        )}
 
-          <button
-            type="button"
-            onClick={logout}
-            title="Log Out"
-            style={{
-              background: 'transparent',
-              border: 'none',
-              padding: '6px',
-              color: 'var(--status-danger)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <IconLogOut size={16} />
-          </button>
-        </div>
+        {/* Direct Encrypted Streams Section */}
+        {(activeFilter === 'ALL' || activeFilter === 'DIRECT') && (
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 6px 6px 6px',
+                fontSize: '0.675rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase'
+              }}
+            >
+              <span>Direct Streams [{filteredConversations.length}]</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {filteredConversations.length === 0 ? (
+                <div style={{ padding: '12px', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                  No active direct streams
+                </div>
+              ) : (
+                filteredConversations.map((conv) => {
+                  const other = conv.other_user;
+                  if (!other) return null;
+
+                  const isActive = conv.id === activeConversationId;
+                  const presence = presenceMap[other.id] || other.status?.toLowerCase() || 'offline';
+                  const isOnline = presence === 'online';
+                  const isIdle = presence === 'idle';
+
+                  return (
+                    <div
+                      key={conv.id}
+                      onClick={() => {
+                        selectConversation(conv);
+                        if (onCloseMobile) onCloseMobile();
+                      }}
+                      className={`frequency-card ${isActive ? 'active' : ''}`}
+                    >
+                      {/* Operator Hologram Pod with Dual-Ring Radar Presence */}
+                      <div
+                        style={{
+                          position: 'relative',
+                          width: '32px',
+                          height: '32px',
+                          flexShrink: 0
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            backgroundColor: 'var(--bg-elevated)',
+                            border: isActive ? '1px solid var(--cyber-amber)' : '1px solid var(--border-default)',
+                            color: isActive ? 'var(--cyber-amber)' : 'var(--text-primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 700,
+                            fontSize: '0.8rem'
+                          }}
+                        >
+                          {(other.full_name || other.username || 'U')[0].toUpperCase()}
+                        </div>
+
+                        {/* Dual Presence Ring */}
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: '-1px',
+                            right: '-1px',
+                            width: '10px',
+                            height: '10px',
+                            borderRadius: '50%',
+                            backgroundColor: isOnline
+                              ? 'var(--cyber-mint)'
+                              : isIdle
+                              ? 'var(--cyber-amber)'
+                              : '#475569',
+                            border: '2px solid var(--bg-canvas)',
+                            boxShadow: isOnline ? '0 0 6px var(--cyber-mint)' : 'none'
+                          }}
+                        />
+                      </div>
+
+                      {/* Operator Info */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '6px'
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: 'var(--font-display)',
+                              fontWeight: isActive ? 700 : 600,
+                              fontSize: '0.825rem',
+                              color: isActive ? 'var(--cyber-amber)' : 'var(--text-primary)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            {other.full_name || other.username}
+                          </span>
+
+                          <span
+                            style={{
+                              fontSize: '0.625rem',
+                              fontFamily: 'var(--font-mono)',
+                              color: other.role === 'admin' ? 'var(--cyber-coral)' : 'var(--text-muted)'
+                            }}
+                          >
+                            {other.role === 'admin' ? 'SYS-ADM' : 'NODE'}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: '0.7rem',
+                            color: 'var(--text-muted)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            marginTop: '2px'
+                          }}
+                        >
+                          {isOnline ? 'Transmitting active' : isIdle ? 'Node idle' : 'Offline'}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Deck Telemetry Footer */}
+      <div
+        style={{
+          padding: '10px 16px',
+          borderTop: '1px solid var(--border-subtle)',
+          backgroundColor: 'rgba(5, 8, 16, 0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '0.675rem',
+          fontFamily: 'var(--font-mono)',
+          color: 'var(--text-muted)'
+        }}
+      >
+        <span>E2EE // ACTIVE</span>
+        <span>CTRL+K OMNI</span>
       </div>
     </aside>
   );

@@ -3,7 +3,7 @@ import { useChat } from '../../context/ChatContext.jsx';
 import { socketClient } from '../../services/socket.js';
 import { IconSend, IconSmile } from '../common/Icons.jsx';
 
-const EMOJIS = ['👍', '🔥', '🚀', '❤️', '🎉', '💡', '✨', '⚡'];
+const EMOJIS = ['👍', '🔥', '🚀', '⚡', '❤️', '🎉', '💡', '✨'];
 
 export default function MessageComposer({ placeholder, replyToMessageId = null }) {
   const { activeConversationId, sendMessage, typingMap, activeConversation } = useChat();
@@ -15,8 +15,8 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
 
   const isChannel = activeConversation?.type === 'CHANNEL' || Boolean(activeConversation?.name);
   const defaultPlaceholder = isChannel
-    ? `Transmit signal to #${activeConversation?.name || 'channel'}...`
-    : `Direct signal to ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'user'}...`;
+    ? `Transmit signal to #${activeConversation?.name || 'frequency'}... (Enter to broadcast)`
+    : `Direct signal to ${activeConversation?.other_user?.full_name || activeConversation?.other_user?.username || 'operator'}...`;
 
   const typingUsers = typingMap[activeConversationId] || [];
 
@@ -73,46 +73,36 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
   };
 
   return (
-    <div style={{ padding: '0 24px 20px 24px', flexShrink: 0, position: 'relative' }}>
-      {/* Live Waveform Indicator */}
+    <div style={{ padding: '0 20px 16px 20px', flexShrink: 0, position: 'relative' }}>
+      {/* Live Frequency Waveform Indicator */}
       <div
         style={{
-          minHeight: '22px',
-          fontSize: '0.725rem',
-          color: 'var(--accent-cyan)',
+          minHeight: '20px',
+          fontSize: '0.7rem',
+          fontFamily: 'var(--font-mono)',
+          color: 'var(--cyber-cyan)',
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          marginBottom: '6px'
+          marginBottom: '4px'
         }}
       >
         {typingUsers.length > 0 && (
           <>
-            <span style={{ display: 'inline-flex', gap: '3px', alignItems: 'center' }}>
-              <span style={{ width: '4px', height: '8px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite' }} />
-              <span style={{ width: '4px', height: '14px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite 0.2s' }} />
-              <span style={{ width: '4px', height: '6px', borderRadius: '2px', backgroundColor: 'var(--accent-cyan)', animation: 'pulse 0.8s infinite 0.4s' }} />
+            <span className="soundwave-indicator">
+              <span className="soundwave-bar" />
+              <span className="soundwave-bar" />
+              <span className="soundwave-bar" />
             </span>
             <span>
-              {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} transmitting...
+              &gt;&gt; 📡 OPERATOR {typingUsers.join(', ').toUpperCase()} MODULATING SIGNAL...
             </span>
           </>
         )}
       </div>
 
-      {/* Floating Modern Capsule Composer */}
-      <div
-        style={{
-          backgroundColor: 'var(--bg-elevated)',
-          border: '1px solid var(--border-strong)',
-          borderRadius: 'var(--radius-lg)',
-          boxShadow: 'var(--shadow-md)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          transition: 'all var(--transition-fast)'
-        }}
-      >
+      {/* Floating Cyber Broadcast Console */}
+      <div className="broadcast-console">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -122,52 +112,68 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           onKeyDown={handleKeyDown}
           style={{
             width: '100%',
-            padding: '14px 18px',
+            padding: '12px 18px',
             backgroundColor: 'transparent',
             border: 'none',
             outline: 'none',
             color: 'var(--text-primary)',
-            fontSize: '0.925rem',
+            fontSize: '0.9rem',
             fontFamily: 'var(--font-sans)',
             resize: 'none',
-            maxHeight: '180px',
+            maxHeight: '160px',
             lineHeight: 1.5
           }}
         />
 
-        {/* Action Dock inside Composer */}
+        {/* Action Dock inside Console */}
         <div
           style={{
-            padding: '8px 16px',
-            backgroundColor: 'var(--bg-canvas)',
+            padding: '6px 14px',
+            backgroundColor: 'rgba(5, 8, 16, 0.65)',
             borderTop: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
           }}
         >
-          {/* Emoji & Quick Tools */}
+          {/* Emoji & Quick Signal Tools */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative' }}>
             <button
               type="button"
               onClick={() => setShowEmojiPicker((prev) => !prev)}
-              title="Insert Emoji"
+              title="Add Emoji Pod"
               style={{
-                background: 'var(--bg-surface)',
+                background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid var(--border-subtle)',
-                padding: '6px 10px',
-                borderRadius: 'var(--radius-full)',
+                padding: '4px 10px',
+                borderRadius: 'var(--radius-xs)',
                 color: 'var(--text-secondary)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
-                fontSize: '0.8rem'
+                gap: '5px',
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)'
               }}
             >
-              <IconSmile size={15} />
-              <span className="hide-sm">Emoji</span>
+              <IconSmile size={13} />
+              <span className="hide-sm">EMOJI</span>
             </button>
+
+            <span
+              style={{
+                fontSize: '0.65rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--cyber-cyan)',
+                opacity: 0.8,
+                padding: '2px 6px',
+                borderRadius: 'var(--radius-xs)',
+                backgroundColor: 'rgba(0, 240, 255, 0.08)'
+              }}
+              className="hide-sm"
+            >
+              E2EE
+            </span>
 
             {/* Emoji popover */}
             {showEmojiPicker && (
@@ -176,12 +182,13 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
                   position: 'absolute',
                   bottom: '100%',
                   left: 0,
-                  marginBottom: '10px',
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-default)',
-                  borderRadius: 'var(--radius-md)',
-                  boxShadow: 'var(--shadow-lg)',
-                  padding: '8px',
+                  marginBottom: '8px',
+                  backgroundColor: 'rgba(10, 15, 29, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid var(--cyber-cyan)',
+                  borderRadius: 'var(--radius-sm)',
+                  boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)',
+                  padding: '6px 8px',
                   display: 'flex',
                   gap: '6px',
                   zIndex: 30
@@ -195,11 +202,14 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      fontSize: '1.25rem',
+                      fontSize: '1.15rem',
                       cursor: 'pointer',
-                      padding: '4px',
-                      borderRadius: 'var(--radius-sm)'
+                      padding: '2px',
+                      borderRadius: 'var(--radius-xs)',
+                      transition: 'transform var(--transition-fast)'
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.25)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                   >
                     {emoji}
                   </button>
@@ -209,9 +219,16 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
           </div>
 
           {/* Transmit Button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }} className="hide-sm">
-              Press ↵ Enter
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontSize: '0.675rem',
+                color: 'var(--text-muted)',
+                fontFamily: 'var(--font-mono)'
+              }}
+              className="hide-sm"
+            >
+              ↵ ENTER
             </span>
             <button
               type="button"
@@ -219,15 +236,18 @@ export default function MessageComposer({ placeholder, replyToMessageId = null }
               disabled={!content.trim() || sending}
               className="btn btn-primary"
               style={{
-                padding: '8px 18px',
-                fontSize: '0.825rem',
-                borderRadius: 'var(--radius-full)',
-                gap: '8px',
+                padding: '6px 14px',
+                fontSize: '0.775rem',
+                fontFamily: 'var(--font-display)',
+                fontWeight: 800,
+                letterSpacing: '0.04em',
+                borderRadius: 'var(--radius-xs)',
+                gap: '6px',
                 opacity: !content.trim() || sending ? 0.45 : 1
               }}
             >
-              <IconSend size={14} />
-              <span>Transmit</span>
+              <IconSend size={13} />
+              <span>TRANSMIT</span>
             </button>
           </div>
         </div>
