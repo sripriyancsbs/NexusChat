@@ -68,6 +68,15 @@ const gracefulShutdown = (signal) => {
   });
 };
 
+// Process error safety handlers to prevent unexpected termination
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught Exception captured:', { error: err.message, stack: err.stack });
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled Promise Rejection captured:', { reason: reason instanceof Error ? reason.message : reason });
+});
+
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
